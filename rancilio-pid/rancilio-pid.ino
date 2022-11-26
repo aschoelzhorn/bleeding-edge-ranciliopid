@@ -38,8 +38,8 @@ const bool ota = OTA;
 
 // Wifi
 const char* hostname = HOSTNAME;
-const char* ssid = D_SSID;
-const char* pass = PASS;
+const char* ssid = WIFI_SSID;
+const char* pass = WIFI_PASSWORD;
 
 unsigned long lastWifiConnectionAttempt = millis();
 const unsigned long wifiReconnectInterval = 15000; // try to reconnect every 15 seconds
@@ -438,7 +438,7 @@ bool isWifiWorking() {
 #else
     val_wifi = ((!forceOffline) && (WiFi.status() == WL_CONNECTED) && (WiFi.localIP() != IPAddress(0U)));
 #endif
-  }
+}
   return val_wifi;
 }
 
@@ -907,7 +907,7 @@ int checkSensor(float latestTemperature, float secondlatestTemperature) {
     if (forceOffline)
       return; // remove this to allow wifi reconnects even when
               // DISABLE_SERVICES_ON_STARTUP_ERRORS=1
-    if ((!force_connect) && (isWifiWorking() || inSensitivePhase())) return; 
+    if ((!force_connect) && (isWifiWorking() || inSensitivePhase())) return;
     if (force_connect || (millis() > lastWifiConnectionAttempt + 5000 + (wifiReconnectInterval * (wifiReconnects<=4?wifiReconnects: 4) ))) {
       // noInterrupts();
       DEBUG_print("Connecting to WIFI with SID %s ...\n", ssid);
@@ -918,7 +918,7 @@ int checkSensor(float latestTemperature, float secondlatestTemperature) {
       #else
       WiFi.disconnect(true); // Delete SDK WiFi config
       #endif
-      // displaymessage(0, "Connecting Wifi", "");
+// displaymessage(0, "Connecting Wifi", "");
 #ifdef STATIC_IP
       IPAddress STATIC_IP;
       IPAddress STATIC_GATEWAY;
@@ -1458,11 +1458,11 @@ network-issues with your other WiFi-devices on your WiFi-network. */
             if (millis() >= previousTimerMqttHandle + 100) {
               previousTimerMqttHandle = millis();
               mqttClient.loop(); // mqtt client connected, do mqtt housekeeping
-            }
-#endif
           }
+#endif
         }
       }
+    }
     }
 
     if (millis() >= previousTimerDebugHandle + 200) {
@@ -1944,10 +1944,10 @@ network-issues with your other WiFi-devices on your WiFi-network. */
   void setup() {
     bool eeprom_force_read = true;
     DEBUGSTART(115200);
-    
+
 #ifdef ESP32
     WiFi.useStaticBuffers(true);
-    // required for remoteDebug to work
+// required for remoteDebug to work
     WiFi.mode(WIFI_STA);
 #endif
     Debug.begin(hostname, Debug.DEBUG);
