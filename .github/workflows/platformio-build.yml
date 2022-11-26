@@ -11,6 +11,8 @@ jobs:
         - name: Add config file
           working-directory: ./rancilio-pid
           run: cp userConfig.h.SAMPLE userConfig.h
+        - name: Add private build flags file
+          run: cp private_build_flags.ini.SAMPLE private_build_flags.ini
         - name: PlatformIO Run
           uses: karniv00l/platformio-run-action@v1
           with:
