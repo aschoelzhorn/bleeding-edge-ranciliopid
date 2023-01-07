@@ -2191,6 +2191,7 @@ network-issues with your other WiFi-devices on your WiFi-network. */
       }
       displaymessage(0, (char*)"Temp sensor defect", (char*)"");
       ERROR_print("Temp sensor defect. Cannot read consistent values. Retrying\n");
+      ArduinoOTA.handle();
       delay(1000);
     }
 

@@ -76,7 +76,7 @@ void updateWeight() {
       unsigned long prevFlowRateSampleTime = flowRateSampleTime;
       flowRateSampleTime = millis();
       unsigned long diffFlowRateSampleTime = flowRateSampleTime - prevFlowRateSampleTime;
-      if (diffFlowRateSampleTime > 110 || diffFlowRateSampleTime <= 11) {  //regular refresh on 10SPS every 90ms
+      if (diffFlowRateSampleTime > 110 || diffFlowRateSampleTime < 11) {  //regular refresh on 10SPS every 90ms
         ERROR_print("flowRateSampleTime anomaly: %lums\n", diffFlowRateSampleTime);
         return;
       }
