@@ -73,7 +73,6 @@ extern float steadyPowerMQTTDisableUpdateUntilProcessed;
 extern unsigned long steadyPowerMQTTDisableUpdateUntilProcessedTime;
 extern float steadyPowerSaved;
 extern unsigned long eepromForceSync;
-extern void blynkSave(char*);
 extern unsigned int brewtimeEndDetection1;
 extern unsigned int brewtimeEndDetection2;
 extern unsigned int brewtimeEndDetection3;

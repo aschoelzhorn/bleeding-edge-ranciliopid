@@ -35,8 +35,6 @@
 
 #if (ENABLE_CALIBRATION_MODE == 1)
 #define DEBUGMODE
-#undef BLYNK_ENABLE
-#define BLYNK_ENABLE 0
 #undef MQTT_ENABLE
 #define MQTT_ENABLE 0
 #endif

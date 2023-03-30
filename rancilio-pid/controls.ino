@@ -435,7 +435,6 @@ void menuConfigPositionModifyByStep(menuMap* menuConfigPosition, bool increase =
     }
     if (setting) {
       eepromForceSync = millis();
-      blynkSave(setting);
     }
   }
 }
@@ -569,11 +568,9 @@ int getActionOfControl(controlMap* controlsConfig, int port, int value) {
   return UNDEFINED_ACTION;
 }
 
-void actionController(int action, int newState) { actionController(action, newState, true, true); }
+void actionController(int action, int newState) { actionController(action, newState, true); }
 
-void actionController(int action, int newState, bool publishActionMqtt) { actionController(action, newState, publishActionMqtt, true); }
-
-void actionController(int action, int newState, bool publishAction, bool publishActionBlynk) {
+void actionController(int action, int newState, bool publishAction) {
   if (action == UNDEFINED_ACTION) { return; }
   // newState := if newState >=0 set value to newState. If newState == -1 ->
   // toggle between 0/1
@@ -609,14 +606,14 @@ void actionController(int action, int newState, bool publishAction, bool publish
       actionController(SLEEPING, 0);
       actionState[action] = newState;
       brewingAction(newState);
-      actionPublish((char*)"actions/BREWING", 101, newState, publishAction, publishActionBlynk);
+      actionPublish((char*)"actions/BREWING", newState, publishAction);
     } else if (action == STEAMING) {
       actionController(BREWING, 0);
       actionController(CLEANING, 0);
       actionController(SLEEPING, 0);
       actionState[action] = newState;
       steamingAction(newState);
-      actionPublish((char*)"actions/STEAMING", 103, newState, publishAction, publishActionBlynk);
+      actionPublish((char*)"actions/STEAMING", newState, publishAction);
     } else if (action == CLEANING) {
       actionController(BREWING, 0);
       actionController(HOTWATER, 0);
@@ -624,7 +621,7 @@ void actionController(int action, int newState, bool publishAction, bool publish
       actionController(SLEEPING, 0);
       actionState[action] = newState;
       cleaningAction(newState);
-      actionPublish((char*)"actions/CLEANING", 107, newState, publishAction, publishActionBlynk);
+      actionPublish((char*)"actions/CLEANING", newState, publishAction);
     } else if (action == SLEEPING) {
       actionController(BREWING, 0);
       actionController(CLEANING, 0);
@@ -632,19 +629,19 @@ void actionController(int action, int newState, bool publishAction, bool publish
       actionController(STEAMING, 0);
       actionState[action] = newState;
       sleepingAction(newState);
-      actionPublish((char*)"actions/SLEEPING", 110, newState, publishAction, publishActionBlynk);
+      actionPublish((char*)"actions/SLEEPING", newState, publishAction);
     } else if (action == MENU) {
       actionState[action] = newState;
       menuAction(newState);
-      //actionPublish((char*)"actions/MENU", 110, newState, publishAction, publishActionBlynk);
+      //actionPublish((char*)"actions/MENU", newState, publishAction);
     } else if (action == MENU_INC) {
       actionState[action] = newState;
       menuIncAction(newState);
-      //actionPublish((char*)"actions/MENUINC", 110, newState, publishAction, publishActionBlynk);
+      //actionPublish((char*)"actions/MENUINC", newState, publishAction);
     } else if (action == MENU_DEC) {
       actionState[action] = newState;
       menuDecAction(newState);
-      //actionPublish((char*)"actions/MENUDEC", 110, newState, publishAction, publishActionBlynk);
+      //actionPublish((char*)"actions/MENUDEC", newState, publishAction);
     }
     //snprintf(debugLine, sizeof(debugLine), "actionController: Completed %s %d->%d", convertDefineToAction(action), oldState, actionState[action]);
     //DEBUG_println(debugLine);
@@ -655,12 +652,9 @@ void actionController(int action, int newState, bool publishAction, bool publish
   }
 }
 
-void actionPublish(char* mqtt_topic, unsigned int blynk_vpin, int newState, bool publishActionMQTT, bool publishActionBlynk) {
-  // TODO add mapping table of action/setting to mqtt-topic&blynk_vpin
+void actionPublish(char* mqtt_topic, int newState, bool publishActionMQTT) {
+  // TODO add mapping table of action/setting to mqtt-topic
   if (publishActionMQTT) mqttPublish(mqtt_topic, int2string(newState));
-#if (BLYNK_ENABLE == 1)
-  if (publishActionBlynk) Blynk.virtualWrite(blynk_vpin, newState);
-#endif
 }
 
 bool checkArrayInArray(int a[], int sizeof_a, int b[], int sizeof_b) {

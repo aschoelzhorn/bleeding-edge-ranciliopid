@@ -18,7 +18,6 @@
 #include "MQTT.h"
 #include "display.h"
 #include "eeprom-pcpid.h"
-#include "blynk.h"
 
 
 
@@ -1047,7 +1046,6 @@ network-issues with your other WiFi-devices on your WiFi-network. */
             // persist starttemp auto-tuning setting
             mqttPublish((char*)"starttemp/set", number2string(*activeStartTemp));
             mqttPublish((char*)"starttemp", number2string(*activeStartTemp));
-            blynkSave((char*)"starttemp");
             eepromForceSync = millis();
           } else {
             DEBUG_print("Auto-Tune starttemp disabled\n");
@@ -1433,8 +1431,6 @@ network-issues with your other WiFi-devices on your WiFi-network. */
           ArduinoOTA.handle();
         }
 
-        runBlynk();
-
         // Check mqtt connection
         if (MQTT_ENABLE && !mqttDisabledTemporary) {
           if (!isMqttWorking()) {
@@ -1677,8 +1673,6 @@ network-issues with your other WiFi-devices on your WiFi-network. */
       maintenance(); // update displayMessageLine1 & Line2
       displaymessage(activeState, (char*)displayMessageLine1, (char*)displayMessageLine2);
 
-      sendToBlynk();
-      
 #if (1 == 0)
       performance_check();
       return;
@@ -1907,14 +1901,6 @@ network-issues with your other WiFi-devices on your WiFi-network. */
     mqttPublish((char*)"activePreinfusionPause", number2string(*activePreinfusionPause));
     mqttPublish((char*)"activeBrewTimeEndDetection", number2string(*activeBrewTimeEndDetection));
     mqttPublish((char*)"activeScaleSensorWeightSetPoint", number2string(*activeScaleSensorWeightSetPoint));
-    blynkSave((char*)"profile");
-    blynkSave((char*)"activeBrewTime");
-    blynkSave((char*)"activeStartTemp");
-    blynkSave((char*)"activeSetPoint");
-    blynkSave((char*)"activePreinfusion");
-    blynkSave((char*)"activePreinfusionPause");
-    blynkSave((char*)"activeBrewTimeEndDetection");
-    blynkSave((char*)"activeScaleSensorWeightSetPoint");
   }
 
   void print_settings() {
@@ -2039,7 +2025,7 @@ network-issues with your other WiFi-devices on your WiFi-network. */
 #endif
 
     /********************************************************
-     * BLYNK & Fallback offline
+     * Fallback offline
      ******************************************************/
     if (!forceOffline) {
       checkWifi(true, 12000); // wait up to 12 seconds for connection
@@ -2048,7 +2034,6 @@ network-issues with your other WiFi-devices on your WiFi-network. */
         if (DISABLE_SERVICES_ON_STARTUP_ERRORS) {
           forceOffline = true;
           mqttDisabledTemporary = true;
-          disableBlynkTemporary();
           lastWifiConnectionAttempt = millis();
         }
         displaymessage(0, (char*)"Cannot connect to Wifi", (char*)"");
@@ -2113,7 +2098,6 @@ network-issues with your other WiFi-devices on your WiFi-network. */
         // delay(1000);
       }
 #endif
-        eeprom_force_read = setupBlynk();
       }
 
     } else {
@@ -2122,7 +2106,7 @@ network-issues with your other WiFi-devices on your WiFi-network. */
 
     /********************************************************
      * READ/SAVE EEPROM
-     * get latest values from EEPROM if not already fetched from blynk or
+     * get latest values from EEPROM 
      * remote mqtt-server Additionally this function honors changed values in
      * userConfig.h (changed userConfig.h values have priority). Some special
      * variables like profile-dependent ones are always fetched from eeprom.
@@ -2232,7 +2216,6 @@ network-issues with your other WiFi-devices on your WiFi-network. */
     // comparison in loop() will have a big offset
     unsigned long currentTime = millis();
     previousTimerRefreshTemp = currentTime;
-    setPreviousTimerBlynk(currentTime + 800);
     lastMQTTStatusReportTime = currentTime + 300;
     pidComputeLastRunTime = currentTime;
 

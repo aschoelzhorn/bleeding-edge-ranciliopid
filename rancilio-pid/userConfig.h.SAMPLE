@@ -12,7 +12,7 @@
 #define MACHINE_TYPE "rancilio"  // supported values are "rancilio", "gaggia" and "ecm".
 #define TEMPSENSOR 2          // 2=TSIC306 (fully supported); 3=MAX6675K (working but untested); (1=DS19B20 not supported anymore); 9=Sensor Mock (for testing without real sensor)
 #define TEMPSENSORRECOVERY 0  // 1 = on, 2= off (default). If off, temp sensor errors will stop the heater until power cycle
-#define FORCE_OFFLINE 0       // 0=Use network | 1=Disable all network stuff (WiFi, MQTT, Blynk).
+#define FORCE_OFFLINE 0       // 0=Use network | 1=Disable all network stuff (WiFi, MQTT).
 #define DISABLE_SERVICES_ON_STARTUP_ERRORS 1 // 1=on (default) when a service cannot be connected during startup, never retry | 0=off Try reconnecting to service during regular operations.
 #define ONLYPID 1             // 1=Only PID with no Preinfussion | 0=PID + Preinfussion
 #define VALVE_TRIGGERTYPE HIGH // LOW = low trigger, HIGH = high trigger relay
@@ -102,7 +102,7 @@
 
 /*
  * In "FullControl" modification, you can also trigger controlActions when multiple buttons (toggle) are activated the same time. This allows 
- * to directly control more actions without using mqtt/blynk and GPIO ports.
+ * to directly control more actions without using mqtt and GPIO ports.
  * You can define up to 3 multi-toggles, which are defined by the ACTION and the list of GPIO ports (must be defined in CONTROLS_CONFIG) 
  * in curly brackets. (The list shall include more than 1 and at most 5 GPIO ports).
  * Only the first multi-toggle's ACTION which gpio's matches is triggered, so think about the order.
@@ -246,12 +246,6 @@
 
 // OTA
 #define OTAPASS "otapassBleedingEdge"    // Password for OTA updates
-
-// Blynk
-#define BLYNK_ENABLE 0       // 1=on (Blynk PID values overwrite userConfig.h settings) | 0=off (default)
-#define BLYNKAUTH "blynkauthcode"
-#define BLYNKADDRESS "any.blynk.server.adress"   // IP-Address of locally installed blynk server
-#define BLYNKPORT 8080
 
 // MQTT
 #define MQTT_ENABLE 1        // 0 = off (no MQTT at all) | 1=MQTT client  | 2=MQTT Server if you dont have a mqtt server running on another system)

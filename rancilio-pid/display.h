@@ -82,7 +82,6 @@ extern float* activeScaleSensorWeightSetPoint;
 extern unsigned long brewTimer;
 extern bool forceOffline;
 extern bool isWifiWorking();
-extern bool isBlynkWorking();
 extern bool isMqttWorking();
 extern int brewing;
 extern unsigned long lastBrewEnd;

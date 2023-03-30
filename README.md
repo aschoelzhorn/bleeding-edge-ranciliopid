@@ -47,7 +47,7 @@ Two cups of a double cappuccino with the new Steamfunction | [![Two cups of a do
    - Standard: In this modifcations in addition to the heater, "brewing" is also controlled by the esp which enables pre-infusion (by cutting the "hardware-button switched" power to the valve and the pump on demand).
    - FullControl: (ESP32 only) All functionality is directly controlled by the esp. This allows full customization and implementation of any feature. Also all functionality can therefore remotely be activated/deactivated. The ESP32 can run 24/7 if required.
 1. Freely choose if you want the software to use WIFI, BLYNK and/or MQTT. Everythink can be enabled/disabled and still have a flawlessly working PID controller.
-1. Additionally if you want to to depend on a remotely running service (eg. blynk server on raspi), you can activate a MQTT-Server on the arduino itself!
+1. Additionally if you want to to depend on a remotely running service, you can activate a MQTT-Server on the arduino itself!
 1. By using the actionController you can freely configure the system to trigger custom ACTIONS (=functions) when a GPIO port is triggered (eg by a switch) or when commands are received over network (mqtt/blynk).
    - fully dynamic mapping of any(!) available analog/digital gpio port to trigger following custom ACTIONS:
      - BREWING   := start brewing
@@ -109,8 +109,6 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
 ## Remote Control APIs
 - MQTT
   - Instructions can be found at https://github.com/medlor/bleeding-edge-ranciliopid/wiki/MQTT-Setup
-- Blynk
-  - Instructions can be found at https://github.com/medlor/bleeding-edge-ranciliopid/wiki/Blynk-Setup
 
 ## Tunings instructions
 - Instructions can be found at https://github.com/medlor/bleeding-edge-ranciliopid/wiki/PID-Tuning

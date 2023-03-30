@@ -46,9 +46,9 @@ if (startup_read && (current_version == expectedEepromVersion)) {
     scaleSensorWeightOffset = preferences.getDouble("scalWeightOf", 1.5);
 }
 
-// if variables are not read from blynk previously, always get latest values from EEPROM
+// always get latest values from EEPROM
 if (force_read && (current_version == expectedEepromVersion)) {
-    DEBUG_print("EEPROM: Blynk not active and not using external mqtt server. "
+    DEBUG_print("EEPROM: not using external mqtt server. "
                 "Reading settings from EEPROM\n");
     profile = preferences.getUInt("profile", 1);
     aggKp = preferences.getDouble("aggKp", 0.0);
@@ -91,7 +91,7 @@ if (force_read && (current_version == expectedEepromVersion)) {
     scaleSensorWeightOffset = preferences.getDouble("scalWeightOf", 1.5);
 }
 
-// if blynk vars are not read previously, get latest values from EEPROM
+// get latest values from EEPROM
 unsigned int profile_sav = 0;
 float aggKp_sav = 0;
 float aggTn_sav = 0;
@@ -409,22 +409,18 @@ if (!almostEqual(SCALE_SENSOR_WEIGHT_SETPOINT3, scaleSensorWeightSetPoint3_cfg))
 // != clPause_cfg) { cleaningPause = CLEANING_PAUSE;
 // preferences.putInt("clPause_cfg", cleaningPause); }
 
-// save latest values to eeprom and sync back to blynk
+// save latest values to eeprom
 if (profile != profile_sav) {
     preferences.putUInt("profile", profile);
-    //blynkSave((char*)"profile");  //done in set_profile()
 }
 if (!almostEqual(aggKp, aggKp_sav)) {
     preferences.putDouble("aggKp", aggKp);
-    blynkSave((char*)"aggKp");
 }
 if (!almostEqual(aggTn, aggTn_sav)) {
     preferences.putDouble("aggTn", aggTn);
-    blynkSave((char*)"aggTn");
 }
 if (!almostEqual(aggTv, aggTv_sav)) {
     preferences.putDouble("aggTv", aggTv);
-    blynkSave((char*)"aggTv");
 }
 if (!almostEqual(setPoint1, setPoint1_sav)) {
     preferences.putDouble("setPoint1", setPoint1);
@@ -482,46 +478,36 @@ if (!almostEqual(starttemp3, starttemp3_sav)) {
 }
 if (!almostEqual(aggoKp, aggoKp_sav)) {
     preferences.putDouble("aggoKp", aggoKp);
-    blynkSave((char*)"aggoKp");
 }
 if (!almostEqual(aggoTn, aggoTn_sav)) {
     preferences.putDouble("aggoTn", aggoTn);
-    blynkSave((char*)"aggoTn");
 }
 if (!almostEqual(aggoTv, aggoTv_sav)) {
     preferences.putDouble("aggoTv", aggoTv);
-    blynkSave((char*)"aggoTv");
 }
 if (!almostEqual(brewDetectionSensitivity, bDetSen_sav)) {
     preferences.putDouble("bDetSen", brewDetectionSensitivity);
-    blynkSave((char*)"brewDetectionSensitivity");
 }
 if (!almostEqual(steadyPower, stePow_sav)) {
     preferences.putDouble("stePow", steadyPower);
-    blynkSave((char*)"steadyPower");
     DEBUG_print("EEPROM: steadyPower (%0.2f) is saved (previous:%0.2f)\n", steadyPower, stePow_sav);
 }
 if (!almostEqual(steadyPowerOffset, stePowOff_sav)) {
     preferences.putDouble("stePowOff", steadyPowerOffset);
-    blynkSave((char*)"steadyPowerOffset");
 }
 if (steadyPowerOffsetTime != stePowOT_sav) {
     preferences.putInt("stePowOT", steadyPowerOffsetTime);
-    blynkSave((char*)"steadyPowerOffsetTime");
 }
 if (!almostEqual(brewDetectionPower, bDetPow_sav)) {
     preferences.putDouble("bDetPow", brewDetectionPower);
-    blynkSave((char*)"brewDetectionPower");
     DEBUG_print("EEPROM: brewDetectionPower (%0.2f) is saved (previous:%0.2f)\n", brewDetectionPower, bDetPow_sav);
 }
 if (pidON != pidON_sav) {
     preferences.putInt("pidON", pidON);
-    blynkSave((char*)"pidON");
     DEBUG_print("EEPROM: pidON (%d) is saved (previous:%d)\n", pidON, pidON_sav);
 }
 if (!almostEqual(setPointSteam, sPointSte_sav)) {
     preferences.putDouble("sPointSte", setPointSteam);
-    blynkSave((char*)"setPointSteam");
     DEBUG_print("EEPROM: setPointSteam (%0.2f) is saved\n", setPointSteam);
 }
 if (brewtimeEndDetection1 != brewtimeEndDetection1_sav) {
@@ -553,11 +539,11 @@ if (!almostEqual(scaleSensorWeightOffset, scaleSensorWeightOffset_sav)) {
     DEBUG_print("EEPROM: scaleSensorWeightOffset (%0.2f) is saved\n", scaleSensorWeightOffset);
 }
 // if (!almostEqual( cleaningCycles, clCycles_sav)) { preferences.putInt("clCycles",
-// cleaningCycles); Blynk.virtualWrite(V61, cleaningCycles); } if (
+// cleaningCycles); } if (
 // cleaningInterval != clInt_sav) { preferences.putInt("clInt",
-// cleaningInterval); Blynk.virtualWrite(V62, cleaningInterval); } if (
+// cleaningInterval); } if (
 // cleaningPause != clPause_sav) { preferences.putInt("clPause",
-// cleaningPause); Blynk.virtualWrite(V63, cleaningPause); }
+// cleaningPause); }
 preferences.end();
 DEBUG_print("EEPROM: sync_eeprom() finished.\n");
 }
@@ -596,10 +582,10 @@ void sync_eeprom(bool startup_read, bool force_read) {
       EEPROM.get(132, starttemp3);
   }
 
-  // if variables are not read from blynk previously, always get latest values
+  // always get latest values
   // from EEPROM
   if (force_read && (current_version == expectedEepromVersion)) {
-    //DEBUG_print("EEPROM: Blynk not active and not using external mqtt server. Reading settings from EEPROM\n");
+    //DEBUG_print("EEPROM: not using external mqtt server. Reading settings from EEPROM\n");
     EEPROM.get(0, aggKp);
     EEPROM.get(4, aggTn);
     EEPROM.get(8, aggTv);
@@ -637,7 +623,7 @@ void sync_eeprom(bool startup_read, bool force_read) {
     // Reminder: 290 is reserved for "version"
   }
 
-  // if blynk vars are not read previously, get latest values from EEPROM
+  // get latest values from EEPROM
   float aggKp_sav = 0;
   float aggTn_sav = 0;
   float aggTv_sav = 0;
@@ -892,22 +878,18 @@ void sync_eeprom(bool startup_read, bool force_read) {
     DEBUG_print("EEPROM: setPointSteam (%0.2f) is read from userConfig.h\n", setPointSteam);
   }
 
-  // save latest values to eeprom and sync back to blynk
+  // save latest values to eeprom 
   if (!almostEqual(aggKp, aggKp_sav)) {
     EEPROM.put(0, aggKp);
-    blynkSave((char*)"aggKp");
   }
   if (!almostEqual(aggTn, aggTn_sav)) {
     EEPROM.put(4, aggTn);
-    blynkSave((char*)"aggTn");
   }
   if (!almostEqual(aggTv, aggTv_sav)) {
     EEPROM.put(8, aggTv);
-    blynkSave((char*)"aggTv");
   }
   if (profile != profile_sav) {
     EEPROM.put(12, profile);
-    blynkSave((char*)"profile");
     DEBUG_print("EEPROM: profile (%d) is saved (previous: %d)\n", profile, profile_sav);
   }
   if (!almostEqual(setPoint1, setPoint1_sav)) {
@@ -966,46 +948,36 @@ void sync_eeprom(bool startup_read, bool force_read) {
   }
   if (!almostEqual(aggoKp, aggoKp_sav)) {
     EEPROM.put(32, aggoKp);
-    blynkSave((char*)"aggoKp");
   }
   if (!almostEqual(aggoTn, aggoTn_sav)) {
     EEPROM.put(36, aggoTn);
-    blynkSave((char*)"aggoTn");
   }
   if (!almostEqual(aggoTv, aggoTv_sav)) {
     EEPROM.put(40, aggoTv);
-    blynkSave((char*)"aggoTv");
   }
   if (!almostEqual(brewDetectionSensitivity, bDetSen_sav)) {
     EEPROM.put(44, brewDetectionSensitivity);
-    blynkSave((char*)"brewDetectionSensitivity");
   }
   if (!almostEqual(steadyPower, stePow_sav)) {
     EEPROM.put(48, steadyPower);
-    blynkSave((char*)"steadyPower");
     DEBUG_print("EEPROM: steadyPower (%0.2f) is saved (previous:%0.2f)\n", steadyPower, stePow_sav);
   }
   if (!almostEqual(steadyPowerOffset, stePowOff_sav)) {
     EEPROM.put(52, steadyPowerOffset);
-    blynkSave((char*)"steadyPowerOffset");
   }
   if (steadyPowerOffsetTime != stePowOT_sav) {
     EEPROM.put(56, steadyPowerOffsetTime);
-    blynkSave((char*)"steadyPowerOffsetTime");
   }
   if (!almostEqual(brewDetectionPower, bDetPow_sav)) {
     EEPROM.put(64, brewDetectionPower);
-    blynkSave((char*)"brewDetectionPower");
     DEBUG_print("EEPROM: brewDetectionPower (%0.2f) is saved (previous:%0.2f)\n", brewDetectionPower, bDetPow_sav);
   }
   if (pidON != pidON_sav) {
     EEPROM.put(68, pidON);
-    blynkSave((char*)"pidON");
     DEBUG_print("EEPROM: pidON (%d) is saved (previous:%d)\n", pidON, pidON_sav);
   }
   if (!almostEqual(setPointSteam, sPointSte_sav)) {
     EEPROM.put(72, setPointSteam);
-    blynkSave((char*)"setPointSteam");
     DEBUG_print("EEPROM: setPointSteam (%0.2f) is saved\n", setPointSteam);
   }
   if (!EEPROM.commit()) ERROR_print("Cannot write to EEPROM.\n");

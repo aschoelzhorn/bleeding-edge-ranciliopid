@@ -218,128 +218,107 @@ void mqttParse(char* topic_str, char* data_str) {
   }
   if (strcmp(configVar, "profile") == 0) {
     if (persistSetting((char*)"profile", &profile, data_str)) {
-      blynkSave((char*)"profile");
     }
     return;
   }
   if (strcmp(configVar, "activeBrewTime") == 0) {
     if (persistSetting((char*)"activeBrewTime", activeBrewTime, data_str)) {
-      blynkSave((char*)"activeBrewTime");
     }
     return;
   }
   if (strcmp(configVar, "activeStartTemp") == 0) {
     if (persistSetting((char*)"activeStartTemp", activeStartTemp, data_str)) {
-      blynkSave((char*)"activeStartTemp");
     }
     return;
   }
   if (strcmp(configVar, "activeSetPoint") == 0) {
     if (persistSetting((char*)"activeSetPoint", activeSetPoint, data_str)) {
-      blynkSave((char*)"activeSetPoint");
     }
     return;
   }
   if (strcmp(configVar, "activePreinfusion") == 0) {
     if (persistSetting((char*)"activePreinfusion", activePreinfusion, data_str)) {
-      blynkSave((char*)"activePreinfusion");
     }
     return;
   }
   if (strcmp(configVar, "activePreinfusionPause") == 0) {
     if (persistSetting((char*)"activePreinfusionPause", activePreinfusionPause, data_str)) {
-      blynkSave((char*)"activePreinfusionPause");
     }
     return;
   }
   if (strcmp(configVar, "pidON") == 0) {
     if (persistSetting((char*)"pidON", &pidON, data_str)) {
-      blynkSave((char*)"pidON");
     }
     pidON = pidON == 0 ? 0 : 1;
     return;
   }
   if (strcmp(configVar, "brewDetectionSensitivity") == 0) {
     if (persistSetting((char*)"brewDetectionSensitivity", &brewDetectionSensitivity, data_str)) {
-      blynkSave((char*)"brewDetectionSensitivity");
     }
     return;
   }
   if (strcmp(configVar, "brewDetectionPower") == 0) {
     if (persistSetting((char*)"brewDetectionPower", &brewDetectionPower, data_str)) {
-      blynkSave((char*)"brewDetectionPower");
     }
     return;
   }
   if (strcmp(configVar, "steadyPower") == 0) {
     if (persistSetting((char*)"steadyPower", &steadyPower, data_str)) {
-      //blynkSave((char*)"steadyPower");  //handled every few seconds by another func
     }
     return;
   }
   if (strcmp(configVar, "steadyPowerOffset") == 0) {
     if (persistSetting((char*)"steadyPowerOffset", &steadyPowerOffset, data_str)) {
-      blynkSave((char*)"steadyPowerOffset");
     }
     return;
   }
   if (strcmp(configVar, "steadyPowerOffsetTime") == 0) {
     if (persistSetting((char*)"steadyPowerOffsetTime", &steadyPowerOffsetTime, data_str)) {
-      blynkSave((char*)"steadyPowerOffsetTime");
     }
     return;
   }
   if (strcmp(configVar, "aggKp") == 0) {
     if (persistSetting((char*)"aggKp", &aggKp, data_str)) {
-      blynkSave((char*)"aggKp");
     }
     return;
   }
   if (strcmp(configVar, "aggTn") == 0) {
     if (persistSetting((char*)"aggTn", &aggTn, data_str)) {
-      blynkSave((char*)"aggTn");
     }
     return;
   }
   if (strcmp(configVar, "aggTv") == 0) {
     if (persistSetting((char*)"aggTv", &aggTv, data_str)) {
-      blynkSave((char*)"aggTv");
     }
     return;
   }
   if (strcmp(configVar, "aggoKp") == 0) {
     if (persistSetting((char*)"aggoKp", &aggoKp, data_str)) {
-      blynkSave((char*)"aggoKp");
     }
     return;
   }
   if (strcmp(configVar, "aggoTn") == 0) {
     if (persistSetting((char*)"aggoTn", &aggoTn, data_str)) {
-      blynkSave((char*)"aggoTn");
     }
     return;
   }
   if (strcmp(configVar, "aggoTv") == 0) {
     if (persistSetting((char*)"aggoTv", &aggoTv, data_str)) {
-      blynkSave((char*)"aggoTv");
     }
     return;
   }
-  if (strcmp(configVar, "setPointSteam") == 0) { // TOBIAS: update wiki (blynk address,..)
+  if (strcmp(configVar, "setPointSteam") == 0) {
     if (persistSetting((char*)"setPointSteam", &setPointSteam, data_str)) {
-      blynkSave((char*)"setPointSteam");
     }
     return;
   }
   if (strcmp(configVar, "activeBrewTimeEndDetection") == 0) {
     if (persistSetting((char*)"activeBrewTimeEndDetection", activeBrewTimeEndDetection, data_str)) {
-      blynkSave((char*)"activeBrewTimeEndDetection");
     }
     return;
   }
   if (strcmp(configVar, "activeScaleSensorWeightSetPoint") == 0) {
     if (persistSetting((char*)"activeScaleSensorWeightSetPoint", activeScaleSensorWeightSetPoint, data_str)) {
-      blynkSave((char*)"activeScaleSensorWeightSetPoint");
     }
     return;
   }

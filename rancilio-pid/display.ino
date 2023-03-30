@@ -348,10 +348,6 @@ void displaymessage_helper(int activeState, char* displaymessagetext, char* disp
           u8g2.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, wifi_not_ok_bits);
           icon_counter++;
         }
-        if (BLYNK_ENABLE && !isBlynkWorking() && !FORCE_OFFLINE) {
-          u8g2.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, blynk_not_ok_bits);
-          icon_counter++;
-        }
         if (MQTT_ENABLE && !isMqttWorking() && !FORCE_OFFLINE) {
           u8g2.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, mqtt_not_ok_bits);
           icon_counter++;

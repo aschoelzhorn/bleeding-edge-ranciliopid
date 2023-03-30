@@ -136,7 +136,7 @@ void sync_eeprom(bool startup_read, bool force_read) {
     preferences.putInt("current_version", expectedEepromVersion);
   }
 
-  //if variables are not read from blynk previously, always get latest values from EEPROM
+  // always get latest values from EEPROM
   if (force_read && (current_version == expectedEepromVersion)) {
     aggKp = preferences.getDouble("aggKp", 0.0);
     aggTn = preferences.getDouble("aggTn", 0.0);
@@ -159,7 +159,7 @@ void sync_eeprom(bool startup_read, bool force_read) {
     setPointSteam = preferences.getDouble("setPointSteam", 0.0f);
   }
 
-  //if blynk vars are not read previously, get latest values from EEPROM
+  // get latest values from EEPROM
   double aggKp_latest_saved = 0;
   double aggTn_latest_saved = 0;
   double aggTv_latest_saved = 0;
@@ -263,7 +263,7 @@ void sync_eeprom(bool startup_read, bool force_read) {
   if (BREWDETECTION_POWER != brewDetectionPower_config_saved) { brewDetectionPower = BREWDETECTION_POWER; preferences.putDouble("brewDetectionPower", brewDetectionPower); }
   if (SETPOINT_STEAM != setPointSteam_config_saved) { setPointSteam = SETPOINT_STEAM; preferences.putDouble("setPointSteam", setPointSteam); }
 
-  //save latest values to eeprom and sync back to blynk
+  //save latest values to eeprom
   if ( aggKp != aggKp_latest_saved) { preferences.putDouble("aggKp", aggKp);  }
   if ( aggTn != aggTn_latest_saved) { preferences.putDouble("aggTn", aggTn); }
   if ( aggTv != aggTv_latest_saved) { preferences.putDouble("aggTv", aggTv); }
