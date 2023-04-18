@@ -265,22 +265,19 @@ void displaymessage_helper(int activeState, char* displaymessagetext, char* disp
       u8g2.setFont(u8g2_font_open_iconic_embedded_1x_t);
       u8g2.drawGlyph(align_right - 11, 3 + 6, 0x0046);
 
-      // if (Input <= *activeSetPoint + 5 || activeState == STATE_STEAM_MODE) { //only show setpoint if we are not steaming
-      if (!steaming) {
-        if (*activeSetPoint >= 100) {
-          align_right = align_right_3digits;
-        } else {
-          align_right = align_right_2digits;
-        }
-        u8g2.setFont(u8g2_font_profont22_tf);
-        u8g2.setCursor(align_right, 20);
-        u8g2.print(*activeSetPoint, 1);
-        u8g2.setFont(u8g2_font_profont10_tf);
-        u8g2.print((char)176);
-        u8g2.println("C");
-        u8g2.setFont(u8g2_font_open_iconic_other_1x_t);
-        u8g2.drawGlyph(align_right - 11, 20 + 6, 0x047);
+      if (*activeSetPoint >= 100) {
+        align_right = align_right_3digits;
+      } else {
+        align_right = align_right_2digits;
       }
+      u8g2.setFont(u8g2_font_profont22_tf);
+      u8g2.setCursor(align_right, 20);
+      u8g2.print(*activeSetPoint, 1);
+      u8g2.setFont(u8g2_font_profont10_tf);
+      u8g2.print((char)176);
+      u8g2.println("C");
+      u8g2.setFont(u8g2_font_open_iconic_other_1x_t);
+      u8g2.drawGlyph(align_right - 11, 20 + 6, 0x047);
     } else if (activeState == STATE_BREW_DETECTED || showLastBrewStatistics) {  //brew
       totalBrewTime = ( (OnlyPID || BREWTIME_TIMER == 0 )? *activeBrewTime : *activePreinfusion + *activePreinfusionPause + *activeBrewTime) * 1000;
       unsigned int align_right_left_value = LCDWidth - 56 - 5;
