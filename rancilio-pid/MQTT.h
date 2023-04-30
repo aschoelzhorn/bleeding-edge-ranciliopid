@@ -51,7 +51,7 @@ extern bool isWifiWorking();
 extern bool forceOffline;
 extern bool mqttDisabledTemporary;
 extern unsigned long mqttDontPublishUntilTime;
-extern const int MQTT_MAX_PUBLISH_SIZE;
+extern const int mqttMaxPublishSize;
 extern const bool mqttFlagRetained;
 extern unsigned long mqttDontPublishBackoffTime;
 extern bool inSensitivePhase();

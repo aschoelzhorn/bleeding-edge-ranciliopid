@@ -20,6 +20,14 @@
 #include "eeprom-pcpid.h"
 #include "blynk.h"
 
+#if (USE_WIFI_MANAGER == 1)
+#ifdef ESP32
+#include <WebServer.h>
+#else
+#include <ESP8266WebServer.h>
+#endif
+#include <WiFiManager.h> 
+#endif   
 
 
 RemoteDebug Debug;
@@ -58,13 +66,13 @@ PubSubClient mqttClient(espClient);
 #elif (MQTT_ENABLE == 2)
 #include <uMQTTBroker.h>
 #endif
-const int MQTT_MAX_PUBLISH_SIZE = 120; // see
-                                       // https://github.com/knolleary/pubsubclient/blob/master/src/PubSubClient.cpp
+
 const char* mqttServerIP = MQTT_SERVER_IP;
-const int mqttServerPort = MQTT_SERVER_PORT;
+const char* mqttServerPort = MQTT_SERVER_PORT;
 const char* mqttUsername = MQTT_USERNAME;
 const char* mqttPassword = MQTT_PASSWORD;
 const char* mqttTopicPrefix = MQTT_TOPIC_PREFIX;
+const int mqttMaxPublishSize = MQTT_MAX_PUBLISH_SIZE;
 char topicWill[256];
 char topicSet[256];
 char topicActions[256];
@@ -398,6 +406,7 @@ unsigned long previousTimerMenuCheck = 0;
 const unsigned int menuOffTimer = 7000;
 menuMap* menuConfig = NULL;
 
+#if (USE_WIFI_MANAGER == 0)
 /******************************************************
  * WiFi helper scripts
  ******************************************************/
@@ -413,6 +422,7 @@ void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info){
 void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info){
   ERROR_print("WiFi lost connection. (IP=%s)\n", WiFi.localIP().toString().c_str());
 }
+#endif
 #endif
 
 /******************************************************
@@ -899,6 +909,7 @@ int checkSensor(float latestTemperature, float secondlatestTemperature) {
   }
 
 
+#if (USE_WIFI_MANAGER == 0)
   /********************************************************
    * Check if Wifi is connected, if not reconnect
    *****************************************************/
@@ -959,6 +970,7 @@ network-issues with your other WiFi-devices on your WiFi-network. */
       }
     }
   }
+#endif
 
 
   /********************************************************
@@ -1363,21 +1375,21 @@ network-issues with your other WiFi-devices on your WiFi-network. */
   }
 #endif
 
-void DisableTimerAlarm() {
+  void DisableTimerAlarm() {
 #ifdef ESP32
-  timerAlarmDisable(timer);
+    timerAlarmDisable(timer);
 #else
-  timer1_disable();
+    timer1_disable();
 #endif
-}
+  }
 
-void EnableTimerAlarm() {
+  void EnableTimerAlarm() {
 #ifdef ESP32
-  timerAlarmEnable(timer);
+    timerAlarmEnable(timer);
 #else
-  timer1_enable(TIM_DIV16, TIM_EDGE, TIM_SINGLE);
+    timer1_enable(TIM_DIV16, TIM_EDGE, TIM_SINGLE);
 #endif
-}
+  }
 
 void InitOTA() {
 	static bool runOnceOTASetup = true;
@@ -1478,7 +1490,9 @@ void CheckMqttConnection() {
 #if (MQTT_ENABLE == 2)
         MQTT_server_cleanupClientCons();
 #endif
+#if (USE_WIFI_MANAGER == 0) // TODO alex: what here
         checkWifi();
+#endif        
       } else {
         InitOTA();
         runBlynk();
@@ -2149,13 +2163,158 @@ void InitTimer() {
 	#endif
 }
 
+// Setup Mqtt (none, client only, server) 
+void InitMqtt(bool eeprom_force_read) {
+// MQTT
+#if (MQTT_ENABLE == 1)
+  snprintf(topicWill, sizeof(topicWill), "%s%s/%s", mqttTopicPrefix, hostname, "will");
+  snprintf(topicSet, sizeof(topicSet), "%s%s/+/%s", mqttTopicPrefix, hostname, "set");
+  snprintf(topicActions, sizeof(topicActions), "%s%s/actions/+", mqttTopicPrefix, hostname);
+  //mqttClient.setKeepAlive(3);      //activates mqttping keepalives (default 15)
+  mqttClient.setSocketTimeout(2);  //sets application level timeout (default 15)
+  uint16_t mqtt_port = strtol(mqttServerPort, NULL, 10);
+  mqttClient.setServer(mqttServerIP, mqtt_port);
+  mqttClient.setCallback(mqttCallback1);
+  if (!mqttReconnect(true)) {
+    if (DISABLE_SERVICES_ON_STARTUP_ERRORS) mqttDisabledTemporary = true;
+    ERROR_print("Cannot connect to MQTT. Disabling...\n");
+    // displaymessage(0, "Cannot connect to MQTT", "");
+    // delay(1000);
+  } else {
+    const bool useRetainedSettingsFromMQTT = true;
+    if (useRetainedSettingsFromMQTT) {
+      // read and use settings retained in mqtt and therefore dont use eeprom values
+      eeprom_force_read = false;
+      unsigned long started = millis();
+          while (isMqttWorking(true) && (millis() < started + 4000)) // attention: delay might not
+                                                              // be long enough over WAN
+      {
+        mqttClient.loop();
+      }
+      eepromForceSync = 0;
+    }
+  }
+#elif (MQTT_ENABLE == 2)
+  DEBUG_print("Starting MQTT service\n");
+  const unsigned int max_subscriptions = 30;
+  const unsigned int max_retained_topics = 30;
+  const unsigned int mqtt_service_port = 1883;
+  snprintf(topicSet, sizeof(topicSet), "%s%s/+/%s", mqttTopicPrefix, hostname, "set");
+  snprintf(topicActions, sizeof(topicActions), "%s%s/actions/+", mqttTopicPrefix, hostname);
+  MQTT_server_onData(mqtt_callback_2);
+  if (MQTT_server_start(mqtt_service_port, max_subscriptions, max_retained_topics)) {
+    if (!MQTT_local_subscribe((unsigned char*)topicSet, 0) || !MQTT_local_subscribe((unsigned char*)topicActions, 0)) {
+      ERROR_print("Cannot subscribe to local MQTT service\n");
+    }
+  } else {
+    if (DISABLE_SERVICES_ON_STARTUP_ERRORS) mqttDisabledTemporary = true;
+    ERROR_print("Cannot create MQTT service. Disabling...\n");
+    // displaymessage(0, "Cannot create MQTT service", "");
+    // delay(1000);
+  }
+#endif
+         
+    eeprom_force_read = setupBlynk() && eeprom_force_read;
+}
+
+
+void saveConfigCallback() {
+  
+}
+
+#if (USE_WIFI_MANAGER == 1)
+void InitWifiManager(bool eeprom_force_read) {
+  // Local intialization. Once its business is done, there is no need to keep it around
+  WiFiManager wifiManager;
+
+// reset settings - for testing purpose
+#if (defined(RESET_WIFI))  
+  wifiManager.resetSettings();
+#endif
+
+  int configPortalTimeOut = PORTAL_TIMEOUT;
+  int connectTimeOut = WIFI_CONNECT_TIMEOUT;
+
+  wifiManager.setConnectTimeout(connectTimeOut);
+  wifiManager.setConfigPortalTimeout(configPortalTimeOut);
+
+  wifiManager.setSaveConfigCallback(saveConfigCallback);
+
+// try to read these from the eeprom 
+// not in eeprom???
+/*
+const char* mqttServerIP = MQTT_SERVER_IP;
+const int mqttServerPort = MQTT_SERVER_PORT;
+const char* mqttUsername = MQTT_USERNAME;
+const char* mqttPassword = MQTT_PASSWORD;
+const char* mqttTopicPrefix = MQTT_TOPIC_PREFIX;
+*/
+
+#if (MQTT_ENABLE != 0)
+  WiFiManagerParameter custom_mqtt_server("server", "mqtt server", mqttServerIP, 60);
+  WiFiManagerParameter custom_mqtt_port("port", "mqtt port", mqttServerPort, 6);
+  WiFiManagerParameter custom_mqtt_user("user", "mqtt user", mqttUsername, 60);
+  WiFiManagerParameter custom_mqtt_pass("pass", "mqtt pass", mqttPassword, 60);
+  WiFiManagerParameter custom_mqtt_topic("topic", "mqtt topic prefix", mqttTopicPrefix, mqttMaxPublishSize);
+
+  wifiManager.addParameter(&custom_mqtt_server);
+  wifiManager.addParameter(&custom_mqtt_port);
+  wifiManager.addParameter(&custom_mqtt_user);
+  wifiManager.addParameter(&custom_mqtt_pass);
+  wifiManager.addParameter(&custom_mqtt_topic);
+#endif
+
+#ifdef WIFI_PORTAL_PASSWORD
+  bool connected = wifiManager.autoConnect(WIFI_PORTAL_NAME, WIFI_PORTAL_PASSWORD);
+#else
+  bool connected = wifiManager.autoConnect(WIFI_PORTAL_NAME);
+#endif
+
+  if(!connected) {
+      Serial.println("Failed to connect");
+      //ESP.restart();
+      // TODO: what to do? just show the wifi nok icon?
+  } 
+  else {
+      //if you get here you have connected to the WiFi    
+      Serial.println("connected...yeey :)");
+      InitMqtt(eeprom_force_read);
+  }
+}
+#else
+void InitWifi(bool eeprom_force_read) {
+  checkWifi(true, 12000); // wait up to 12 seconds for connection
+  if (!isWifiWorking()) {
+    ERROR_print("Cannot connect to WIFI %s. Disabling WIFI\n", ssid);
+    if (DISABLE_SERVICES_ON_STARTUP_ERRORS) {
+      forceOffline = true;
+      mqttDisabledTemporary = true;
+      disableBlynkTemporary();
+      lastWifiConnectionAttempt = millis();
+    }
+    displaymessage(0, (char*)"Cannot connect to Wifi", (char*)"");
+    delay(1000);
+  } else {
+    DEBUG_print("IP address: %s\n", WiFi.localIP().toString().c_str());
+#if (defined(ESP32) and defined(DEBUGMODE))
+      WiFi.onEvent(WiFiStationConnected, ARDUINO_EVENT_WIFI_STA_CONNECTED);
+      WiFi.onEvent(WiFiGotIP, ARDUINO_EVENT_WIFI_STA_GOT_IP);
+      WiFi.onEvent(WiFiGotIP, ARDUINO_EVENT_WIFI_STA_GOT_IP6);
+      WiFi.onEvent(WiFiStationDisconnected, ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+#endif
+    InitMqtt(eeprom_force_read);
+  }
+}
+#endif
+
+
 /***********************************
  * SETUP()
  ***********************************/
 void setup() {
   bool eeprom_force_read = true;
-   
-#ifdef ESP32
+
+ #ifdef ESP32
   WiFi.useStaticBuffers(true);
   // required for remoteDebug to work
   WiFi.mode(WIFI_STA);
@@ -2195,81 +2354,12 @@ void setup() {
   if (forceOffline) {
     DEBUG_print("Staying offline due to forceOffline=1\n");
   } else {
-    checkWifi(true, 12000); // wait up to 12 seconds for connection
-    if (!isWifiWorking()) {
-      ERROR_print("Cannot connect to WIFI %s. Disabling WIFI\n", ssid);
-      if (DISABLE_SERVICES_ON_STARTUP_ERRORS) {
-        forceOffline = true;
-        mqttDisabledTemporary = true;
-          disableBlynkTemporary();
-        lastWifiConnectionAttempt = millis();
-      }
-      displaymessage(0, (char*)"Cannot connect to Wifi", (char*)"");
-      delay(1000);
-    } else {
-      DEBUG_print("IP address: %s\n", WiFi.localIP().toString().c_str());
-
-#if (defined(ESP32) and defined(DEBUGMODE))
-      //WiFi.onEvent(WiFiStationConnected, SYSTEM_EVENT_STA_CONNECTED);
-      //WiFi.onEvent(WiFiGotIP, SYSTEM_EVENT_STA_GOT_IP);
-      //WiFi.onEvent(WiFiStationDisconnected, SYSTEM_EVENT_STA_DISCONNECTED);
-      WiFi.onEvent(WiFiStationConnected, ARDUINO_EVENT_WIFI_STA_CONNECTED);
-      WiFi.onEvent(WiFiGotIP, ARDUINO_EVENT_WIFI_STA_GOT_IP);
-      WiFi.onEvent(WiFiGotIP, ARDUINO_EVENT_WIFI_STA_GOT_IP6);
-      WiFi.onEvent(WiFiStationDisconnected, ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
-#endif
-
-// MQTT
-#if (MQTT_ENABLE == 1)
-      snprintf(topicWill, sizeof(topicWill), "%s%s/%s", mqttTopicPrefix, hostname, "will");
-      snprintf(topicSet, sizeof(topicSet), "%s%s/+/%s", mqttTopicPrefix, hostname, "set");
-      snprintf(topicActions, sizeof(topicActions), "%s%s/actions/+", mqttTopicPrefix, hostname);
-      //mqttClient.setKeepAlive(3);      //activates mqttping keepalives (default 15)
-      mqttClient.setSocketTimeout(2);  //sets application level timeout (default 15)
-      mqttClient.setServer(mqttServerIP, mqttServerPort);
-      mqttClient.setCallback(mqttCallback1);
-      if (!mqttReconnect(true)) {
-        if (DISABLE_SERVICES_ON_STARTUP_ERRORS) mqttDisabledTemporary = true;
-        ERROR_print("Cannot connect to MQTT. Disabling...\n");
-        // displaymessage(0, "Cannot connect to MQTT", "");
-        // delay(1000);
-      } else {
-        const bool useRetainedSettingsFromMQTT = true;
-        if (useRetainedSettingsFromMQTT) {
-          // read and use settings retained in mqtt and therefore dont use eeprom values
-          eeprom_force_read = false;
-          unsigned long started = millis();
-          while (isMqttWorking(true) && (millis() < started + 4000)) // attention: delay might not
-                                                                  // be long enough over WAN
-          {
-            mqttClient.loop();
-          }
-          eepromForceSync = 0;
-        }
-      }
-#elif (MQTT_ENABLE == 2)
-    DEBUG_print("Starting MQTT service\n");
-    const unsigned int max_subscriptions = 30;
-    const unsigned int max_retained_topics = 30;
-    const unsigned int mqtt_service_port = 1883;
-    snprintf(topicSet, sizeof(topicSet), "%s%s/+/%s", mqttTopicPrefix, hostname, "set");
-    snprintf(topicActions, sizeof(topicActions), "%s%s/actions/+", mqttTopicPrefix, hostname);
-    MQTT_server_onData(mqtt_callback_2);
-    if (MQTT_server_start(mqtt_service_port, max_subscriptions, max_retained_topics)) {
-      if (!MQTT_local_subscribe((unsigned char*)topicSet, 0) || !MQTT_local_subscribe((unsigned char*)topicActions, 0)) {
-        ERROR_print("Cannot subscribe to local MQTT service\n");
-      }
-    } else {
-      if (DISABLE_SERVICES_ON_STARTUP_ERRORS) mqttDisabledTemporary = true;
-      ERROR_print("Cannot create MQTT service. Disabling...\n");
-      // displaymessage(0, "Cannot create MQTT service", "");
-      // delay(1000);
-    }
-#endif
-         
-        eeprom_force_read = setupBlynk() && eeprom_force_read;
-    }
-  }
+#if (USE_WIFI_MANAGER == 1)
+    InitWifiManager(eeprom_force_read);
+#else    
+    InitWifi(eeprom_force_read);
+#endif    
+}
 
   InititialSyncEeprom(eeprom_force_read);
 
@@ -2288,7 +2378,6 @@ void setup() {
     ArduinoOTA.setHostname(hostname); //  Device name for OTA
     ArduinoOTA.setPassword(OTApass); //  Password for OTA
     ArduinoOTA.setRebootOnSuccess(true); // reboot after successful update 
-    //ArduinoOTA.begin();
   }
 
   /********************************************************

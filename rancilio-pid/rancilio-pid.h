@@ -114,8 +114,13 @@ float getCurrentTemperature();
 float readTemperatureFromSensor();
 bool almostEqual(float, float);
 void print_settings();
+#if (USE_WIFI_MANAGER == 1)
+void InitWifiManager(bool);
+#else
+void InitWifi(bool);
 void checkWifi();
 void checkWifi(bool, unsigned long);
+#endif
 extern char debugLine[200];
 void maintenance();
 void performance_check();

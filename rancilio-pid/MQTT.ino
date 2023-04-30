@@ -63,10 +63,10 @@ bool isMqttWorking(bool refresh) {
 bool mqttPublish(char* reading, char* payload) {
   if (!MQTT_ENABLE || forceOffline || mqttDisabledTemporary) return true;
   if (!isMqttWorking()) { return false; }
-  char topic[MQTT_MAX_PUBLISH_SIZE];
-  snprintf(topic, MQTT_MAX_PUBLISH_SIZE, "%s%s/%s", mqttTopicPrefix, hostname, reading);
+  char topic[mqttMaxPublishSize];
+  snprintf(topic, mqttMaxPublishSize, "%s%s/%s", mqttTopicPrefix, hostname, reading);
 
-  if (strlen(topic) + strlen(payload) >= MQTT_MAX_PUBLISH_SIZE) {
+  if (strlen(topic) + strlen(payload) >= mqttMaxPublishSize) {
     ERROR_print("mqttPublish() wants to send too much data (len=%u)\n", strlen(topic) + strlen(payload));
     return false;
   } else {
@@ -141,10 +141,10 @@ bool isMqttWorking(bool refresh) { return ((MQTT_ENABLE > 0) && (isWifiWorking()
 
 bool mqttPublish(char* reading, char* payload) {
   if (!MQTT_ENABLE || forceOffline || mqttDisabledTemporary) return true;
-  char topic[MQTT_MAX_PUBLISH_SIZE];
-  snprintf(topic, MQTT_MAX_PUBLISH_SIZE, "%s%s/%s", mqttTopicPrefix, hostname, reading);
+  char topic[mqttMaxPublishSize];
+  snprintf(topic, mqttMaxPublishSize, "%s%s/%s", mqttTopicPrefix, hostname, reading);
   if (!isMqttWorking()) { return false; }
-  if (strlen(topic) + strlen(payload) >= MQTT_MAX_PUBLISH_SIZE) {
+  if (strlen(topic) + strlen(payload) >= mqttMaxPublishSize) {
     ERROR_print("mqttPublish() wants to send too much data (len=%u)\n", strlen(topic) + strlen(payload));
     return false;
   } else {

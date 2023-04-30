@@ -22,7 +22,7 @@ void sync_eeprom(bool startup_read, bool force_read);
 extern bool forceOffline;
 extern bool mqttDisabledTemporary;
 extern unsigned long mqttDontPublishUntilTime;
-extern const int MQTT_MAX_PUBLISH_SIZE;
+extern const int mqttMaxPublishSize;
 extern const bool mqttFlagRetained;
 extern unsigned long mqttDontPublishBackoffTime;
 extern bool inSensitivePhase();
