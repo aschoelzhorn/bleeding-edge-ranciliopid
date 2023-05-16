@@ -1,16 +1,7 @@
-#ifndef _enums_h
-#define _enums_h
+#ifndef STATE_H
+#define STATE_H
 
 #pragma once
-
-// : 0 := OK, 1 := Hardware issue, 2:= Software issue / outlier detected, 3: temperature jump
-enum class SensorStatus {
-    Ok = 0,
-    HardwareIssue = 1,
-    SoftwareIssue = 2,
-    TemperatureJump = 3
-};
-
 
 enum class State {
   Undefined = 0,

@@ -1,24 +1,24 @@
 #ifndef _display_H
 #define _display_H
 
-#include "rancilio-pid.h"
-#include "Enums.h"
+#include "main.h"
+#include "enums/State.h"
 
 const int Display = DISPLAY_HARDWARE;
 
 #include "controls.h"
-#include "icon_shared.h"
+#include "icons/icon_shared.h"
 #if (ENABLE_BIG_STATUS_ICONS)
-#include "icon_big.h"
+#include "icons/icon_big.h"
 #else
-#include "icon.h"
+#include "icons/icon.h"
 #endif
 #if (ICON_COLLECTION == 2)
-#include "icon_winter.h"
+#include "icons/icon_winter.h"
 #elif (ICON_COLLECTION == 1)
-#include "icon_smiley.h"
+#include "icons/icon_smiley.h"
 #else
-#include "icon_simple.h" // also used as placeholder for ICON_COLLECTION==3
+#include "icons/icon_simple.h"  // also used as placeholder for ICON_COLLECTION==3
 #endif
 #include <U8g2lib.h>
 #include <Wire.h>
@@ -29,8 +29,6 @@ const int Display = DISPLAY_HARDWARE;
 #ifdef ESP32
 static State activeStateBuffer;
 #endif
-static char displaymessagetextBuffer[30];
-static char displaymessagetext2Buffer[30];
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels

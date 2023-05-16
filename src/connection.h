@@ -1,5 +1,5 @@
-#ifndef _connection_H
-#define _connection_H
+#ifndef CONNECTION_H
+#define CONNECTION_H
 
 extern bool forceOffline;
 
@@ -10,4 +10,4 @@ void InitOTA();
 
 extern void disableBlynkTemporary();
 
-#endif // _connection_H
+#endif // CONNECTION_H

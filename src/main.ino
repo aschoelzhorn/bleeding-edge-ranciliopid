@@ -14,7 +14,7 @@
 #include <math.h>
 
 #include "userConfig.h"
-#include "rancilio-pid.h"
+#include "main.h"
 #include "MQTT.h"
 #include "blynk.h"
 #include "display.h"
@@ -23,7 +23,7 @@
 //#include "rancilio_debug.h"
 #include "helper.h"
 #include "TemperatureSensor.h"
-#include "Enums.h"
+#include "enums/State.h"
 
 RemoteDebug Debug;
 

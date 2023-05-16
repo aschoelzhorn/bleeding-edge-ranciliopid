@@ -10,7 +10,7 @@
 #define _gpiocheck_H
 
 #include "Arduino.h"
-#include "rancilio-pid.h"
+#include "main.h"
 
 extern int convertPortModeToDefine(char* portMode);
 

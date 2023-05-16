@@ -10,6 +10,9 @@ bool image_flip = true;
 unsigned int enableScreenSaver = ENABLE_SCREEN_SAVER;
 bool screenSaverOn = false;
 
+static char displaymessagetextBuffer[30];
+static char displaymessagetext2Buffer[30];
+
 // Attention: refresh takes around 42ms (esp32: 26ms)!
 #if (DISPLAY_HARDWARE == 1)
   U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE, DISPLAY_I2C_SCL, DISPLAY_I2C_SDA); // e.g. 1.3"

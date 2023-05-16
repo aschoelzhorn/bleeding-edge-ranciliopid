@@ -3,7 +3,7 @@
  * https://github.com/medlor/bleeding-edge-ranciliopid
  *****************************************************/
 #include "controls.h"
-#include "rancilio-pid.h"
+#include "main.h"
 
 int simulatedBrewSwitch = 0;
 unsigned long previousCheckControls = 0;
@@ -793,16 +793,16 @@ void checkControls(controlMap* controlsConfig) {
       }
 
       if (strcmp(ptr->type, "trigger") == 0) {
-        if (currentAction == UNDEFINED_ACTION) { // no boundaries match ->
+        if (currentAction == UNDEFINED_ACTION ) { // no boundaries match ->
           // button not pressed anymore
-          if (gpioLastAction[portRead] != UNDEFINED_ACTION) {
+          if (gpioLastAction[portRead] != UNDEFINED_ACTION ) {
             // snprintf(debugLine, sizeof(debugLine), "GPIO %d: action=%s
             // state=released", portRead,
             // convertDefineToAction(gpioLastAction[portRead]));
             // DEBUG_println(debugLine);
           }
-          gpioLastAction[portRead] = UNDEFINED_ACTION;
-        } else if ((gpioLastAction[portRead] == UNDEFINED_ACTION) && (currentAction != gpioLastAction[portRead])) {
+          gpioLastAction[portRead] = UNDEFINED_ACTION ;
+        } else if ((gpioLastAction[portRead] == UNDEFINED_ACTION ) && (currentAction != gpioLastAction[portRead])) {
           // snprintf(debugLine, sizeof(debugLine), "GPIO %d: action=%s
           // valueRead=%d", portRead, convertDefineToAction(currentAction),
           // valueRead); DEBUG_println(debugLine);

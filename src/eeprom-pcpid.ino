@@ -4,7 +4,7 @@
  *****************************************************/
 
 #include "eeprom-pcpid.h"
-#include "rancilio-pid.h"
+#include "main.h"
 
 void sync_eeprom() { sync_eeprom(false, false); }
 

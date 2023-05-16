@@ -1,10 +1,9 @@
-#ifndef _blynk_H
-#define _blynk_H
+#ifndef BLYNK_H
+#define BLYNK_H
 
 #define BLYNK_PRINT Serial
 
 #include "userConfig.h"
-#include "blynk.h"
 
 #if (BLYNK_ENABLE == 1)
 #ifdef ESP32
@@ -24,7 +23,7 @@ extern BlynkWifi Blynk;
 #define BLYNK_RED "#D3435C"
 extern unsigned long previousTimerBlynk;
 extern unsigned long blynkConnectTime;
-extern const long intervalBlynk;    // Update intervall to send data to the app
+extern const long intervalBlynk;  // Update intervall to send data to the app
 extern int blynkSendCounter;
 extern bool blynkSyncRunOnce;
 extern bool blynkDisabledTemporary;
@@ -42,8 +41,8 @@ extern const int blynkPort;
 extern const char* blynkAuth;
 extern unsigned long blynkLastReconnectAttemptTime;
 extern unsigned int blynkReconnectAttempts;
-extern unsigned long blynkReconnectIncrementalBackoff; // Failsafe: add 180sec to reconnect time after each connect-failure.
-extern unsigned int blynkMaxIncrementalBackoff; // At most backoff <mqtt_max_incremenatl_backoff>+1 * (<mqttReconnectIncrementalBackoff>ms)
+extern unsigned long blynkReconnectIncrementalBackoff;  // Failsafe: add 180sec to reconnect time after each connect-failure.
+extern unsigned int blynkMaxIncrementalBackoff;  // At most backoff <mqtt_max_incremenatl_backoff>+1 * (<mqttReconnectIncrementalBackoff>ms)
 
 extern char* blynkReadyLedColor;
 

@@ -1,13 +1,14 @@
 #ifndef TEMPERATURESENSOR_H
 #define TEMPERATURESENSOR_H
 
-#include "Enums.h"
+#include "enums/SensorStatus.h"
+#include "enums/State.h"
 
 class TemperatureSensor {
-   
-public:
+
+ public:
   TemperatureSensor(int recovery);
-  
+
   void init();
   float read();
   float readWithDelay();
@@ -24,9 +25,9 @@ public:
   const char* name;
   bool malfunction;
 
-  static const int numberOfReadings = 75 * 10; // number of values per Array
+  static const int numberOfReadings = 75 * 10;  // number of values per Array
 
-private:
+ private:
   float getAverageTemperature(int lookback);
   float pastTemperatureChange(int lookback, bool enable_avg);
 
@@ -39,11 +40,11 @@ private:
 
   int m_error;
   int m_errorFarOff;
-  int m_maxErrorCounter; // define maximum number of consecutive polls (of m_refreshInterval) to have errors
+  int m_maxErrorCounter;  // define maximum number of consecutive polls (of m_refreshInterval) to have errors
 
-  int m_readIndex; // the index of the current reading
-  float m_readingsTemp[numberOfReadings]; // the readings from Temp
-  float m_readingsTime[numberOfReadings]; // the readings from time
+  int m_readIndex;  // the index of the current reading
+  float m_readingsTemp[numberOfReadings];  // the readings from Temp
+  float m_readingsTime[numberOfReadings];  // the readings from time
 
 };
 

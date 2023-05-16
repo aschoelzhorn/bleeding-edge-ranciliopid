@@ -72,7 +72,7 @@ void debugControlHardware(controlMap* controlsConfig);
 void printControlsConfig(controlMap*);
 menuMap* parseMenuConfig();
 void printMenuConfig(menuMap*);
-menuMap* getMenuConfigPosition(menuMap* menuConfig, unsigned int menuPosition);  
+menuMap* getMenuConfigPosition(menuMap* menuConfig, unsigned int menuPosition);
 void checkControls(controlMap*);
 void actionController(int, int);
 void actionController(int, int, bool);

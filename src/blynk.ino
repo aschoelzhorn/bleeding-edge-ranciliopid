@@ -2,7 +2,7 @@
  * Perfect Coffee PID
  * https://github.com/medlor/bleeding-edge-ranciliopid
  *****************************************************/
-#include "rancilio-pid.h"
+#include "main.h"
 #include "blynk.h"
 #include "controls.h"
 

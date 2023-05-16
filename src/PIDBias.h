@@ -12,7 +12,7 @@
 #define PIDBias_h
 #define LIBRARY_VERSION 0.0.1
 
-#include "rancilio-pid.h"
+#include "main.h"
 #include "rancilio_debug.h"
 
 class PIDBias {
