@@ -19,8 +19,7 @@
 #include "rancilio-helper.h"
 #include "MQTT.h"
 #include "blynk.h"
-//#include "display.h"
-#include "display/DisplayManager.h"
+#include "display.h"
 #include "eeprom-pcpid.h"
 #include "rancilio-network.h"
 #include "TemperatureSensor.h"
@@ -36,11 +35,6 @@ const int OnlyPID = ONLYPID;
 const int brewDetection = BREWDETECTION;
 const int valveTriggerType = VALVE_TRIGGERTYPE;
 const int pumpTriggerType = PUMP_TRIGGERTYPE;
-
-/********************************************************
- * Displaymanager takes care to init the correct hardware
-********************************************************/
-DisplayManager displayManager;
 
 /********************************************************
  * MQTT
@@ -1057,7 +1051,7 @@ void CheckMqttConnection() {
       }
       brewReady = brewReadyCurrent;
     }
-    setHardwareLed(((brewReady && (ENABLE_HARDWARE_LED_OFF_WHEN_SCREENSAVER == 0 || displayManager.screenSaverOn == false))) || (steaming && Input >= steamReadyTemp));
+    setHardwareLed(((brewReady && (ENABLE_HARDWARE_LED_OFF_WHEN_SCREENSAVER == 0 || screenSaverOn == false))) || (steaming && Input >= steamReadyTemp));
 
     // network related stuff
     if (!forceOffline) {
