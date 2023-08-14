@@ -28,7 +28,7 @@ unsigned long mqttReconnectIncrementalBackoff = 30000; // Failsafe: add 30sec to
                                                         // connect-failure.
 unsigned int mqttMaxIncrementalBackoff = 4; // At most backoff <mqtt_max_incremenatl_backoff>+1 *
                                             // (<mqttReconnectIncrementalBackoff>ms)
-bool mqttDisabledTemporary = false;
+//bool mqttDisabledTemporary = false; // moved to MQTT.h
 unsigned long mqttConnectTime = 0; // time of last successfull mqtt connection
 unsigned long lastCheckMQTT = 0;
 

@@ -8,7 +8,9 @@
 #include "rancilio-enums.h"
 #include "MQTT.h"
 #include "blynk.h"
-#include "display.h"
+//#include "display.h"
+#include "display/DisplayManager.h"
+extern DisplayManager display;  // Declare the extern DisplayManager object to use the same instance everywhere
 
 // Wifi
 const char* hostname = HOSTNAME;
@@ -75,7 +77,7 @@ bool isWifiWorking() {
       #else
       WiFi.disconnect(true); // Delete SDK WiFi config
       #endif
-// displaymessage(State::Undefined, "Connecting Wifi", "");
+// display.displaymessage(State::Undefined, "Connecting Wifi", "");
 #ifdef STATIC_IP
       IPAddress STATIC_IP;
       IPAddress STATIC_GATEWAY;
@@ -139,7 +141,7 @@ bool InitNetworking() {
       disableBlynkTemporary();
       lastWifiConnectionAttempt = millis();
     }
-    displaymessage(State::Undefined, (char*)"Cannot connect to Wifi", (char*)"");
+    display.displaymessage(State::Undefined, (char*)"Cannot connect to Wifi", (char*)"");
     delay(1000);
     return true;
   } else {
