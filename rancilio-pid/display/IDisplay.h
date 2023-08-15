@@ -1,23 +1,27 @@
 #ifndef IDISPLAY_H
 #define IDISPLAY_H
 
-#include "../rancilio-enums.h"
-#include "../userConfig.h"
-
 class IDisplay {
 public:
-    // virtual void clearScreen() = 0;
-    // virtual void showText(const char* text) = 0;
-    // ... Add more virtual methods as needed ...
-    virtual void displaymessage(State state, char* message1, char* message2) = 0;
+    virtual void init();
+    virtual void clearBuffer();
+    virtual void setPowerSave(uint32_t is_enabled);
+    virtual void setBitmapMode(uint32_t is_transparent);
+    virtual void drawXBMP(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap);
+    virtual void setFont(const uint8_t *font);
+    virtual void setCursor(int16_t x, int16_t y);
+    virtual void print(float data, int digits);
+    virtual void print(char c);
+    virtual void print(const char* c);
+    virtual void println(const String &s);
+    virtual void drawGlyph(uint8_t x, uint8_t y, uint8_t encoding);
+    virtual void sendBuffer();
+    virtual int getUTF8Width(const char *s);
 
-    virtual bool screenSaverRunning();
-    //virtual void displaymessage(State, char*, char*);
-    virtual void displaymessage_helper(State, char*, char*);
-    virtual void showScreenSaver();
-    virtual void showMenu(char**, char**);
-    virtual void showPowerOffCountdown(char*, char*);
-    virtual void showSoftwareUpdate();
+//    virtual int getWidth();
+//    virtual int getHeight();
+    int width;
+    int height;
 };
 
 #endif // IDISPLAY_H

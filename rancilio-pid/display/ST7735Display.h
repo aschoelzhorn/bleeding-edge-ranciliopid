@@ -3,13 +3,26 @@
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7735.h>
-#include "DisplayBase.h"
 #include "IDisplay.h"
 
-class ST7735Display : public DisplayBase, public IDisplay {
+class ST7735Display : public IDisplay {
 public:
     ST7735Display(Adafruit_ST7735& tftInstance);
- void displaymessage(State state, char* message1, char* message2) override;
+
+    void init(void) override;
+    void clearBuffer() override;
+    void setPowerSave(uint32_t is_enabled) override;
+    void setBitmapMode(uint32_t is_transparent) override;
+    void drawXBMP(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) override;
+    void setFont(const uint8_t *font) override;
+    void setCursor(int16_t x, int16_t y) override;
+    void print(float data, int digits) override;
+    void print(char c) override;
+    void print(const char* c) override;
+    void println(const String &s) override;
+    void drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) override;
+    void sendBuffer() override;
+    int getUTF8Width(const char *s) override;    
 private:
     Adafruit_ST7735& tft;
 };

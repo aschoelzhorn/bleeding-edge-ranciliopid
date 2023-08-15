@@ -36,8 +36,6 @@ char* number2string(float in);
 char* number2string(int in);
 char* number2string(unsigned int in);
 
-bool mqttDisabledTemporary = false;
-
 extern const char* mqttTopicPrefix;
 extern const char* hostname;
 extern unsigned long mqttDontPublishUntilTime;

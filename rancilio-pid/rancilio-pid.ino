@@ -303,6 +303,12 @@ unsigned long previousTimerScaleStatistics = 0;
 unsigned long scaleSensorCheckTimer = 2000;
 
 /********************************************************
+ * Display
+ ******************************************************/
+#include "display/DisplayManager.h"
+DisplayManager display;  // declare the extern DisplayManager object to use the same instance everywhere
+
+/********************************************************
  * CONTROLS
  ******************************************************/
 #include "controls.h"

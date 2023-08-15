@@ -21,8 +21,24 @@
 class DisplayManager {
 public:
     DisplayManager();  // Constructor initializes the display instance
-    // ... DisplayManager methods ...
-    void displaymessage(State state, char* message1, char* message2);
+
+    virtual void init();    
+    virtual void clearBuffer();
+    virtual void setPowerSave(uint32_t is_enabled);
+    virtual void setBitmapMode(uint32_t is_transparent);
+    virtual void drawXBMP(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap);
+    virtual void setFont(const uint8_t *font);
+    virtual void setCursor(int16_t x, int16_t y);
+    virtual void print(float data, int digits);
+    virtual void print(char c);
+    virtual void print(const char* c);
+    virtual void println(const String &s);
+    virtual void drawGlyph(uint8_t x, uint8_t y, uint8_t encoding);
+    virtual void sendBuffer();
+
+    virtual int getUTF8Width(const char *s);
+    int width;
+    int height;
 
 private:
    IDisplay* display;  // Use a pointer to IDisplay to allow dynamic initialization

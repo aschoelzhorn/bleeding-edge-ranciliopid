@@ -6,47 +6,15 @@
 #include "rancilio-debug.h"
 #include "rancilio-network.h"
 
+#include "display/DisplayManager.h"
+extern DisplayManager display;  // declare the extern DisplayManager object to use the same instance everywhere
+
 unsigned long previousMillisDisplay = 0; // initialisation at the end of init()
 const long intervalDisplay = 1000; // update for display
 bool image_flip = true;
 unsigned int enableScreenSaver = ENABLE_SCREEN_SAVER;
 bool screenSaverOn = false;
-
-// Attention: refresh takes around 42ms (esp32: 26ms)!
-#if (DISPLAY_HARDWARE == 1)
-  U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE, DISPLAY_I2C_SCL, DISPLAY_I2C_SDA); // e.g. 1.3"
-#elif (DISPLAY_HARDWARE == 2)
-  U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE, DISPLAY_I2C_SCL, DISPLAY_I2C_SDA); // e.g. 0.96"
-#else
-// 23-MOSI 18-CLK
-#define OLED_CS             5
-#define OLED_DC             2
-U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, OLED_CS, OLED_DC, /* reset=*/U8X8_PIN_NONE); // e.g. 1.3"
-#endif
-
-
-void u8g2_init(void) {
-#ifdef ESP32
-#if (DISPLAY_HARDWARE == 3)
-  u8g2.setBusClock(600000);
-#else
-  u8g2.setBusClock(2000000);
-#endif
-#endif
-  u8g2.begin();
-  u8g2_prepare();
-  u8g2.setFlipMode(ROTATE_DISPLAY);
-  u8g2.clearBuffer();
-}
-
-void u8g2_prepare(void) {
-  u8g2.setFont(u8g2_font_profont11_tf);
-  u8g2.setFontRefHeightExtendedText();
-  u8g2.setDrawColor(1);
-  u8g2.setFontPosTop();
-  u8g2.setFontDirection(0);
-  u8g2.setPowerSave(0);
-}
+const unsigned int powerOffCountDownStart = 300;
 
 bool softwareUpdateCheck() {
   return activeState == State::SoftwareUpdate;
@@ -58,7 +26,7 @@ bool screenSaverCheck() {
     return true;
   } else {
     if (screenSaverOn) {
-      u8g2.setPowerSave(0);
+      display.setPowerSave(0);
       screenSaverOn = false;
     }
     return false;
@@ -110,7 +78,7 @@ void setDisplayTextState(State activeState, char* displaymessagetext, char* disp
 
 #ifdef ESP32
 void displaymessage_esp32_task(void* activeStateParam) {
-  u8g2_init();
+  display.init();
   delay(100);
   for (;;) {
     // unsigned long cur_micros_display = micros();
@@ -145,7 +113,7 @@ void displaymessage(State activeState, char* displaymessagetext, char* displayme
 #else
     if (only_once == 0) {
       only_once = 1;
-      u8g2_init();
+      display.init();
     }
     if ((millis() >= previousMillisDisplay + intervalDisplay) || previousMillisDisplay == 0) {
       previousMillisDisplay = millis();
@@ -157,8 +125,8 @@ void displaymessage(State activeState, char* displaymessagetext, char* displayme
 }
 
 void displaymessage_helper(State activeState, char* displaymessagetext, char* displaymessagetext2) {
-  u8g2.clearBuffer();
-  u8g2.setBitmapMode(1);
+  display.clearBuffer();
+  display.setBitmapMode(1);
 
   if (softwareUpdateCheck()) {
     showSoftwareUpdate();
@@ -178,21 +146,21 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
     // boot logo
     if (activeState == State::Undefined) {
       if (strcmp(MACHINE_TYPE, "rancilio") == 0) {
-        u8g2.drawXBMP(41, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
+        display.drawXBMP(41, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
       } else if (strcmp(MACHINE_TYPE, "gaggia") == 0) {
-        u8g2.drawXBMP(5, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits);
+        display.drawXBMP(5, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits);
       } else if (strcmp(MACHINE_TYPE, "ecm") == 0) {
-        u8g2.drawXBMP(11, 0, ecm_logo_width, ecm_logo_height, ecm_logo_bits);
+        display.drawXBMP(11, 0, ecm_logo_width, ecm_logo_height, ecm_logo_bits);
       } else {
-        u8g2.drawXBMP(41, 0, general_logo_width, general_logo_height, general_logo_bits);
+        display.drawXBMP(41, 0, general_logo_width, general_logo_height, general_logo_bits);
       }
     } else {
 #if (ICON_COLLECTION == 3)
       // text only mode
       if (strcmp(MACHINE_TYPE, "rancilio") == 0) {
-        u8g2.drawXBMP(0, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
+        display.drawXBMP(0, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
       } else {
-        u8g2.drawXBMP(0, 0, general_logo_width, general_logo_height, general_logo_bits);
+        display.drawXBMP(0, 0, general_logo_width, general_logo_height, general_logo_bits);
       }
 #else
       // display icons
@@ -200,61 +168,61 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
         case State::ColdStart:
         case State::StabilizeTemperature:
           if (image_flip) {
-            u8g2.drawXBMP(0, 0, icon_width, icon_height, coldstart_rotate_bits);
+            display.drawXBMP(0, 0, icon_width, icon_height, coldstart_rotate_bits);
           } else {
-            u8g2.drawXBMP(0, 0, icon_width, icon_height, coldstart_bits);
+            display.drawXBMP(0, 0, icon_width, icon_height, coldstart_bits);
           }
           break;
         case State::BrewDetected: // brew
           if (image_flip) {
-            u8g2.drawXBMP(0, 0, icon_width, icon_height, brewing_bits);
+            display.drawXBMP(0, 0, icon_width, icon_height, brewing_bits);
           } else {
-            u8g2.drawXBMP(0, 0, icon_width, icon_height, brewing_rotate_bits);
+            display.drawXBMP(0, 0, icon_width, icon_height, brewing_rotate_bits);
           }
           break;
         case State::InnerZoneDetected:
           if (brewReady) {
             if (image_flip) {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, brew_ready_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, brew_ready_bits);
             } else {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, brew_ready_rotate_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, brew_ready_rotate_bits);
             }
           } else { // inner zone
             if (image_flip) {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, brew_acceptable_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, brew_acceptable_bits);
             } else {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, brew_acceptable_rotate_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, brew_acceptable_rotate_bits);
             }
           }
           break;
         case State::OuterZoneDetected:
           if (Input >= steamReadyTemp) { // fallback: if hardware steaming button is used still show steaming icon
             if (image_flip) {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, steam_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, steam_bits);
             } else {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, steam_rotate_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, steam_rotate_bits);
             }
           } else {
             if (image_flip) {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, outer_zone_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, outer_zone_bits);
             } else {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, outer_zone_rotate_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, outer_zone_rotate_bits);
             }
           }
           break;
         case State::SteamMode: // steaming state (detected via controlAction STEAMING)
           if (Input >= steamReadyTemp) {
             if (image_flip) {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, steam_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, steam_bits);
             } else {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, steam_rotate_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, steam_rotate_bits);
             }
           } else {
             // TODO create new icons for steam phase
             if (image_flip) {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, outer_zone_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, outer_zone_bits);
             } else {
-              u8g2.drawXBMP(0, 0, icon_width, icon_height, outer_zone_rotate_bits);
+              display.drawXBMP(0, 0, icon_width, icon_height, outer_zone_rotate_bits);
             }
           }
           break;
@@ -262,9 +230,9 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
           break;
         case State::CleanMode: // cleaning state
           if (image_flip) {
-            u8g2.drawXBMP(0, 0, icon_width, icon_height, clean_bits);
+            display.drawXBMP(0, 0, icon_width, icon_height, clean_bits);
           } else {
-            u8g2.drawXBMP(0, 0, icon_width, icon_height, clean_rotate_bits);
+            display.drawXBMP(0, 0, icon_width, icon_height, clean_rotate_bits);
           }
           break;
       }
@@ -278,14 +246,14 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
       } else {
         align_right = align_right_2digits;
       }
-      u8g2.setFont(u8g2_font_profont22_tf);
-      u8g2.setCursor(align_right, 3);
-      u8g2.print(Input, 1);
-      u8g2.setFont(u8g2_font_profont10_tf);
-      u8g2.print((char)176);
-      u8g2.println("C");
-      u8g2.setFont(u8g2_font_open_iconic_embedded_1x_t);
-      u8g2.drawGlyph(align_right - 11, 3 + 6, 0x0046);
+      display.setFont(u8g2_font_profont22_tf);
+      display.setCursor(align_right, 3);
+      display.print(Input, 1);
+      display.setFont(u8g2_font_profont10_tf);
+      display.print((char)176);
+      display.println("C");
+      display.setFont(u8g2_font_open_iconic_embedded_1x_t);
+      display.drawGlyph(align_right - 11, 3 + 6, 0x0046);
 
       // if (Input <= *activeSetPoint + 5 || activeState == State::SteamMode) { //only show setpoint if we are not steaming
       if (!steaming) {
@@ -294,57 +262,57 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
         } else {
           align_right = align_right_2digits;
         }
-        u8g2.setFont(u8g2_font_profont22_tf);
-        u8g2.setCursor(align_right, 20);
-        u8g2.print(*activeSetPoint, 1);
-        u8g2.setFont(u8g2_font_profont10_tf);
-        u8g2.print((char)176);
-        u8g2.println("C");
-        u8g2.setFont(u8g2_font_open_iconic_other_1x_t);
-        u8g2.drawGlyph(align_right - 11, 20 + 6, 0x047);
+        display.setFont(u8g2_font_profont22_tf);
+        display.setCursor(align_right, 20);
+        display.print(*activeSetPoint, 1);
+        display.setFont(u8g2_font_profont10_tf);
+        display.print((char)176);
+        display.println("C");
+        display.setFont(u8g2_font_open_iconic_other_1x_t);
+        display.drawGlyph(align_right - 11, 20 + 6, 0x047);
       }
     } else if (activeState == State::BrewDetected || showLastBrewStatistics) {  //brew
       totalBrewTime = ( (OnlyPID || BREWTIME_TIMER == 0 )? *activeBrewTime : *activePreinfusion + *activePreinfusionPause + *activeBrewTime) * 1000;
       unsigned int align_right_left_value = LCDWidth - 56 - 5;
       unsigned int align_right_right_value = LCDWidth - 56 + 28;
-      u8g2.setFont(u8g2_font_profont22_tf);
-      u8g2.setCursor(align_right_left_value, 3);
-      if (brewTimer < 10000) u8g2.print("0");
+      display.setFont(u8g2_font_profont22_tf);
+      display.setCursor(align_right_left_value, 3);
+      if (brewTimer < 10000) display.print("0");
       // TODO: Use print(u8x8_u8toa(value, digits)) or print(u8x8_u16toa(value, digits)) to print numbers with constant width (numbers are prefixed with 0 if required).
-      u8g2.print(brewTimer / 1000);
+      display.print(brewTimer / 1000);
 
-      u8g2.setFont(u8g2_font_open_iconic_arrow_1x_t);
-      u8g2.drawGlyph(align_right_right_value - 8, 3 + 6, 0x04e);
-      u8g2.setFont(u8g2_font_profont22_tf);
-      u8g2.setCursor(align_right_right_value, 3);
-      u8g2.print(totalBrewTime / 1000);
+      display.setFont(u8g2_font_open_iconic_arrow_1x_t);
+      display.drawGlyph(align_right_right_value - 8, 3 + 6, 0x04e);
+      display.setFont(u8g2_font_profont22_tf);
+      display.setCursor(align_right_right_value, 3);
+      display.print(totalBrewTime / 1000);
 
-      u8g2.setFont(u8g2_font_profont10_tf);
-      u8g2.println("s");
+      display.setFont(u8g2_font_profont10_tf);
+      display.println("s");
 
       if (SCALE_SENSOR_ENABLE) {
-        u8g2.setFont(u8g2_font_profont22_tf);
-        u8g2.setCursor(align_right_left_value, 20);
+        display.setFont(u8g2_font_profont22_tf);
+        display.setCursor(align_right_left_value, 20);
         int weight = (int) currentWeight;
         //if (weight <0) weight = 0;
-        if (weight < 10) u8g2.print("0");
-        u8g2.print(weight<0?0:weight, 0);
+        if (weight < 10) display.print("0");
+        display.print(weight<0?0:weight, 0);
 
-        u8g2.setFont(u8g2_font_open_iconic_arrow_1x_t);
-        u8g2.drawGlyph(align_right_right_value - 8, 20 + 6, 0x04e);
-        u8g2.setFont(u8g2_font_profont22_tf);
-        u8g2.setCursor(align_right_right_value, 20);
-        u8g2.print(*activeScaleSensorWeightSetPoint, 0);
+        display.setFont(u8g2_font_open_iconic_arrow_1x_t);
+        display.drawGlyph(align_right_right_value - 8, 20 + 6, 0x04e);
+        display.setFont(u8g2_font_profont22_tf);
+        display.setCursor(align_right_right_value, 20);
+        display.print(*activeScaleSensorWeightSetPoint, 0);
 
-        u8g2.setFont(u8g2_font_profont10_tf);
-        u8g2.println("g");
+        display.setFont(u8g2_font_profont10_tf);
+        display.println("g");
       }
-      //u8g2.setFont(u8g2_font_open_iconic_other_1x_t);
-      u8g2.setFont(u8g2_font_open_iconic_thing_1x_t);
+      //display.setFont(u8g2_font_open_iconic_other_1x_t);
+      display.setFont(u8g2_font_open_iconic_thing_1x_t);
       if (*activeBrewTimeEndDetection == 0) {
-        u8g2.drawGlyph(align_right_left_value - 11, 3 + 6, 0x04f);
+        display.drawGlyph(align_right_left_value - 11, 3 + 6, 0x04f);
       } else {
-        u8g2.drawGlyph(align_right_left_value - 11, 20 + 6, 0x04f);
+        display.drawGlyph(align_right_left_value - 11, 20 + 6, 0x04f);
       }
     }
   }
@@ -355,43 +323,43 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 #endif
 
   //(optional) add 2 text lines
-  u8g2.setFont(u8g2_font_profont11_tf);
-  u8g2.setCursor(ALIGN_CENTER(displaymessagetext), 44); // 9 pixel space between lines
-  u8g2.print(displaymessagetext);
-  u8g2.setCursor(ALIGN_CENTER(displaymessagetext2), 53);
-  u8g2.print(displaymessagetext2);
+  display.setFont(u8g2_font_profont11_tf);
+  display.setCursor(ALIGN_CENTER(displaymessagetext), 44); // 9 pixel space between lines
+  display.print(displaymessagetext);
+  display.setCursor(ALIGN_CENTER(displaymessagetext2), 53);
+  display.print(displaymessagetext2);
 
   // add status icons
   if (millis() >= 10000) {
     byte icon_y = 64 - (status_icon_height - 1);
     byte icon_counter = 0;
     #if (ENABLE_PROFILE_STATUS > 0)
-      if (profile == 1 && ENABLE_PROFILE_STATUS == 1 && !screenSaverOn) { u8g2.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_1_bits); icon_counter++; }
-      else if (profile == 2 && !screenSaverOn) { u8g2.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_2_bits); icon_counter++; }
-      else if (profile == 3 && !screenSaverOn) { u8g2.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_3_bits); icon_counter++; }
+      if (profile == 1 && ENABLE_PROFILE_STATUS == 1 && !screenSaverOn) { display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_1_bits); icon_counter++; }
+      else if (profile == 2 && !screenSaverOn) { display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_2_bits); icon_counter++; }
+      else if (profile == 3 && !screenSaverOn) { display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_3_bits); icon_counter++; }
     #endif
     #if (ENABLE_FAILURE_STATUS_ICONS == 1)
       if (image_flip) {   
         if ((!forceOffline && !isWifiWorking()) || (forceOffline && !FORCE_OFFLINE)) {
-          u8g2.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, wifi_not_ok_bits);
+          display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, wifi_not_ok_bits);
           icon_counter++;
         }
         if (BLYNK_ENABLE && !isBlynkWorking() && !FORCE_OFFLINE) {
-          u8g2.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, blynk_not_ok_bits);
+          display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, blynk_not_ok_bits);
           icon_counter++;
         }
         if (MQTT_ENABLE && !isMqttWorking() && !FORCE_OFFLINE) {
-          u8g2.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, mqtt_not_ok_bits);
+          display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, mqtt_not_ok_bits);
           icon_counter++;
         }
     }
     #endif
   }
-  u8g2.sendBuffer();
+  display.sendBuffer();
 }
 
 void showSoftwareUpdate() {
-    u8g2.drawXBMP(41, 0, icon_width, general_logo_height, update_bits);
+    display.drawXBMP(41, 0, icon_width, general_logo_height, update_bits);
 }
 
 void showScreenSaver() {
@@ -422,16 +390,16 @@ void showScreenSaver() {
     }
   }
   if (enableScreenSaver == 1 || sleeping) {
-    if (!screenSaverOn) { u8g2.setPowerSave(1); }
+    if (!screenSaverOn) { display.setPowerSave(1); }
   } else if (enableScreenSaver == 2) {
-    u8g2.drawXBMP(screen_saver_x_pos, 0, icon_width, icon_height, brew_ready_bits);
+    display.drawXBMP(screen_saver_x_pos, 0, icon_width, icon_height, brew_ready_bits);
   } else if (enableScreenSaver == 3) {
     if (strcmp(MACHINE_TYPE, "rancilio") == 0) {
-      u8g2.drawXBMP(screen_saver_x_pos, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
+      display.drawXBMP(screen_saver_x_pos, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
     } else if (strcmp(MACHINE_TYPE, "gaggia") == 0) {
-      u8g2.drawXBMP(screen_saver_x_pos, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits); // TODO fix
+      display.drawXBMP(screen_saver_x_pos, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits); // TODO fix
     } else if (strcmp(MACHINE_TYPE, "ecm") == 0) {
-      u8g2.drawXBMP(screen_saver_x_pos, 0, ecm_logo_width, ecm_logo_height, ecm_logo_bits); // TODO fix
+      display.drawXBMP(screen_saver_x_pos, 0, ecm_logo_width, ecm_logo_height, ecm_logo_bits); // TODO fix
     }
   }
   screenSaverOn = true;
@@ -446,11 +414,11 @@ void showMenu(char** displaymessagetext, char** displaymessagetext2) {
   menuMap* menuConfigPosition = getMenuConfigPosition(menuConfig, menuPosition);
   if (!menuConfigPosition) return;
   if (image_flip) {
-    u8g2.drawXBMP(0, 0, icon_width, icon_height, menu_rotate_bits);
+    display.drawXBMP(0, 0, icon_width, icon_height, menu_rotate_bits);
   } else {
-    u8g2.drawXBMP(0, 0, icon_width, icon_height, menu_bits);
+    display.drawXBMP(0, 0, icon_width, icon_height, menu_bits);
   }
-  u8g2.setFont(u8g2_font_profont22_tf);
+  display.setFont(u8g2_font_profont22_tf);
   if (!strcmp(menuConfigPosition->value->type, "bool")) {
     bool menuValue;
     if (menuConfigPosition->value->is_double_ptr) {
@@ -458,11 +426,11 @@ void showMenu(char** displaymessagetext, char** displaymessagetext2) {
     } else {
       menuValue = *(int*)menuConfigPosition->value->ptr;
     }
-    u8g2.setCursor(align_right_2digits, 3);
+    display.setCursor(align_right_2digits, 3);
     if ( menuValue == 0) {
-      u8g2.print("Off");
+      display.print("Off");
     } else {
-      u8g2.print("On");
+      display.print("On");
     }
   }
   else if (!strcmp(menuConfigPosition->value->type, "int")) {
@@ -479,8 +447,8 @@ void showMenu(char** displaymessagetext, char** displaymessagetext2) {
             align_right = align_right_2digits;
           } else align_right = align_right_1digits_decimal;
     }
-    u8g2.setCursor(align_right, 3);
-    u8g2.print(menuValue, 1);
+    display.setCursor(align_right, 3);
+    display.print(menuValue, 1);
   } else {
     float menuValue;
     if (menuConfigPosition->value->is_double_ptr) {
@@ -495,69 +463,43 @@ void showMenu(char** displaymessagetext, char** displaymessagetext2) {
             align_right = align_right_2digits;
           } else align_right = align_right_1digits_decimal;
     }
-    u8g2.setCursor(align_right, 3);
-    u8g2.print(menuValue, 1);
+    display.setCursor(align_right, 3);
+    display.print(menuValue, 1);
   }
   char* unit = menuConfigPosition->unit;
   if (!unit) {
   } else if (strcmp(unit, "C") == 0) {
-    u8g2.setFont(u8g2_font_profont10_tf);
-    u8g2.print((char)176);
-    u8g2.println(unit);
+    display.setFont(u8g2_font_profont10_tf);
+    display.print((char)176);
+    display.println(unit);
   } else {
-    u8g2.setFont(u8g2_font_profont10_tf);
-    u8g2.println(unit);
+    display.setFont(u8g2_font_profont10_tf);
+    display.println(unit);
   }
   *displaymessagetext = (char*)"";
   *displaymessagetext2 = (char*) convertDefineToReadAbleVariable(menuConfigPosition->item);
 }
 
-/*
-char* camelCase(char line[])  {
-    static char buffer[30];
-    snprintf(buffer, sizeof(buffer), "%s", line);
-    bool active = true;
-
-    for(int i = 0; buffer[i] != '\0'; i++) {
-        if(std::isalpha(buffer[i])) {
-            if(active) {
-                buffer[i] = toupper(buffer[i]);
-                active = false;
-            } else {
-                buffer[i] = tolower(buffer[i]);
-            }
-        } else if(buffer[i] == '_') {
-            active = true;
-            buffer[i] = ' ';
-        } else if(buffer[i] == ' ') {
-            active = true;
-        }
-    }
-    return buffer;
-}
-*/
-
-  const unsigned int powerOffCountDownStart = 300;
 void showPowerOffCountdown(char* displaymessagetext, char* displaymessagetext2) {
   const unsigned int align_right_countdown_min = LCDWidth - 52;
   const unsigned int align_right_countdown_sec = LCDWidth - 52 + 20;
   static char line[30];
   powerOffTimer = ENABLE_POWER_OFF_COUNTDOWN - ((millis() - lastBrewEnd) / 1000);
   if (powerOffTimer <= powerOffCountDownStart && !brewing && !strlen(displaymessagetext) && !strlen(displaymessagetext2)) {
-    u8g2.setFont(u8g2_font_open_iconic_embedded_1x_t);
-    u8g2.drawGlyph(align_right_countdown_min - 15, 37 + 6, 0x004e);
-    u8g2.setFont(u8g2_font_profont22_tf);
-    u8g2.setCursor(align_right_countdown_min, 37);
+    display.setFont(u8g2_font_open_iconic_embedded_1x_t);
+    display.drawGlyph(align_right_countdown_min - 15, 37 + 6, 0x004e);
+    display.setFont(u8g2_font_profont22_tf);
+    display.setCursor(align_right_countdown_min, 37);
     snprintf(line, sizeof(line), "%d", int(powerOffTimer / 60));
-    u8g2.print(line);
-    u8g2.setFont(u8g2_font_profont10_tf);
-    u8g2.println("m");
-    u8g2.setFont(u8g2_font_profont22_tf);
-    u8g2.setCursor(align_right_countdown_sec, 37);
+    display.print(line);
+    display.setFont(u8g2_font_profont10_tf);
+    display.println("m");
+    display.setFont(u8g2_font_profont22_tf);
+    display.setCursor(align_right_countdown_sec, 37);
     snprintf(line, sizeof(line), "%02d", int(powerOffTimer % 60));
-    u8g2.print(line);
-    u8g2.setCursor(align_right_countdown_sec + 23, 37);
-    u8g2.setFont(u8g2_font_profont10_tf);
-    u8g2.println(" s");
+    display.print(line);
+    display.setCursor(align_right_countdown_sec + 23, 37);
+    display.setFont(u8g2_font_profont10_tf);
+    display.println(" s");
   }
 }

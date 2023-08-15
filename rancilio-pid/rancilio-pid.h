@@ -86,7 +86,7 @@ extern float setPointSteam;
 extern int pidON;
 extern unsigned int profile;
 extern const unsigned int windowSize;
-//extern bool mqttDisabledTemporary;
+extern bool mqttDisabledTemporary;
 extern unsigned int* activeBrewTimeEndDetection;
 extern unsigned long allServicesLastReconnectAttemptTime;
 extern unsigned long allservicesMinReconnectInterval;
