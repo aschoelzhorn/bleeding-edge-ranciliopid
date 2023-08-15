@@ -20,7 +20,14 @@
 
 class DisplayManager {
 public:
-    DisplayManager();  // Constructor initializes the display instance
+    // DisplayManager();  // Constructor initializes the display instance
+#ifdef U8G2_DISPLAY
+    DisplayManager(U8G2& u8g2Instance);
+#endif
+
+#ifdef ST7735_DISPLAY
+    DisplayManager(Adafruit_ST7735& tftInstance);
+#endif
 
     virtual void init();    
     virtual void clearBuffer();
@@ -37,9 +44,8 @@ public:
     virtual void sendBuffer();
 
     virtual int getUTF8Width(const char *s);
-    int width;
-    int height;
-
+    virtual int getWidth();
+    virtual int getHeight();
 private:
    IDisplay* display;  // Use a pointer to IDisplay to allow dynamic initialization
 };

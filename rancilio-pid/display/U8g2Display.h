@@ -24,6 +24,8 @@ public:
     void drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) override;
     void sendBuffer() override;
     int getUTF8Width(const char *s) override;
+    int getWidth() override;
+    int getHeight() override;
 
 private:
     U8G2& u8g2;

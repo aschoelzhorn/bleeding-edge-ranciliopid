@@ -27,11 +27,6 @@ static State activeStateBuffer;
 static char displaymessagetextBuffer[30];
 static char displaymessagetext2Buffer[30];
 
-#define LCDWidth 128 //display.width
-#define LCDHeight 64 //display.height
-//#define ALIGN_CENTER(t) ((LCDWidth - (display.getUTF8Width(t))) / 2)
-#define ALIGN_CENTER(t) ((LCDWidth - 10) / 2)
-
 extern unsigned long previousMillisDisplay; // initialisation at the end of init()
 extern const long intervalDisplay; // update for display
 extern bool image_flip;

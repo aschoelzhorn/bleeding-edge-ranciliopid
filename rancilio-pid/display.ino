@@ -124,6 +124,10 @@ void displaymessage(State activeState, char* displaymessagetext, char* displayme
   }
 }
 
+int align_center(char *text) {
+  return ((display.getWidth() -(display.getUTF8Width(text))) / 2);
+}
+
 void displaymessage_helper(State activeState, char* displaymessagetext, char* displaymessagetext2) {
   display.clearBuffer();
   display.setBitmapMode(1);
@@ -137,8 +141,8 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
   } else {
     image_flip = !image_flip;
     unsigned int align_right;
-    const unsigned int align_right_2digits = LCDWidth - 56;
-    const unsigned int align_right_3digits = LCDWidth - 56 - 12;
+    const unsigned int align_right_2digits = display.getWidth() - 56;
+    const unsigned int align_right_3digits = display.getWidth() - 56 - 12;
 
     bool showLastBrewStatistics = ( (brewTimer > 0) && (currentWeight != 0) && 
      (millis() <= brewStatisticsTimer + brewStatisticsAdditionalDisplayTime) ) ? true : false;
@@ -148,7 +152,7 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
       if (strcmp(MACHINE_TYPE, "rancilio") == 0) {
         display.drawXBMP(41, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
       } else if (strcmp(MACHINE_TYPE, "gaggia") == 0) {
-        display.drawXBMP(5, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits);
+        display.drawXBMP(1, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits);
       } else if (strcmp(MACHINE_TYPE, "ecm") == 0) {
         display.drawXBMP(11, 0, ecm_logo_width, ecm_logo_height, ecm_logo_bits);
       } else {
@@ -273,8 +277,8 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
       }
     } else if (activeState == State::BrewDetected || showLastBrewStatistics) {  //brew
       totalBrewTime = ( (OnlyPID || BREWTIME_TIMER == 0 )? *activeBrewTime : *activePreinfusion + *activePreinfusionPause + *activeBrewTime) * 1000;
-      unsigned int align_right_left_value = LCDWidth - 56 - 5;
-      unsigned int align_right_right_value = LCDWidth - 56 + 28;
+      unsigned int align_right_left_value = display.getWidth() - 56 - 5;
+      unsigned int align_right_right_value = display.getWidth() - 56 + 28;
       display.setFont(u8g2_font_profont22_tf);
       display.setCursor(align_right_left_value, 3);
       if (brewTimer < 10000) display.print("0");
@@ -324,9 +328,9 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 
   //(optional) add 2 text lines
   display.setFont(u8g2_font_profont11_tf);
-  display.setCursor(ALIGN_CENTER(displaymessagetext), 44); // 9 pixel space between lines
+  display.setCursor(align_center(displaymessagetext), 44); // 9 pixel space between lines
   display.print(displaymessagetext);
-  display.setCursor(ALIGN_CENTER(displaymessagetext2), 53);
+  display.setCursor(align_center(displaymessagetext2), 53);
   display.print(displaymessagetext2);
 
   // add status icons
@@ -375,7 +379,7 @@ void showScreenSaver() {
     screen_saver_x_pos = 11;
   }
   if (screen_saver_direction_right) {
-    if (screen_saver_x_pos + screen_saver_step <= LCDWidth - logo_width) {
+    if (screen_saver_x_pos + screen_saver_step <= display.getWidth() - logo_width) {
       screen_saver_x_pos += screen_saver_step;
     } else {
       screen_saver_x_pos -= screen_saver_step;
@@ -408,9 +412,9 @@ void showScreenSaver() {
 void showMenu(char** displaymessagetext, char** displaymessagetext2) {
   image_flip = !image_flip;
   unsigned int align_right;
-  const unsigned int align_right_2digits = LCDWidth - 56;
-  const unsigned int align_right_3digits = LCDWidth - 56 - 12;
-  const unsigned int align_right_1digits_decimal = LCDWidth - 56 + 12;
+  const unsigned int align_right_2digits = display.getWidth() - 56;
+  const unsigned int align_right_3digits = display.getWidth() - 56 - 12;
+  const unsigned int align_right_1digits_decimal = display.getWidth() - 56 + 12;
   menuMap* menuConfigPosition = getMenuConfigPosition(menuConfig, menuPosition);
   if (!menuConfigPosition) return;
   if (image_flip) {
@@ -481,8 +485,8 @@ void showMenu(char** displaymessagetext, char** displaymessagetext2) {
 }
 
 void showPowerOffCountdown(char* displaymessagetext, char* displaymessagetext2) {
-  const unsigned int align_right_countdown_min = LCDWidth - 52;
-  const unsigned int align_right_countdown_sec = LCDWidth - 52 + 20;
+  const unsigned int align_right_countdown_min = display.getWidth() - 52;
+  const unsigned int align_right_countdown_sec = display.getWidth() - 52 + 20;
   static char line[30];
   powerOffTimer = ENABLE_POWER_OFF_COUNTDOWN - ((millis() - lastBrewEnd) / 1000);
   if (powerOffTimer <= powerOffCountDownStart && !brewing && !strlen(displaymessagetext) && !strlen(displaymessagetext2)) {

@@ -2,13 +2,7 @@
 
 #include "../userConfig.h"
 
-U8g2Display::U8g2Display(U8G2& u8g2Instance) : u8g2(u8g2Instance) {
-    // Constructor implementation
-    width = u8g2.getDisplayWidth();
-    height = u8g2.getDisplayHeight();
-
-    init();
-}
+U8g2Display::U8g2Display(U8G2& u8g2Instance) : u8g2(u8g2Instance) {}
 
 void U8g2Display::init(void) {
 #ifdef ESP32
@@ -91,4 +85,12 @@ void U8g2Display::sendBuffer() {
 
 int U8g2Display::getUTF8Width(const char *s) {
     return u8g2.getUTF8Width(s);
+}
+
+int U8g2Display::getWidth() {
+    return u8g2.getDisplayWidth();
+}
+
+int U8g2Display::getHeight() {
+    return u8g2.getDisplayHeight();
 }

@@ -17,11 +17,8 @@ public:
     virtual void drawGlyph(uint8_t x, uint8_t y, uint8_t encoding);
     virtual void sendBuffer();
     virtual int getUTF8Width(const char *s);
-
-//    virtual int getWidth();
-//    virtual int getHeight();
-    int width;
-    int height;
+    virtual int getWidth();
+    virtual int getHeight();
 };
 
 #endif // IDISPLAY_H

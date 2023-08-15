@@ -1,10 +1,6 @@
 #include "ST7735Display.h"
 
-ST7735Display::ST7735Display(Adafruit_ST7735& tftInstance) : tft(tftInstance) {
-    // Constructor implementation
-    width = tft.width();
-    height = tft.height();    
-}
+ST7735Display::ST7735Display(Adafruit_ST7735& tftInstance) : tft(tftInstance) {}
 
 void ST7735Display::init() {
     
@@ -60,4 +56,12 @@ void ST7735Display::sendBuffer() {
 
 int ST7735Display::getUTF8Width(const char *s) {
     // Implement getting the width of a UTF-8 string using tft, if applicable
+}
+
+int ST7735Display::getWidth() {
+    return 240;
+}
+
+int ST7735Display::getHeight() {
+    return 240;
 }

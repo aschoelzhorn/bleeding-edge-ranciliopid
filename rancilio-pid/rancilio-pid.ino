@@ -306,7 +306,22 @@ unsigned long scaleSensorCheckTimer = 2000;
  * Display
  ******************************************************/
 #include "display/DisplayManager.h"
-DisplayManager display;  // declare the extern DisplayManager object to use the same instance everywhere
+
+// Attention: refresh takes around 42ms (esp32: 26ms)!
+#if (DISPLAY_HARDWARE == 1)
+  U8G2_SH1106_128X64_NONAME_F_HW_I2C displayInstance(U8G2_R0, U8X8_PIN_NONE, DISPLAY_I2C_SCL, DISPLAY_I2C_SDA); // e.g. 1.3"
+#elif (DISPLAY_HARDWARE == 2)
+  U8G2_SSD1306_128X64_NONAME_F_HW_I2C displayInstance(U8G2_R0, U8X8_PIN_NONE, DISPLAY_I2C_SCL, DISPLAY_I2C_SDA); // e.g. 0.96"
+#elif (DISPLAY_HARDWARE == 3)
+  // 23-MOSI 18-CLK
+  #define OLED_CS             5
+  #define OLED_DC             2
+  U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI displayInstance(U8G2_R0, OLED_CS, OLED_DC, /* reset=*/U8X8_PIN_NONE); // e.g. 1.3"
+#elif (DISPLAY_HARDWARE == 4)
+  Adafruit_ST7735 displayInstance(/* ... Pin configuration ... */);
+#endif
+
+DisplayManager display(displayInstance);  // declare the extern DisplayManager object to use the same instance everywhere
 
 /********************************************************
  * CONTROLS
