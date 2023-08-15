@@ -1605,6 +1605,7 @@ void CheckMqttConnection() {
   ******************************************************/
   void InitScale() {
 #if (SCALE_SENSOR_ENABLE)
+    displaymessage(State::Undefined, (char*)"Init scale", (char*)"");
     initScale();
     scalePowerDown();
 #endif
@@ -1615,6 +1616,7 @@ void CheckMqttConnection() {
  ******************************************************/
 void InitWaterLevelSensor() {
 	#if (WATER_LEVEL_SENSOR_ENABLE)
+ 	displaymessage(State::Undefined, (char*)"Init water level sensor", (char*)"");
 	#ifdef ESP32
 		Wire1.begin(WATER_LEVEL_SENSOR_SDA, WATER_LEVEL_SENSOR_SCL,
 			100000U); // Wire0 cannot be re-used due to core0 stickyness
@@ -1643,6 +1645,7 @@ void InitWaterLevelSensor() {
  * variables like profile-dependent ones are always fetched from eeprom.
  ******************************************************/
 void InititialSyncEeprom(bool force_read) {	 
+    displaymessage(State::Undefined, (char*)"Sync EEprom", (char*)"");
     #ifndef ESP32
     EEPROM.begin(432);
     #endif
@@ -1679,6 +1682,7 @@ void InitMqttPublishSettings() {
  * TEMP SENSOR
  ******************************************************/
 void InitTemperaturSensor() {
+    displaymessage(State::Undefined, (char*)"Init temperature sensor", (char*)"");
     isrCounter = 950; // required
     tempSensor.init();
 
@@ -1751,6 +1755,7 @@ void HandleOTA() {
 
 void InitOTA() {  
   if (ota && !forceOffline) {
+    displaymessage(State::Undefined, (char*)"Init OTA", (char*)"");
     // TODO: OTA logic has to be refactored so have clean setup() and loop() parts
     // wifi connection is done during blynk connection
     ArduinoOTA.setHostname(hostname); //  Device name for OTA
@@ -1822,10 +1827,12 @@ void setup() {
     ERROR_print("Brewswitch is already turned on after power on. Don't brew until it is turned off.\n");
     waitingForBrewSwitchOff = true;
   }
-
+  
   InitPid();
   InitScale();
-  InititialSyncEeprom(InitNetworking());
+  
+  bool eeprom_force_read = InitNetworking();
+  InititialSyncEeprom(eeprom_force_read);
 
   set_profile();
 

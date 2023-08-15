@@ -128,6 +128,7 @@ bool InitNetworking() {
     DEBUG_print("Staying offline due to forceOffline=1\n");
     return true;
   }
+  displaymessage(State::Undefined, (char*)"Init Wifi", (char*)"");
 
   checkWifi(true, 12000UL, false); // wait up to 12 seconds for connection
 
