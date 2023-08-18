@@ -1,6 +1,17 @@
 #ifndef IDISPLAY_H
 #define IDISPLAY_H
 
+enum class FontType {
+    Font10,
+    Font11,
+    Font22,
+    OpenIconicArrow,
+    OpenIconicEmbedded,
+    OpenIconicThing,
+    OpenIconicOther
+};
+
+
 class IDisplay {
 public:
     virtual void init();
@@ -8,7 +19,7 @@ public:
     virtual void setPowerSave(uint32_t is_enabled);
     virtual void setBitmapMode(uint32_t is_transparent);
     virtual void drawXBMP(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap);
-    virtual void setFont(const uint8_t *font);
+    virtual void setFont(FontType fontType);
     virtual void setCursor(int16_t x, int16_t y);
     virtual void print(float data, int digits);
     virtual void print(char c);

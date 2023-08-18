@@ -1,5 +1,7 @@
 #include "DisplayManager.h"
 
+
+
 // DisplayManager::DisplayManager() {
 
 // #ifdef U8G2_DISPLAY
@@ -17,12 +19,16 @@
 //     display = new U8g2Display(u8g2);
 // #endif
 
-// #ifdef ST7735_DISPLAY
-//     // Initialize your Adafruit_ST7735 instance
+// #ifdef ST7789_DISPLAY
+//     // Initialize your Adafruit_ST7789 instance
 //     // ...
-//     Adafruit_ST7735 tft(/* ... Pin configuration ... */);
-//     display = new ST7735Display(tft);
+//     Adafruit_ST7789 tft(/* ... Pin configuration ... */);
+//     display = new ST7789Display(tft);
 // #endif
+// }
+
+// DisplayManager::DisplayManager(TFT_eSPI& tftInstance) {
+//     display = new ST7789Display(tftInstance);
 // }
 
 
@@ -32,9 +38,9 @@ DisplayManager::DisplayManager(U8G2& u8g2Instance) {
 }
 #endif
 
-#ifdef ST7735_DISPLAY
-DisplayManager::DisplayManager(Adafruit_ST7735& tftInstance) {
-    display = new ST7735Display(tftInstance);
+#ifdef ST7789_DISPLAY
+DisplayManager::DisplayManager(TFT_eSPI& tftInstance) {
+    display = new ST7789Display(tftInstance);
 }
 #endif
 
@@ -59,8 +65,8 @@ void DisplayManager::drawXBMP(uint16_t x, uint16_t y, uint16_t w, uint16_t h, co
     display->drawXBMP(x, y, w, h, bitmap);
 }
 
-void DisplayManager::setFont(const uint8_t *font) {
-    display->setFont(font);
+void DisplayManager::setFont(FontType fontType) {
+    display->setFont(fontType);
 }
 
 void DisplayManager::setCursor(int16_t x, int16_t y) {

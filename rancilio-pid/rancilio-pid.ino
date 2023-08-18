@@ -318,10 +318,10 @@ unsigned long scaleSensorCheckTimer = 2000;
   #define OLED_DC             2
   U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI displayInstance(U8G2_R0, OLED_CS, OLED_DC, /* reset=*/U8X8_PIN_NONE); // e.g. 1.3"
 #elif (DISPLAY_HARDWARE == 4)
-  Adafruit_ST7735 displayInstance(/* ... Pin configuration ... */);
+  TFT_eSPI displayInstance = TFT_eSPI();
 #endif
 
-DisplayManager display(displayInstance);  // declare the extern DisplayManager object to use the same instance everywhere
+DisplayManager display(displayInstance);  // declare the DisplayManager object to use the same instance everywhere
 
 /********************************************************
  * CONTROLS

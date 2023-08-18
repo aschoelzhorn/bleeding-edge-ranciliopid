@@ -51,8 +51,22 @@ void U8g2Display::drawXBMP(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const
     u8g2.drawXBMP(x, y, w, h, bitmap);
 }
 
-void U8g2Display::setFont(const uint8_t *font) {
-    u8g2.setFont(font);
+void U8g2Display::setFont(FontType fontType) {
+    if (fontType == FontType::Font10) {
+        u8g2.setFont(u8g2_font_profont10_tf);
+    } else if (fontType == FontType::Font11) {
+        u8g2.setFont(u8g2_font_profont11_tf);
+    } else if (fontType == FontType::Font22) {
+        u8g2.setFont(u8g2_font_profont22_tf);
+    } else if (fontType == FontType::OpenIconicArrow) {
+        u8g2.setFont(u8g2_font_open_iconic_arrow_1x_t);
+    } else if (fontType == FontType::OpenIconicEmbedded) {
+        u8g2.setFont(u8g2_font_open_iconic_embedded_1x_t);
+    } else if (fontType == FontType::OpenIconicThing) {
+        u8g2.setFont(u8g2_font_open_iconic_thing_1x_t);
+    } else if (fontType == FontType::OpenIconicOther) {
+        u8g2.setFont(u8g2_font_open_iconic_other_1x_t);
+    }    
 }
 
 void U8g2Display::setCursor(int16_t x, int16_t y) {
