@@ -4,23 +4,25 @@
 #include <Wire.h>
 #include "IDisplay.h"
 
-#if (DISPLAY_HARDWARE < 4)
-#define U8G2_DISPLAY
-#include "U8g2Display.h"
-#endif
+#include "../userConfig.h"
 
 #if (DISPLAY_HARDWARE == 4)
 #define ST7789_DISPLAY
 #include "ST7789Display.h"
+#include <TFT_eSPI.h>
+#include <TFT_eWidget.h>
+#elif
+#define U8G2_DISPLAY
+#include "U8g2Display.h"
 #endif
 
-#if (DISPLAY_HARDWARE == 3 || DISPLAY_HARDWARE == 4)
+#if (DISPLAY_HARDWARE == 3)
 #include <SPI.h>
 #endif
 
 class DisplayManager {
 public:
-    // DisplayManager();  // Constructor initializes the display instance
+
 #ifdef U8G2_DISPLAY
     DisplayManager(U8G2& u8g2Instance);
 #endif
@@ -46,6 +48,7 @@ public:
     virtual int getUTF8Width(const char *s);
     virtual int getWidth();
     virtual int getHeight();
+
 private:
    IDisplay* display;  // Use a pointer to IDisplay to allow dynamic initialization
 };

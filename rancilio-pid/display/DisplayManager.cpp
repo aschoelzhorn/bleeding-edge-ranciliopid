@@ -1,37 +1,5 @@
 #include "DisplayManager.h"
 
-
-
-// DisplayManager::DisplayManager() {
-
-// #ifdef U8G2_DISPLAY
-// // Attention: refresh takes around 42ms (esp32: 26ms)!
-// #if (DISPLAY_HARDWARE == 1)
-//   U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE, DISPLAY_I2C_SCL, DISPLAY_I2C_SDA); // e.g. 1.3"
-// #elif (DISPLAY_HARDWARE == 2)
-//   U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE, DISPLAY_I2C_SCL, DISPLAY_I2C_SDA); // e.g. 0.96"
-// #else
-// // 23-MOSI 18-CLK
-// #define OLED_CS             5
-// #define OLED_DC             2
-// U8G2_SH1106_128X64_NONAME_F_4W_HW_SPI u8g2(U8G2_R0, OLED_CS, OLED_DC, /* reset=*/U8X8_PIN_NONE); // e.g. 1.3"
-// #endif
-//     display = new U8g2Display(u8g2);
-// #endif
-
-// #ifdef ST7789_DISPLAY
-//     // Initialize your Adafruit_ST7789 instance
-//     // ...
-//     Adafruit_ST7789 tft(/* ... Pin configuration ... */);
-//     display = new ST7789Display(tft);
-// #endif
-// }
-
-// DisplayManager::DisplayManager(TFT_eSPI& tftInstance) {
-//     display = new ST7789Display(tftInstance);
-// }
-
-
 #ifdef U8G2_DISPLAY
 DisplayManager::DisplayManager(U8G2& u8g2Instance) {
     display = new U8g2Display(u8g2Instance);
@@ -43,7 +11,6 @@ DisplayManager::DisplayManager(TFT_eSPI& tftInstance) {
     display = new ST7789Display(tftInstance);
 }
 #endif
-
 
 void DisplayManager::init() {
     display->init();

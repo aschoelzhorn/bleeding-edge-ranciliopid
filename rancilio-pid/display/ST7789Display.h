@@ -27,6 +27,7 @@ public:
     int getUTF8Width(const char *s) override;
     int getWidth() override;
     int getHeight() override;    
+
 private:
     TFT_eSPI& tft;
 };

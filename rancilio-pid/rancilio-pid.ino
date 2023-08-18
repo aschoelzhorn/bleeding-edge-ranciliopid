@@ -307,6 +307,7 @@ unsigned long scaleSensorCheckTimer = 2000;
  ******************************************************/
 #include "display/DisplayManager.h"
 
+// This codeblock should be in class Displaymanager, but then I get a SegmentationFault on init for U8g2
 // Attention: refresh takes around 42ms (esp32: 26ms)!
 #if (DISPLAY_HARDWARE == 1)
   U8G2_SH1106_128X64_NONAME_F_HW_I2C displayInstance(U8G2_R0, U8X8_PIN_NONE, DISPLAY_I2C_SCL, DISPLAY_I2C_SDA); // e.g. 1.3"
@@ -321,7 +322,7 @@ unsigned long scaleSensorCheckTimer = 2000;
   TFT_eSPI displayInstance = TFT_eSPI();
 #endif
 
-DisplayManager display(displayInstance);  // declare the DisplayManager object to use the same instance everywhere
+DisplayManager display(displayInstance);
 
 /********************************************************
  * CONTROLS

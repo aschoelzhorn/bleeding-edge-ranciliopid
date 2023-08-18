@@ -1,9 +1,16 @@
 #include "ST7789Display.h"
+#include "../userConfig.h"
 
-ST7789Display::ST7789Display(TFT_eSPI& tftInstance) : tft(tftInstance) {}
+ST7789Display::ST7789Display(TFT_eSPI& tftInstance) : tft(tftInstance) {
+}
 
 void ST7789Display::init() {
-    
+    tft.begin();
+#if (ROTATE_DISPLAY == 0)
+    tft.setRotation(0);
+#elif 
+    tft.setRotation(3);
+#endif    
 }
 
 void ST7789Display::clearBuffer() {
@@ -23,21 +30,21 @@ void ST7789Display::drawXBMP(uint16_t x, uint16_t y, uint16_t w, uint16_t h, con
 }
 
 void ST7789Display::setFont(FontType fontType) {
-    // if (fontType == FontType::Font10) {
-    //     tft.setFont(u8g2_font_profont10_tf);
-    // } else if (fontType == FontType::Font11) {
-    //     tft.setFont(u8g2_font_profont11_tf);
-    // } else if (fontType == FontType::Font22) {
-    //     tft.setFont(u8g2_font_profont22_tf);
-    // } else if (fontType == FontType::OpenIconicArrow) {
-    //     tft.setFont(u8g2_font_open_iconic_arrow_1x_t);
-    // } else if (fontType == FontType::OpenIconicEmbedded) {
-    //     tft.setFont(u8g2_font_open_iconic_embedded_1x_t);
-    // } else if (fontType == FontType::OpenIconicThing) {
-    //     tft.setFont(u8g2_font_open_iconic_thing_1x_t);
-    // } else if (fontType == FontType::OpenIconicOther) {
-    //     tft.setFont(u8g2_font_open_iconic_other_1x_t);
-    // }  
+    if (fontType == FontType::Font10) {
+        tft.setFreeFont(&FreeMono9pt7b);
+    } else if (fontType == FontType::Font11) {
+        tft.setFreeFont(&FreeMono12pt7b);
+    } else if (fontType == FontType::Font22) {
+        tft.setFreeFont(&FreeMono24pt7b);
+    } else if (fontType == FontType::OpenIconicArrow) {
+         //tft.setFreeFont(u8g2_font_open_iconic_arrow_1x_t);
+    } else if (fontType == FontType::OpenIconicEmbedded) {
+        //tft.setFreeFont(u8g2_font_open_iconic_embedded_1x_t);
+    } else if (fontType == FontType::OpenIconicThing) {
+        //tft.setFreeFont(u8g2_font_open_iconic_thing_1x_t);
+    } else if (fontType == FontType::OpenIconicOther) {
+        //tft.setFreeFont(u8g2_font_open_iconic_other_1x_t);
+    }  
 }
 
 void ST7789Display::setCursor(int16_t x, int16_t y) {
