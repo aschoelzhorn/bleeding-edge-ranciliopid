@@ -14,7 +14,7 @@ void ST7789Display::init() {
 }
 
 void ST7789Display::clearBuffer() {
-    tft.fillScreen(TFT_BLACK);  // Clear the screen
+   tft.fillScreen(TFT_BLACK);  // Clear the screen
 }
 
 void ST7789Display::setPowerSave(uint32_t is_enabled) {
@@ -26,16 +26,16 @@ void ST7789Display::setBitmapMode(uint32_t is_transparent) {
 }
 
 void ST7789Display::drawXBMP(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) {
-    tft.drawBitmap(x, y, bitmap, w, h, TFT_WHITE);  // Draw bitmap
+   tft.drawXBitmap(x, y, bitmap, w, h, TFT_WHITE);  // Draw bitmap
 }
 
 void ST7789Display::setFont(FontType fontType) {
     if (fontType == FontType::Font10) {
-        tft.setFreeFont(&FreeMono9pt7b);
+       tft.setFreeFont(&FreeMono9pt7b);
     } else if (fontType == FontType::Font11) {
-        tft.setFreeFont(&FreeMono12pt7b);
+       tft.setFreeFont(&FreeMono12pt7b);
     } else if (fontType == FontType::Font22) {
-        tft.setFreeFont(&FreeMono24pt7b);
+       tft.setFreeFont(&FreeMono24pt7b);
     } else if (fontType == FontType::OpenIconicArrow) {
          //tft.setFreeFont(u8g2_font_open_iconic_arrow_1x_t);
     } else if (fontType == FontType::OpenIconicEmbedded) {
@@ -76,7 +76,7 @@ void ST7789Display::sendBuffer() {
 }
 
 int ST7789Display::getUTF8Width(const char *s) {
-    // Implement getting the width of a UTF-8 string using tft, if applicable
+    return 8;// Implement getting the width of a UTF-8 string using tft, if applicable
 }
 
 int ST7789Display::getWidth() {
