@@ -149,22 +149,26 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 
     // boot logo
     if (activeState == State::Undefined) {
+
+    DEBUG_print("\nShow Bootlogo: %s\n", MACHINE_TYPE);
+
+
       if (strcmp(MACHINE_TYPE, "rancilio") == 0) {
-        display.drawXBMP(41, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
+        display.drawImage(41, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
       } else if (strcmp(MACHINE_TYPE, "gaggia") == 0) {
-        display.drawXBMP(1, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits);
+        display.drawImage(1, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits);
       } else if (strcmp(MACHINE_TYPE, "ecm") == 0) {
-        display.drawXBMP(11, 0, ecm_logo_width, ecm_logo_height, ecm_logo_bits);
+        display.drawImage(11, 0, ecm_logo_width, ecm_logo_height, ecm_logo_bits);
       } else {
-        display.drawXBMP(41, 0, general_logo_width, general_logo_height, general_logo_bits);
+        display.drawImage(41, 0, general_logo_width, general_logo_height, general_logo_bits);
       }
     } else {
 #if (ICON_COLLECTION == 3)
       // text only mode
       if (strcmp(MACHINE_TYPE, "rancilio") == 0) {
-        display.drawXBMP(0, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
+        display.drawImage(0, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
       } else {
-        display.drawXBMP(0, 0, general_logo_width, general_logo_height, general_logo_bits);
+        display.drawImage(0, 0, general_logo_width, general_logo_height, general_logo_bits);
       }
 #else
       // display icons
@@ -172,61 +176,61 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
         case State::ColdStart:
         case State::StabilizeTemperature:
           if (image_flip) {
-            display.drawXBMP(0, 0, icon_width, icon_height, coldstart_rotate_bits);
+            display.drawImage(0, 0, icon_width, icon_height, coldstart_rotate_bits);
           } else {
-            display.drawXBMP(0, 0, icon_width, icon_height, coldstart_bits);
+            display.drawImage(0, 0, icon_width, icon_height, coldstart_bits);
           }
           break;
         case State::BrewDetected: // brew
           if (image_flip) {
-            display.drawXBMP(0, 0, icon_width, icon_height, brewing_bits);
+            display.drawImage(0, 0, icon_width, icon_height, brewing_bits);
           } else {
-            display.drawXBMP(0, 0, icon_width, icon_height, brewing_rotate_bits);
+            display.drawImage(0, 0, icon_width, icon_height, brewing_rotate_bits);
           }
           break;
         case State::InnerZoneDetected:
           if (brewReady) {
             if (image_flip) {
-              display.drawXBMP(0, 0, icon_width, icon_height, brew_ready_bits);
+              display.drawImage(0, 0, icon_width, icon_height, brew_ready_bits);
             } else {
-              display.drawXBMP(0, 0, icon_width, icon_height, brew_ready_rotate_bits);
+              display.drawImage(0, 0, icon_width, icon_height, brew_ready_rotate_bits);
             }
           } else { // inner zone
             if (image_flip) {
-              display.drawXBMP(0, 0, icon_width, icon_height, brew_acceptable_bits);
+              display.drawImage(0, 0, icon_width, icon_height, brew_acceptable_bits);
             } else {
-              display.drawXBMP(0, 0, icon_width, icon_height, brew_acceptable_rotate_bits);
+              display.drawImage(0, 0, icon_width, icon_height, brew_acceptable_rotate_bits);
             }
           }
           break;
         case State::OuterZoneDetected:
           if (Input >= steamReadyTemp) { // fallback: if hardware steaming button is used still show steaming icon
             if (image_flip) {
-              display.drawXBMP(0, 0, icon_width, icon_height, steam_bits);
+              display.drawImage(0, 0, icon_width, icon_height, steam_bits);
             } else {
-              display.drawXBMP(0, 0, icon_width, icon_height, steam_rotate_bits);
+              display.drawImage(0, 0, icon_width, icon_height, steam_rotate_bits);
             }
           } else {
             if (image_flip) {
-              display.drawXBMP(0, 0, icon_width, icon_height, outer_zone_bits);
+              display.drawImage(0, 0, icon_width, icon_height, outer_zone_bits);
             } else {
-              display.drawXBMP(0, 0, icon_width, icon_height, outer_zone_rotate_bits);
+              display.drawImage(0, 0, icon_width, icon_height, outer_zone_rotate_bits);
             }
           }
           break;
         case State::SteamMode: // steaming state (detected via controlAction STEAMING)
           if (Input >= steamReadyTemp) {
             if (image_flip) {
-              display.drawXBMP(0, 0, icon_width, icon_height, steam_bits);
+              display.drawImage(0, 0, icon_width, icon_height, steam_bits);
             } else {
-              display.drawXBMP(0, 0, icon_width, icon_height, steam_rotate_bits);
+              display.drawImage(0, 0, icon_width, icon_height, steam_rotate_bits);
             }
           } else {
             // TODO create new icons for steam phase
             if (image_flip) {
-              display.drawXBMP(0, 0, icon_width, icon_height, outer_zone_bits);
+              display.drawImage(0, 0, icon_width, icon_height, outer_zone_bits);
             } else {
-              display.drawXBMP(0, 0, icon_width, icon_height, outer_zone_rotate_bits);
+              display.drawImage(0, 0, icon_width, icon_height, outer_zone_rotate_bits);
             }
           }
           break;
@@ -234,9 +238,9 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
           break;
         case State::CleanMode: // cleaning state
           if (image_flip) {
-            display.drawXBMP(0, 0, icon_width, icon_height, clean_bits);
+            display.drawImage(0, 0, icon_width, icon_height, clean_bits);
           } else {
-            display.drawXBMP(0, 0, icon_width, icon_height, clean_rotate_bits);
+            display.drawImage(0, 0, icon_width, icon_height, clean_rotate_bits);
           }
           break;
       }
@@ -338,22 +342,22 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
     byte icon_y = 64 - (status_icon_height - 1);
     byte icon_counter = 0;
     #if (ENABLE_PROFILE_STATUS > 0)
-      if (profile == 1 && ENABLE_PROFILE_STATUS == 1 && !screenSaverOn) { display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_1_bits); icon_counter++; }
-      else if (profile == 2 && !screenSaverOn) { display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_2_bits); icon_counter++; }
-      else if (profile == 3 && !screenSaverOn) { display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_3_bits); icon_counter++; }
+      if (profile == 1 && ENABLE_PROFILE_STATUS == 1 && !screenSaverOn) { display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_1_bits); icon_counter++; }
+      else if (profile == 2 && !screenSaverOn) { display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_2_bits); icon_counter++; }
+      else if (profile == 3 && !screenSaverOn) { display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_3_bits); icon_counter++; }
     #endif
     #if (ENABLE_FAILURE_STATUS_ICONS == 1)
       if (image_flip) {   
         if ((!forceOffline && !isWifiWorking()) || (forceOffline && !FORCE_OFFLINE)) {
-          display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, wifi_not_ok_bits);
+          display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, wifi_not_ok_bits);
           icon_counter++;
         }
         if (BLYNK_ENABLE && !isBlynkWorking() && !FORCE_OFFLINE) {
-          display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, blynk_not_ok_bits);
+          display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, blynk_not_ok_bits);
           icon_counter++;
         }
         if (MQTT_ENABLE && !isMqttWorking() && !FORCE_OFFLINE) {
-          display.drawXBMP(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, mqtt_not_ok_bits);
+          display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, mqtt_not_ok_bits);
           icon_counter++;
         }
     }
@@ -363,7 +367,7 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 }
 
 void showSoftwareUpdate() {
-    display.drawXBMP(41, 0, icon_width, general_logo_height, update_bits);
+    display.drawImage(41, 0, icon_width, general_logo_height, update_bits);
 }
 
 void showScreenSaver() {
@@ -396,14 +400,14 @@ void showScreenSaver() {
   if (enableScreenSaver == 1 || sleeping) {
     if (!screenSaverOn) { display.setPowerSave(1); }
   } else if (enableScreenSaver == 2) {
-    display.drawXBMP(screen_saver_x_pos, 0, icon_width, icon_height, brew_ready_bits);
+    display.drawImage(screen_saver_x_pos, 0, icon_width, icon_height, brew_ready_bits);
   } else if (enableScreenSaver == 3) {
     if (strcmp(MACHINE_TYPE, "rancilio") == 0) {
-      display.drawXBMP(screen_saver_x_pos, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
+      display.drawImage(screen_saver_x_pos, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
     } else if (strcmp(MACHINE_TYPE, "gaggia") == 0) {
-      display.drawXBMP(screen_saver_x_pos, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits); // TODO fix
+      display.drawImage(screen_saver_x_pos, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits); // TODO fix
     } else if (strcmp(MACHINE_TYPE, "ecm") == 0) {
-      display.drawXBMP(screen_saver_x_pos, 0, ecm_logo_width, ecm_logo_height, ecm_logo_bits); // TODO fix
+      display.drawImage(screen_saver_x_pos, 0, ecm_logo_width, ecm_logo_height, ecm_logo_bits); // TODO fix
     }
   }
   screenSaverOn = true;
@@ -418,9 +422,9 @@ void showMenu(char** displaymessagetext, char** displaymessagetext2) {
   menuMap* menuConfigPosition = getMenuConfigPosition(menuConfig, menuPosition);
   if (!menuConfigPosition) return;
   if (image_flip) {
-    display.drawXBMP(0, 0, icon_width, icon_height, menu_rotate_bits);
+    display.drawImage(0, 0, icon_width, icon_height, menu_rotate_bits);
   } else {
-    display.drawXBMP(0, 0, icon_width, icon_height, menu_bits);
+    display.drawImage(0, 0, icon_width, icon_height, menu_bits);
   }
   display.setFont(FontType::Font22);
   if (!strcmp(menuConfigPosition->value->type, "bool")) {

@@ -28,8 +28,12 @@ void DisplayManager::setBitmapMode(uint32_t is_transparent) {
     display->setBitmapMode(is_transparent);
 }
 
-void DisplayManager::drawXBMP(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) {
-    display->drawXBMP(x, y, w, h, bitmap);
+void DisplayManager::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) {
+    display->drawImage(x, y, w, h, bitmap);
+}
+
+void DisplayManager::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) {
+    display->drawImage(x, y, w, h, bitmap);
 }
 
 void DisplayManager::setFont(FontType fontType) {

@@ -1829,7 +1829,7 @@ void setup() {
 #else
   displaymessage(State::Undefined, (char*)DISPLAY_TEXT, (char*)sysVersion);
 #endif
-  delay(1000);
+  delay(5000);
 
   controlsConfig = parseControlsConfig();
   configureControlsHardware(controlsConfig);

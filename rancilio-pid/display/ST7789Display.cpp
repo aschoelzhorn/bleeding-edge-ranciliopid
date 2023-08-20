@@ -25,8 +25,15 @@ void ST7789Display::setBitmapMode(uint32_t is_transparent) {
     // Implement bitmap mode using tft, if applicable
 }
 
-void ST7789Display::drawXBMP(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) {
+void ST7789Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) {
    tft.drawXBitmap(x, y, bitmap, w, h, TFT_WHITE);  // Draw bitmap
+}
+
+void ST7789Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) {
+    tft.setSwapBytes(true);                      // swap the byte order for pushImage() - corrects endianness
+    tft.fillScreen(TFT_BLACK);
+    tft.pushImage(x,y,w,h,bitmap);
+    tft.setSwapBytes(false);
 }
 
 void ST7789Display::setFont(FontType fontType) {
@@ -37,13 +44,13 @@ void ST7789Display::setFont(FontType fontType) {
     } else if (fontType == FontType::Font22) {
        tft.setFreeFont(&FreeMono24pt7b);
     } else if (fontType == FontType::OpenIconicArrow) {
-         //tft.setFreeFont(u8g2_font_open_iconic_arrow_1x_t);
+         tft.setFreeFont(&FreeMono12pt7b);
     } else if (fontType == FontType::OpenIconicEmbedded) {
-        //tft.setFreeFont(u8g2_font_open_iconic_embedded_1x_t);
+        tft.setFreeFont(&FreeMono12pt7b);
     } else if (fontType == FontType::OpenIconicThing) {
-        //tft.setFreeFont(u8g2_font_open_iconic_thing_1x_t);
+        tft.setFreeFont(&FreeMono12pt7b);
     } else if (fontType == FontType::OpenIconicOther) {
-        //tft.setFreeFont(u8g2_font_open_iconic_other_1x_t);
+        tft.setFreeFont(&FreeMono12pt7b);
     }  
 }
 

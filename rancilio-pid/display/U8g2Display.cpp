@@ -47,8 +47,12 @@ void U8g2Display::setBitmapMode(uint32_t is_transparent) {
     }
 }
 
-void U8g2Display::drawXBMP(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) {
+void U8g2Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) {
     u8g2.drawXBMP(x, y, w, h, bitmap);
+}
+
+void U8g2Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) {
+    //u8g2.drawXBMP(x, y, w, h, bitmap); // TODO: show not supported image
 }
 
 void U8g2Display::setFont(FontType fontType) {

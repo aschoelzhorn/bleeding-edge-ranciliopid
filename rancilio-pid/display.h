@@ -7,7 +7,13 @@ const int Display = DISPLAY_HARDWARE;
 #include "rancilio-pid.h"
 #include "rancilio-enums.h"
 #include "controls.h"
+
+#if DISPLAY_HARDWARE == 4
+#include "icon_shared_color.h"
+#else
 #include "icon_shared.h"
+#endif
+
 #if (ENABLE_BIG_STATUS_ICONS)
 #include "icon_big.h"
 #else
