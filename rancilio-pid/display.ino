@@ -254,10 +254,10 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
       } else {
         align_right = align_right_2digits;
       }
-      display.setFont(FontType::Font22);
+      display.setFont(FontType::Big);
       display.setCursor(align_right, 3);
       display.print(Input, 1);
-      display.setFont(FontType::Font10);
+      display.setFont(FontType::Small);
       display.print((char)176);
       display.println("C");
       display.setFont(FontType::OpenIconicEmbedded);
@@ -270,10 +270,10 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
         } else {
           align_right = align_right_2digits;
         }
-        display.setFont(FontType::Font22);
+        display.setFont(FontType::Big);
         display.setCursor(align_right, 20);
         display.print(*activeSetPoint, 1);
-        display.setFont(FontType::Font10);
+        display.setFont(FontType::Small);
         display.print((char)176);
         display.println("C");
         display.setFont(FontType::OpenIconicOther);
@@ -283,7 +283,7 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
       totalBrewTime = ( (OnlyPID || BREWTIME_TIMER == 0 )? *activeBrewTime : *activePreinfusion + *activePreinfusionPause + *activeBrewTime) * 1000;
       unsigned int align_right_left_value = display.getWidth() - 56 - 5;
       unsigned int align_right_right_value = display.getWidth() - 56 + 28;
-      display.setFont(FontType::Font22);
+      display.setFont(FontType::Big);
       display.setCursor(align_right_left_value, 3);
       if (brewTimer < 10000) display.print("0");
       // TODO: Use print(u8x8_u8toa(value, digits)) or print(u8x8_u16toa(value, digits)) to print numbers with constant width (numbers are prefixed with 0 if required).
@@ -291,15 +291,15 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 
       display.setFont(FontType::OpenIconicArrow);
       display.drawGlyph(align_right_right_value - 8, 3 + 6, 0x04e);
-      display.setFont(FontType::Font22);
+      display.setFont(FontType::Big);
       display.setCursor(align_right_right_value, 3);
       display.print(totalBrewTime / 1000);
 
-      display.setFont(FontType::Font10);
+      display.setFont(FontType::Small);
       display.println("s");
 
       if (SCALE_SENSOR_ENABLE) {
-        display.setFont(FontType::Font22);
+        display.setFont(FontType::Big);
         display.setCursor(align_right_left_value, 20);
         int weight = (int) currentWeight;
         //if (weight <0) weight = 0;
@@ -308,11 +308,11 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 
         display.setFont(FontType::OpenIconicArrow);
         display.drawGlyph(align_right_right_value - 8, 20 + 6, 0x04e);
-        display.setFont(FontType::Font22);
+        display.setFont(FontType::Big);
         display.setCursor(align_right_right_value, 20);
         display.print(*activeScaleSensorWeightSetPoint, 0);
 
-        display.setFont(FontType::Font10);
+        display.setFont(FontType::Small);
         display.println("g");
       }
       //display.setFont(FontType::OpenIconicOther);
@@ -331,7 +331,7 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 #endif
 
   //(optional) add 2 text lines
-  display.setFont(FontType::Font11);
+  display.setFont(FontType::Normal);
   display.setCursor(align_center(displaymessagetext), 44); // 9 pixel space between lines
   display.print(displaymessagetext);
   display.setCursor(align_center(displaymessagetext2), 53);
@@ -426,7 +426,7 @@ void showMenu(char** displaymessagetext, char** displaymessagetext2) {
   } else {
     display.drawImage(0, 0, icon_width, icon_height, menu_bits);
   }
-  display.setFont(FontType::Font22);
+  display.setFont(FontType::Big);
   if (!strcmp(menuConfigPosition->value->type, "bool")) {
     bool menuValue;
     if (menuConfigPosition->value->is_double_ptr) {
@@ -477,11 +477,11 @@ void showMenu(char** displaymessagetext, char** displaymessagetext2) {
   char* unit = menuConfigPosition->unit;
   if (!unit) {
   } else if (strcmp(unit, "C") == 0) {
-    display.setFont(FontType::Font10);
+    display.setFont(FontType::Small);
     display.print((char)176);
     display.println(unit);
   } else {
-    display.setFont(FontType::Font10);
+    display.setFont(FontType::Small);
     display.println(unit);
   }
   *displaymessagetext = (char*)"";
@@ -496,18 +496,18 @@ void showPowerOffCountdown(char* displaymessagetext, char* displaymessagetext2) 
   if (powerOffTimer <= powerOffCountDownStart && !brewing && !strlen(displaymessagetext) && !strlen(displaymessagetext2)) {
     display.setFont(FontType::OpenIconicEmbedded);
     display.drawGlyph(align_right_countdown_min - 15, 37 + 6, 0x004e);
-    display.setFont(FontType::Font22);
+    display.setFont(FontType::Big);
     display.setCursor(align_right_countdown_min, 37);
     snprintf(line, sizeof(line), "%d", int(powerOffTimer / 60));
     display.print(line);
-    display.setFont(FontType::Font10);
+    display.setFont(FontType::Small);
     display.println("m");
-    display.setFont(FontType::Font22);
+    display.setFont(FontType::Big);
     display.setCursor(align_right_countdown_sec, 37);
     snprintf(line, sizeof(line), "%02d", int(powerOffTimer % 60));
     display.print(line);
     display.setCursor(align_right_countdown_sec + 23, 37);
-    display.setFont(FontType::Font10);
+    display.setFont(FontType::Small);
     display.println(" s");
   }
 }

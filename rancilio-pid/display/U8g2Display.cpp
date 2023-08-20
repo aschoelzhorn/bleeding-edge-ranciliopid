@@ -56,11 +56,11 @@ void U8g2Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, cons
 }
 
 void U8g2Display::setFont(FontType fontType) {
-    if (fontType == FontType::Font10) {
+    if (fontType == FontType::Small) {
         u8g2.setFont(u8g2_font_profont10_tf);
-    } else if (fontType == FontType::Font11) {
+    } else if (fontType == FontType::Normal) {
         u8g2.setFont(u8g2_font_profont11_tf);
-    } else if (fontType == FontType::Font22) {
+    } else if (fontType == FontType::Big) {
         u8g2.setFont(u8g2_font_profont22_tf);
     } else if (fontType == FontType::OpenIconicArrow) {
         u8g2.setFont(u8g2_font_open_iconic_arrow_1x_t);

@@ -2,9 +2,9 @@
 #define IDISPLAY_H
 
 enum class FontType {
-    Font10,
-    Font11,
-    Font22,
+    Small,
+    Normal,
+    Big,
     OpenIconicArrow,
     OpenIconicEmbedded,
     OpenIconicThing,

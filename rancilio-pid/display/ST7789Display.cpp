@@ -37,12 +37,12 @@ void ST7789Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, co
 }
 
 void ST7789Display::setFont(FontType fontType) {
-    if (fontType == FontType::Font10) {
-       tft.setFreeFont(&FreeMono9pt7b);
-    } else if (fontType == FontType::Font11) {
-       tft.setFreeFont(&FreeMono12pt7b);
-    } else if (fontType == FontType::Font22) {
-       tft.setFreeFont(&FreeMono24pt7b);
+    if (fontType == FontType::Small) {
+       tft.setFreeFont(&FreeSans12pt7b);
+    } else if (fontType == FontType::Normal) {
+       tft.setFreeFont(&FreeSans18pt7b);
+    } else if (fontType == FontType::Big) {
+       tft.setFreeFont(&FreeSans24pt7b);
     } else if (fontType == FontType::OpenIconicArrow) {
          tft.setFreeFont(&FreeMono12pt7b);
     } else if (fontType == FontType::OpenIconicEmbedded) {
@@ -59,19 +59,19 @@ void ST7789Display::setCursor(int16_t x, int16_t y) {
 }
 
 void ST7789Display::print(float data, int digits) {
-    tft.print(data, digits);  // Print float data
+    tft.drawFloat(data, digits, tft.getCursorX(), tft.getCursorY());  // Print float data
 }
 
 void ST7789Display::print(char c) {
-    tft.print(c);  // Print a character
+    tft.drawChar(c, tft.getCursorX(), tft.getCursorY());  // Print a character
 }
 
 void ST7789Display::print(const char* c) {
-    tft.print(c);  // Print a string
+    tft.drawString(c, tft.getCursorX(), tft.getCursorY());  // Print a string
 }
 
 void ST7789Display::println(const String &s) {
-    tft.println(s);  // Print a string followed by a newline
+    tft.drawString(s, tft.getCursorX(), tft.getCursorY());  // Print a string followed by a newline
 }
 
 void ST7789Display::drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) {
