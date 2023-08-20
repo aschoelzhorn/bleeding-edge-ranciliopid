@@ -11,7 +11,7 @@
 #include "ST7789Display.h"
 #include <TFT_eSPI.h>
 #include <TFT_eWidget.h>
-#elif
+#else
 #define U8G2_DISPLAY
 #include "U8g2Display.h"
 #endif
