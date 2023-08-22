@@ -28,6 +28,10 @@ void DisplayManager::setBitmapMode(uint32_t is_transparent) {
     display->setBitmapMode(is_transparent);
 }
 
+void DisplayManager::clearRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
+    display->clearRect(x, y, w, h);
+};
+
 void DisplayManager::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) {
     display->drawImage(x, y, w, h, bitmap);
 }
@@ -68,9 +72,9 @@ void DisplayManager::sendBuffer() {
     display->sendBuffer();
 }
 
-int DisplayManager::getUTF8Width(const char *s) {
-    return display->getUTF8Width(s);
-}
+// int DisplayManager::getUTF8Width(const char *s) {
+//     return display->getUTF8Width(s);
+// }
 
 int DisplayManager::getWidth() {
     return display->getWidth();
@@ -78,4 +82,8 @@ int DisplayManager::getWidth() {
 
 int DisplayManager::getHeight() {
     return display->getHeight();
+}
+
+void DisplayManager::printCentered(const char* c, uint16_t y) {
+    display->printCentered(c, y);
 }

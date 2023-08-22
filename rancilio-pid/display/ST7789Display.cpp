@@ -6,6 +6,7 @@ ST7789Display::ST7789Display(TFT_eSPI& tftInstance) : tft(tftInstance) {
 
 void ST7789Display::init() {
     tft.begin();
+    tft.fillScreen(TFT_BLACK);
 #if (ROTATE_DISPLAY == 0)
     tft.setRotation(0);
 #elif 
@@ -14,7 +15,11 @@ void ST7789Display::init() {
 }
 
 void ST7789Display::clearBuffer() {
-   tft.fillScreen(TFT_BLACK);  // Clear the screen
+   // No need to clear a buffer for this library
+}
+
+void ST7789Display::sendBuffer() {
+    // No need to send a buffer for this library
 }
 
 void ST7789Display::setPowerSave(uint32_t is_enabled) {
@@ -31,7 +36,7 @@ void ST7789Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, co
 
 void ST7789Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) {
     tft.setSwapBytes(true);                      // swap the byte order for pushImage() - corrects endianness
-    tft.fillScreen(TFT_BLACK);
+    //tft.fillScreen(TFT_BLACK);
     tft.pushImage(x,y,w,h,bitmap);
     tft.setSwapBytes(false);
 }
@@ -63,14 +68,17 @@ void ST7789Display::print(float data, int digits) {
 }
 
 void ST7789Display::print(char c) {
+tft.setTextDatum(MC_DATUM);
     tft.drawChar(c, tft.getCursorX(), tft.getCursorY());  // Print a character
 }
 
 void ST7789Display::print(const char* c) {
+tft.setTextDatum(MC_DATUM);    
     tft.drawString(c, tft.getCursorX(), tft.getCursorY());  // Print a string
 }
 
 void ST7789Display::println(const String &s) {
+tft.setTextDatum(MC_DATUM);    
     tft.drawString(s, tft.getCursorX(), tft.getCursorY());  // Print a string followed by a newline
 }
 
@@ -78,18 +86,23 @@ void ST7789Display::drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) {
     // Implement drawing a glyph using tft, if applicable
 }
 
-void ST7789Display::sendBuffer() {
-    // No need to send a buffer for this library
-}
+// int ST7789Display::getUTF8Width(const char *s) {
+//     return 8;// Implement getting the width of a UTF-8 string using tft, if applicable
+// }
 
-int ST7789Display::getUTF8Width(const char *s) {
-    return 8;// Implement getting the width of a UTF-8 string using tft, if applicable
+void ST7789Display::clearRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
+    tft.fillRect(x, y, w, h, TFT_BLACK);
 }
 
 int ST7789Display::getWidth() {
-    return 240;
+    return tft.width();
 }
 
 int ST7789Display::getHeight() {
-    return 240;
+    return tft.height();
+}
+
+void ST7789Display::printCentered(const char* c, uint16_t y) {
+    tft.setTextDatum(MC_DATUM);
+    tft.drawString(c, 0, y);  // Print a string
 }

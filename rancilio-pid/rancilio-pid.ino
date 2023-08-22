@@ -1611,6 +1611,7 @@ void CheckMqttConnection() {
   * Init PID
   ******************************************************/
   void InitPid() {
+    showBootMessage((char*)"Init scale");
     bPID.SetSampleTime(windowSize);
     bPID.SetOutputLimits(0, windowSize);
     bPID.SetMode(AUTOMATIC);
@@ -1621,7 +1622,6 @@ void CheckMqttConnection() {
   ******************************************************/
   void InitScale() {
 #if (SCALE_SENSOR_ENABLE)
-    displaymessage(State::Undefined, (char*)"Init scale", (char*)"");
     initScale();
     scalePowerDown();
 #endif
@@ -1632,7 +1632,7 @@ void CheckMqttConnection() {
  ******************************************************/
 void InitWaterLevelSensor() {
 	#if (WATER_LEVEL_SENSOR_ENABLE)
- 	displaymessage(State::Undefined, (char*)"Init water level sensor", (char*)"");
+ 	showBootMessage((char*)"Init water level sensor");
 	#ifdef ESP32
 		Wire1.begin(WATER_LEVEL_SENSOR_SDA, WATER_LEVEL_SENSOR_SCL,
 			100000U); // Wire0 cannot be re-used due to core0 stickyness
@@ -1644,7 +1644,7 @@ void InitWaterLevelSensor() {
 		waterSensor.setTimeout(300);
 		if (!waterSensor.init()) {
 		  ERROR_println("Water level sensor cannot be initialized");
-		  displaymessage(State::Undefined, (char*)"Water sensor defect", (char*)"");
+		  showBootMessage((char*)"Water sensor defect");
 		}
 		// increased accuracy by increase timing budget to 200 ms
 		waterSensor.setMeasurementTimingBudget(200000);
@@ -1661,7 +1661,7 @@ void InitWaterLevelSensor() {
  * variables like profile-dependent ones are always fetched from eeprom.
  ******************************************************/
 void InititialSyncEeprom(bool force_read) {	 
-    displaymessage(State::Undefined, (char*)"Sync EEprom", (char*)"");
+    showBootMessage((char*)"Sync EEprom");
     #ifndef ESP32
     EEPROM.begin(432);
     #endif
@@ -1698,7 +1698,7 @@ void InitMqttPublishSettings() {
  * TEMP SENSOR
  ******************************************************/
 void InitTemperaturSensor() {
-    displaymessage(State::Undefined, (char*)"Init temperature sensor", (char*)"");
+    showBootMessage((char*)"Init temp. sensor");
     isrCounter = 950; // required
     tempSensor.init();
 
@@ -1710,7 +1710,7 @@ void InitTemperaturSensor() {
         secondlatestTemperature = Input;
         break;
       }
-      displaymessage(State::Undefined, (char*)"Temp sensor defect", (char*)"");
+      showBootMessage((char*)"Temp. sensor defect");
       ERROR_print("Temp sensor defect. Cannot read consistent values. Retrying\n");
       HandleOTA();
       delay(1000);
@@ -1771,7 +1771,7 @@ void HandleOTA() {
 
 void InitOTA() {  
   if (ota && !forceOffline) {
-    displaymessage(State::Undefined, (char*)"Init OTA", (char*)"");
+    //displaymessage(State::Undefined, (char*)"Init OTA", (char*)"");
     // TODO: OTA logic has to be refactored so have clean setup() and loop() parts
     // wifi connection is done during blynk connection
     ArduinoOTA.setHostname(hostname); //  Device name for OTA
@@ -1818,16 +1818,18 @@ void setup() {
   // required for remoteDebug to work
   WiFi.mode(WIFI_STA);
 #endif
-
+  
   InitDebug();
-
   DefineTriggerTypes();
   InitPins();
 
+  InitDisplay();
+  showBootLogo();
+
 #if defined(OVERWRITE_VERSION_DISPLAY_TEXT)
-  displaymessage(State::Undefined, (char*)DISPLAY_TEXT, (char*)OVERWRITE_VERSION_DISPLAY_TEXT);
+  showBootMessage((char*)DISPLAY_TEXT, (char*)OVERWRITE_VERSION_DISPLAY_TEXT);
 #else
-  displaymessage(State::Undefined, (char*)DISPLAY_TEXT, (char*)sysVersion);
+  showBootMessage((char*)DISPLAY_TEXT, (char*)sysVersion);
 #endif
   delay(5000);
 
@@ -1878,4 +1880,8 @@ void setup() {
   pidComputeLastRunTime = currentTime;
 
   DEBUG_print("End of setup()\n");
+
+  //hideBootLogo();
+  //hideBootMessage();
+  clearDisplay();
 }

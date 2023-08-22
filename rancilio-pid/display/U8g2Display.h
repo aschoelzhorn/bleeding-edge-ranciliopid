@@ -24,9 +24,11 @@ public:
     void println(const String &s) override;
     void drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) override;
     void sendBuffer() override;
-    int getUTF8Width(const char *s) override;
+    // int getUTF8Width(const char *s) override;
     int getWidth() override;
     int getHeight() override;
+    void clearRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h) override;
+    void printCentered(const char* c, uint16_t y) override;
 
 private:
     U8G2& u8g2;

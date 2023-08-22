@@ -47,8 +47,17 @@ void U8g2Display::setBitmapMode(uint32_t is_transparent) {
     }
 }
 
+void U8g2Display::clearRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
+    u8g2.setDrawColor(0);
+    u8g2.drawBox(x, y, w, h);
+    u8g2.sendBuffer();
+    u8g2.setDrawColor(1);
+    u8g2.sendBuffer();
+}
+
 void U8g2Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) {
     u8g2.drawXBMP(x, y, w, h, bitmap);
+    u8g2.sendBuffer();
 }
 
 void U8g2Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) {
@@ -101,9 +110,9 @@ void U8g2Display::sendBuffer() {
     u8g2.sendBuffer();
 }
 
-int U8g2Display::getUTF8Width(const char *s) {
-    return u8g2.getUTF8Width(s);
-}
+// int U8g2Display::getUTF8Width(const char *s) {
+//     return u8g2.getUTF8Width(s);
+// }
 
 int U8g2Display::getWidth() {
     return u8g2.getDisplayWidth();
@@ -111,4 +120,12 @@ int U8g2Display::getWidth() {
 
 int U8g2Display::getHeight() {
     return u8g2.getDisplayHeight();
+}
+
+void U8g2Display::printCentered(const char* c, uint16_t y) {
+    int textWidth = u8g2.getStrWidth(c);
+    int centerX = (u8g2.getWidth() - textWidth) / 2;
+    u8g2.setCursor(centerX, y);
+    u8g2.print(c);
+    u8g2.sendBuffer();
 }

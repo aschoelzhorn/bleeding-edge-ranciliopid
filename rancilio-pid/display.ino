@@ -16,6 +16,10 @@ unsigned int enableScreenSaver = ENABLE_SCREEN_SAVER;
 bool screenSaverOn = false;
 const unsigned int powerOffCountDownStart = 300;
 
+void InitDisplay() {
+  display.init();
+}
+
 bool softwareUpdateCheck() {
   return activeState == State::SoftwareUpdate;
 }
@@ -78,7 +82,7 @@ void setDisplayTextState(State activeState, char* displaymessagetext, char* disp
 
 #ifdef ESP32
 void displaymessage_esp32_task(void* activeStateParam) {
-  display.init();
+  //display.init();
   delay(100);
   for (;;) {
     // unsigned long cur_micros_display = micros();
@@ -89,6 +93,19 @@ void displaymessage_esp32_task(void* activeStateParam) {
   vTaskDelete(NULL);
 }
 #endif
+
+void displayBootMessage(char* displaymessagetext, char* displaymessagetext2) {
+  snprintf((char*)displaymessagetextBuffer, sizeof(displaymessagetextBuffer), "%s", displaymessagetext);
+  snprintf((char*)displaymessagetext2Buffer, sizeof(displaymessagetext2Buffer), "%s", displaymessagetext2);
+
+    //(optional) add 2 text lines
+  display.setFont(FontType::Normal);
+// combine setcursor and print into one call eg printCenter(string, x, y)
+  display.setCursor(0, logo_height + 9); // 9 pixel space between logo and lines
+  display.print(displaymessagetext);
+  display.setCursor(0, logo_height + 9 + 53);
+  display.print(displaymessagetext2);
+}
 
 void displaymessage(State activeState, char* displaymessagetext, char* displaymessagetext2) {
   if (Display > 0) {
@@ -113,7 +130,7 @@ void displaymessage(State activeState, char* displaymessagetext, char* displayme
 #else
     if (only_once == 0) {
       only_once = 1;
-      display.init();
+      //display.init();
     }
     if ((millis() >= previousMillisDisplay + intervalDisplay) || previousMillisDisplay == 0) {
       previousMillisDisplay = millis();
@@ -124,8 +141,38 @@ void displaymessage(State activeState, char* displaymessagetext, char* displayme
   }
 }
 
-int align_center(char *text) {
-  return ((display.getWidth() -(display.getUTF8Width(text))) / 2);
+// int align_center(char *text) {
+//   return ((display.getWidth() -(display.getUTF8Width(text))) / 2);
+// }
+
+void showBootLogo() {
+  int posX = (display.getWidth() - logo_width) / 2;
+  display.drawImage(posX, 0, logo_width, logo_height, logo_bits);
+}
+
+void hideBootLogo() {
+  int posX = (display.getWidth() - logo_width) / 2;
+  display.clearRect(posX, 0, logo_width, logo_height);
+}
+
+void clearDisplay() {
+  display.clearBuffer();
+}
+
+void showBootMessage(char* displaymessagetext) {
+  showBootMessage(displaymessagetext, (char*)"");
+}
+
+void showBootMessage(char* displaymessagetext, char* displaymessagetext2) {
+  display.setFont(FontType::Normal);
+  hideBootMessage();
+  int posY = logo_height;
+  display.printCentered(displaymessagetext, posY);
+}
+
+void hideBootMessage() {
+  int posY = logo_height;
+  display.clearRect(0, posY, display.getWidth(), display.getHeight() - posY);
 }
 
 void displaymessage_helper(State activeState, char* displaymessagetext, char* displaymessagetext2) {
@@ -147,22 +194,6 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
     bool showLastBrewStatistics = ( (brewTimer > 0) && (currentWeight != 0) && 
      (millis() <= brewStatisticsTimer + brewStatisticsAdditionalDisplayTime) ) ? true : false;
 
-    // boot logo
-    if (activeState == State::Undefined) {
-
-    DEBUG_print("\nShow Bootlogo: %s\n", MACHINE_TYPE);
-
-
-      if (strcmp(MACHINE_TYPE, "rancilio") == 0) {
-        display.drawImage(41, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
-      } else if (strcmp(MACHINE_TYPE, "gaggia") == 0) {
-        display.drawImage(1, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits);
-      } else if (strcmp(MACHINE_TYPE, "ecm") == 0) {
-        display.drawImage(11, 0, ecm_logo_width, ecm_logo_height, ecm_logo_bits);
-      } else {
-        display.drawImage(41, 0, general_logo_width, general_logo_height, general_logo_bits);
-      }
-    } else {
 #if (ICON_COLLECTION == 3)
       // text only mode
       if (strcmp(MACHINE_TYPE, "rancilio") == 0) {
@@ -245,7 +276,7 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
           break;
       }
 #endif
-    }
+   // }
 
     // display current and target temperature
     if (activeState != State::Undefined && activeState != State::BrewDetected && !showLastBrewStatistics) {
@@ -332,10 +363,10 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 
   //(optional) add 2 text lines
   display.setFont(FontType::Normal);
-  display.setCursor(align_center(displaymessagetext), 44); // 9 pixel space between lines
-  display.print(displaymessagetext);
-  display.setCursor(align_center(displaymessagetext2), 53);
-  display.print(displaymessagetext2);
+  //display.setCursor(align_center(displaymessagetext), 44); // 9 pixel space between lines
+  display.printCentered(displaymessagetext, 44);
+  //display.setCursor(align_center(displaymessagetext2), 53);
+  display.printCentered(displaymessagetext2, 53);
 
   // add status icons
   if (millis() >= 10000) {
@@ -374,16 +405,16 @@ void showScreenSaver() {
   static unsigned int screen_saver_x_pos = 41;
   static bool screen_saver_direction_right = true;
   const int unsigned screen_saver_step = 4;
-  unsigned int logo_width = icon_width;
+  unsigned int logo_width_tmp = icon_width;
   if (enableScreenSaver == 3 && strcmp(MACHINE_TYPE, "gaggia") == 0) {
-    logo_width = 125; // hack which will result in logo only moving left
+    logo_width_tmp = 125; // hack which will result in logo only moving left
     screen_saver_x_pos = 5;
   } else if (enableScreenSaver == 3 && strcmp(MACHINE_TYPE, "ecm") == 0) {
-    logo_width = 125; // hack which will result in logo only moving left
+    logo_width_tmp = 125; // hack which will result in logo only moving left
     screen_saver_x_pos = 11;
   }
   if (screen_saver_direction_right) {
-    if (screen_saver_x_pos + screen_saver_step <= display.getWidth() - logo_width) {
+    if (screen_saver_x_pos + screen_saver_step <= display.getWidth() - logo_width_tmp) {
       screen_saver_x_pos += screen_saver_step;
     } else {
       screen_saver_x_pos -= screen_saver_step;
@@ -402,13 +433,7 @@ void showScreenSaver() {
   } else if (enableScreenSaver == 2) {
     display.drawImage(screen_saver_x_pos, 0, icon_width, icon_height, brew_ready_bits);
   } else if (enableScreenSaver == 3) {
-    if (strcmp(MACHINE_TYPE, "rancilio") == 0) {
-      display.drawImage(screen_saver_x_pos, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
-    } else if (strcmp(MACHINE_TYPE, "gaggia") == 0) {
-      display.drawImage(screen_saver_x_pos, 0, gaggia_logo_width, gaggia_logo_height, gaggia_logo_bits); // TODO fix
-    } else if (strcmp(MACHINE_TYPE, "ecm") == 0) {
-      display.drawImage(screen_saver_x_pos, 0, ecm_logo_width, ecm_logo_height, ecm_logo_bits); // TODO fix
-    }
+    display.drawImage(screen_saver_x_pos, 0, logo_width_tmp, logo_height, logo_bits);
   }
   screenSaverOn = true;
 }

@@ -8,7 +8,21 @@ const int Display = DISPLAY_HARDWARE;
 #include "rancilio-enums.h"
 #include "controls.h"
 
+#define MACHINE_TYPE_GAGGIA
+// Uncomment the appropriate MACHINE_TYPE_XYZ line based on your need
+//#define MACHINE_TYPE_ECM
+//#define MACHINE_TYPE_RANCILIO
+
 #if DISPLAY_HARDWARE == 4
+#ifdef MACHINE_TYPE_GAGGIA
+#include "icon_gaggia_color.h"
+#elif defined(MACHINE_TYPE_ECM)
+#include "icon_ecm_color.h"
+#elif defined(MACHINE_TYPE_RANCILIO)
+#include "icon_rancilio_color.h"
+#else
+#include "icon_generic_color_.h"
+#endif
 #include "icon_shared_color.h"
 #else
 #include "icon_shared.h"
@@ -41,7 +55,10 @@ extern bool screenSaverOn;
 const int brewReadyWaitPeriod = 300000;
 const int userActivityWaitPeriod = 180000;
 
-void prepare(void);
+void InitDisplay();
+
+
+// void prepare(void);
 bool screenSaverRunning();
 void displaymessage(State, char*, char*);
 void displaymessage_helper(State, char*, char*);
@@ -49,6 +66,16 @@ void showScreenSaver();
 void showMenu(char**, char**);
 void showPowerOffCountdown(char*, char*);
 void showSoftwareUpdate();
+
+void showBootLogo();
+void hideBootLogo();
+
+void displayMessageCentered(char*, uint16_t y);
+void showBootMessage(char*);
+void showBootMessage(char*, char*);
+void hideBootMessage();
+
+void clearDisplay();
 
 extern bool brewReady;
 extern unsigned long lastBrewReady;

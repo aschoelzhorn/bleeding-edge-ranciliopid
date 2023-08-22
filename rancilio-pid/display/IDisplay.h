@@ -28,9 +28,11 @@ public:
     virtual void println(const String &s);
     virtual void drawGlyph(uint8_t x, uint8_t y, uint8_t encoding);
     virtual void sendBuffer();
-    virtual int getUTF8Width(const char *s);
+    //virtual int getUTF8Width(const char *s);
     virtual int getWidth();
     virtual int getHeight();
+    virtual void clearRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+    virtual void printCentered(const char* c, uint16_t y);
 };
 
 #endif // IDISPLAY_H

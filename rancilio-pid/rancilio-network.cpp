@@ -128,7 +128,7 @@ bool InitNetworking() {
     DEBUG_print("Staying offline due to forceOffline=1\n");
     return true;
   }
-  displaymessage(State::Undefined, (char*)"Init Wifi", (char*)"");
+  showBootMessage((char*)"Init Wifi");
 
   checkWifi(true, 12000UL, false); // wait up to 12 seconds for connection
 
@@ -140,7 +140,7 @@ bool InitNetworking() {
       disableBlynkTemporary();
       lastWifiConnectionAttempt = millis();
     }
-    displaymessage(State::Undefined, (char*)"Cannot connect to Wifi", (char*)"");
+    showBootMessage((char*)"Cannot connect to Wifi");
     delay(1000);
     return true;
   } else {
