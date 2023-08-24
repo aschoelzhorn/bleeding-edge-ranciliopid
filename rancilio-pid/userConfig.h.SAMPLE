@@ -10,6 +10,12 @@
  * General settings
  *****************************************************/
 #define MACHINE_TYPE "rancilio"  // supported values are "rancilio", "gaggia" and "ecm".
+// this is a hack, because I don't know how to include a specific h file depending on #define MACHINE_TYPE "gaggia" 
+#define MACHINE_TYPE_GAGGIA
+// Uncomment the appropriate MACHINE_TYPE_XYZ line based on your need
+//#define MACHINE_TYPE_ECM
+//#define MACHINE_TYPE_RANCILIO
+
 #define TEMPSENSOR 2          // 2=TSIC306 (fully supported); 3=MAX6675K (working but untested); (1=DS19B20 not supported anymore); 9=Sensor Mock (for testing without real sensor)
 #define TEMPSENSORRECOVERY 0  // 1 = on, 2= off (default). If off, temp sensor errors will stop the heater until power cycle
 #define FORCE_OFFLINE 0       // 0=Use network | 1=Disable all network stuff (WiFi, MQTT, Blynk).
@@ -118,8 +124,10 @@
 /*******
  * Display Settings
  *******/
-#define DISPLAY_HARDWARE 0                // 0=Deaktiviert, 1=SH1106_128X64_I2C, 2=SSD1306_128X64_I2C, 3=SH1106_126x64_SPI
+#define DISPLAY_HARDWARE 0                // 0=Deaktiviert, 1=SH1106_128X64_I2C, 2=SSD1306_128X64_I2C, 3=SH1106_126x64_SPI, 4=ST7739_240x240
                                           // for 3 (SH1106 SPI) use P23=MOSI P18=CLK P5=OLED_CS P2=OLED_DC (see display.h)
+                                          // for 4 (ST7789 SPI) see documentation of TFT_eSPI (for 240x240 I recommend using Setup24_ST7789) with these settings
+                                          //   TFT_MOSI 23, TFT_SCLK 18, TFT_CS -1, TFT_DC 27, TFT_RST 33
 #define DISPLAY_I2C_SCL 255               // 255=use default SCL (default); (esp32 only) x=pin number to be used for SCL 
 #define DISPLAY_I2C_SDA 255               // 255=use default SDA (default); (esp32 only) x=pin number to be used for SDA
 #define ROTATE_DISPLAY 0                  // 0=Off (Default), 1=180 degree clockwise rotation
