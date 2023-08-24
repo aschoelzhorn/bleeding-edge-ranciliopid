@@ -99,13 +99,14 @@ int ST7789Display::getHeight() {
 }
 
 void ST7789Display::printCentered(const char* c, uint16_t y) {
-    tft.setTextDatum(MC_DATUM);
-    tft.drawString(c, 0, y);  // Print a string
+    int posX = tft.width() / 2; // Calculate the center X position
+    tft.setTextDatum(TC_DATUM);
+    tft.drawString(c, posX, y);  // Print a string
 }
 
 void ST7789Display::printCentered(const char* line1, const char* line2, uint16_t y) {
-    tft.setTextDatum(MC_DATUM);
-    tft.drawString(line1, 0, y);  // Print a string
-    tft.drawString(line2, 0, y + tft.fontHeight());  // Print a string // TODO get height of font 
+    int posX = tft.width() / 2;
+    tft.setTextDatum(TC_DATUM);
+    tft.drawString(line1, posX, y);
+    tft.drawString(line2, posX, y + tft.fontHeight());
 }
-

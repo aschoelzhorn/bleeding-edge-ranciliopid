@@ -2,8 +2,8 @@
  * Perfect Coffee PID
  * https://github.com/medlor/bleeding-edge-ranciliopid
  *****************************************************/
-#define general_logo_width 45
-#define general_logo_height 45
+#define update_icon_width 45
+#define update_icon_height 45
 
 static const unsigned char update_bits[] PROGMEM = {
    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

@@ -150,7 +150,7 @@ void showBootMessage(char* displaymessagetext) {
 void showBootMessage(char* displaymessagetext, char* displaymessagetext2) {
   display.setFont(FontType::Normal);
   hideBootMessage();
-  int posY = logo_height + 1; // 4 is perfect for the gaggia logo, but not for the rest (height 45, only line one is shown)
+  int posY = logo_height + 2; // 4 is perfect for the gaggia logo, but not for the rest (height 45, only line one is shown)
   // todo: maybe add a (calculated) parameter for leading (=line spacing)
   display.printCentered(displaymessagetext, displaymessagetext2, posY);
 }
