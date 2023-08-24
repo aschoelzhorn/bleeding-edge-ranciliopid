@@ -196,11 +196,6 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 
 #if (ICON_COLLECTION == 3)
       // text only mode
-      if (strcmp(MACHINE_TYPE, "rancilio") == 0) {
-        display.drawImage(0, 0, rancilio_logo_width, rancilio_logo_height, rancilio_logo_bits);
-      } else {
-        display.drawImage(0, 0, general_logo_width, general_logo_height, general_logo_bits);
-      }
 #else
       // display icons
       switch (activeState) {
@@ -398,7 +393,7 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 }
 
 void showSoftwareUpdate() {
-    display.drawImage(41, 0, icon_width, general_logo_height, update_bits);
+    display.drawImage(41, 0, update_icon_width, update_icon_height, update_bits);
 }
 
 void showScreenSaver() {

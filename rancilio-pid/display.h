@@ -14,31 +14,44 @@ const int Display = DISPLAY_HARDWARE;
 //#define MACHINE_TYPE_RANCILIO
 
 #if DISPLAY_HARDWARE == 4
+
 #ifdef MACHINE_TYPE_GAGGIA
-#include "icon_gaggia_color.h"
+#include "display/icons/icon_gaggia_color.h"
 #elif defined(MACHINE_TYPE_ECM)
-#include "icon_ecm_color.h"
+#include "display/icons/icon_ecm_color.h"
 #elif defined(MACHINE_TYPE_RANCILIO)
-#include "icon_rancilio_color.h"
+#include "display/icons/icon_rancilio_color.h"
 #else
-#include "icon_generic_color_.h"
+#include "display/icons/icon_generic_color_.h"
 #endif
-#include "icon_shared_color.h"
+#include "display/icons/icon_shared_color.h"
+
 #else
-#include "icon_shared.h"
+
+#ifdef MACHINE_TYPE_GAGGIA
+#include "display/icons/icon_gaggia.h"
+#elif defined(MACHINE_TYPE_ECM)
+#include "display/icons/icon_ecm.h"
+#elif defined(MACHINE_TYPE_RANCILIO)
+#include "display/icons/icon_rancilio.h"
+#else
+#include "display/icons/icon_generic_.h"
+#endif
+
+#include "display/icons/icon_shared.h"
 #endif
 
 #if (ENABLE_BIG_STATUS_ICONS)
-#include "icon_big.h"
+#include "display/icons/icon_big.h"
 #else
-#include "icon.h"
+#include "display/icons/icon.h"
 #endif
 #if (ICON_COLLECTION == 2)
-#include "icon_winter.h"
+#include "display/icons/icon_winter.h"
 #elif (ICON_COLLECTION == 1)
-#include "icon_smiley.h"
+#include "display/icons/icon_smiley.h"
 #else
-#include "icon_simple.h" // also used as placeholder for ICON_COLLECTION==3
+#include "display/icons/icon_simple.h" // also used as placeholder for ICON_COLLECTION==3
 #endif
 
 #ifdef ESP32
