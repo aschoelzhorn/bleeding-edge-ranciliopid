@@ -5,7 +5,7 @@ ST7789Display::ST7789Display(TFT_eSPI& tftInstance) : tft(tftInstance) {
 }
 
 void ST7789Display::init() {
-    tft.begin();
+    tft.init();
     tft.fillScreen(TFT_BLACK);
 #if (ROTATE_DISPLAY == 0)
     tft.setRotation(0);
@@ -35,7 +35,7 @@ void ST7789Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, co
 }
 
 void ST7789Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) {
-    tft.setSwapBytes(true);                      // swap the byte order for pushImage() - corrects endianness
+    tft.setSwapBytes(true); // swap the byte order for pushImage() - corrects endianness
     //tft.fillScreen(TFT_BLACK);
     tft.pushImage(x,y,w,h,bitmap);
     tft.setSwapBytes(false);
@@ -68,17 +68,14 @@ void ST7789Display::print(float data, int digits) {
 }
 
 void ST7789Display::print(char c) {
-tft.setTextDatum(MC_DATUM);
     tft.drawChar(c, tft.getCursorX(), tft.getCursorY());  // Print a character
 }
 
 void ST7789Display::print(const char* c) {
-tft.setTextDatum(MC_DATUM);    
     tft.drawString(c, tft.getCursorX(), tft.getCursorY());  // Print a string
 }
 
 void ST7789Display::println(const String &s) {
-tft.setTextDatum(MC_DATUM);    
     tft.drawString(s, tft.getCursorX(), tft.getCursorY());  // Print a string followed by a newline
 }
 
