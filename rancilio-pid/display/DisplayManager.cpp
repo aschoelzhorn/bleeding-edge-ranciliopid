@@ -78,10 +78,6 @@ void DisplayManager::sendBuffer() {
     display->sendBuffer();
 }
 
-// int DisplayManager::getUTF8Width(const char *s) {
-//     return display->getUTF8Width(s);
-// }
-
 int DisplayManager::getWidth() {
     return display->getWidth();
 }
@@ -92,4 +88,8 @@ int DisplayManager::getHeight() {
 
 void DisplayManager::printCentered(const char* c, uint16_t y) {
     display->printCentered(c, y);
+}
+
+void DisplayManager::printCentered(const char* line1, const char* line2, uint16_t y) {
+    display->printCentered(line1, line2, y);
 }

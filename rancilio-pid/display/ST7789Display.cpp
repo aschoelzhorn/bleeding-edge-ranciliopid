@@ -86,10 +86,6 @@ void ST7789Display::drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) {
     // Implement drawing a glyph using tft, if applicable
 }
 
-// int ST7789Display::getUTF8Width(const char *s) {
-//     return 8;// Implement getting the width of a UTF-8 string using tft, if applicable
-// }
-
 void ST7789Display::clearRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
     tft.fillRect(x, y, w, h, TFT_BLACK);
 }
@@ -106,3 +102,10 @@ void ST7789Display::printCentered(const char* c, uint16_t y) {
     tft.setTextDatum(MC_DATUM);
     tft.drawString(c, 0, y);  // Print a string
 }
+
+void ST7789Display::printCentered(const char* line1, const char* line2, uint16_t y) {
+    tft.setTextDatum(MC_DATUM);
+    tft.drawString(line1, 0, y);  // Print a string
+    tft.drawString(line2, 0, y + tft.fontHeight());  // Print a string // TODO get height of font 
+}
+

@@ -1,5 +1,4 @@
 #include "U8g2Display.h"
-
 #include "../userConfig.h"
 
 U8g2Display::U8g2Display(U8G2& u8g2Instance) : u8g2(u8g2Instance) {}
@@ -110,10 +109,6 @@ void U8g2Display::sendBuffer() {
     u8g2.sendBuffer();
 }
 
-// int U8g2Display::getUTF8Width(const char *s) {
-//     return u8g2.getUTF8Width(s);
-// }
-
 int U8g2Display::getWidth() {
     return u8g2.getDisplayWidth();
 }
@@ -127,5 +122,22 @@ void U8g2Display::printCentered(const char* c, uint16_t y) {
     int centerX = (u8g2.getWidth() - textWidth) / 2;
     u8g2.setCursor(centerX, y);
     u8g2.print(c);
+    u8g2.sendBuffer();
+}
+
+void U8g2Display::printCentered(const char* line1, const char* line2, uint16_t y) {
+    int leading = 1;
+    
+    int textWidth = u8g2.getStrWidth(line1);
+    int centerX = (u8g2.getWidth() - textWidth) / 2;
+    u8g2.setCursor(centerX, y);
+    u8g2.print(line1);
+
+    textWidth = u8g2.getStrWidth(line2);
+    centerX = (u8g2.getWidth() - textWidth) / 2;
+    int yPos = y + u8g2.getMaxCharHeight() + leading;
+    u8g2.setCursor(centerX, yPos);
+    u8g2.print(line2);
+
     u8g2.sendBuffer();
 }

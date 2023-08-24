@@ -9,12 +9,20 @@
 /********************************************************
  * General settings
  *****************************************************/
-#define MACHINE_TYPE "rancilio"  // supported values are "rancilio", "gaggia" and "ecm".
-// this is a hack, because I don't know how to include a specific h file depending on #define MACHINE_TYPE "gaggia" 
-#define MACHINE_TYPE_GAGGIA
 // Uncomment the appropriate MACHINE_TYPE_XYZ line based on your need
+#define MACHINE_TYPE_GAGGIA
 //#define MACHINE_TYPE_ECM
 //#define MACHINE_TYPE_RANCILIO
+
+#ifdef MACHINE_TYPE_GAGGIA
+#define MACHINE_TYPE "gaggia"
+#elif defined(MACHINE_TYPE_ECM)
+#define MACHINE_TYPE "ecm"
+#elif defined(MACHINE_TYPE_RANCILIO)
+#define MACHINE_TYPE "rancilio"
+#else
+#define MACHINE_TYPE "generic"
+#endif
 
 #define TEMPSENSOR 2          // 2=TSIC306 (fully supported); 3=MAX6675K (working but untested); (1=DS19B20 not supported anymore); 9=Sensor Mock (for testing without real sensor)
 #define TEMPSENSORRECOVERY 0  // 1 = on, 2= off (default). If off, temp sensor errors will stop the heater until power cycle

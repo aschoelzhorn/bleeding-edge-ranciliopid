@@ -94,19 +94,6 @@ void displaymessage_esp32_task(void* activeStateParam) {
 }
 #endif
 
-void displayBootMessage(char* displaymessagetext, char* displaymessagetext2) {
-  snprintf((char*)displaymessagetextBuffer, sizeof(displaymessagetextBuffer), "%s", displaymessagetext);
-  snprintf((char*)displaymessagetext2Buffer, sizeof(displaymessagetext2Buffer), "%s", displaymessagetext2);
-
-    //(optional) add 2 text lines
-  display.setFont(FontType::Normal);
-// combine setcursor and print into one call eg printCenter(string, x, y)
-  display.setCursor(0, logo_height + 9); // 9 pixel space between logo and lines
-  display.print(displaymessagetext);
-  display.setCursor(0, logo_height + 9 + 53);
-  display.print(displaymessagetext2);
-}
-
 void displaymessage(State activeState, char* displaymessagetext, char* displaymessagetext2) {
   if (Display > 0) {
     static int only_once = 0;
@@ -141,9 +128,6 @@ void displaymessage(State activeState, char* displaymessagetext, char* displayme
   }
 }
 
-// int align_center(char *text) {
-//   return ((display.getWidth() -(display.getUTF8Width(text))) / 2);
-// }
 
 void showBootLogo() {
   int posX = (display.getWidth() - logo_width) / 2;
@@ -166,8 +150,9 @@ void showBootMessage(char* displaymessagetext) {
 void showBootMessage(char* displaymessagetext, char* displaymessagetext2) {
   display.setFont(FontType::Normal);
   hideBootMessage();
-  int posY = logo_height;
-  display.printCentered(displaymessagetext, posY);
+  int posY = logo_height + 1; // 4 is perfect for the gaggia logo, but not for the rest (height 45, only line one is shown)
+  // todo: maybe add a (calculated) parameter for leading (=line spacing)
+  display.printCentered(displaymessagetext, displaymessagetext2, posY);
 }
 
 void hideBootMessage() {
@@ -196,6 +181,7 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 
 #if (ICON_COLLECTION == 3)
       // text only mode
+      // I deleted the code in here, why drawImage in text only mode?
 #else
       // display icons
       switch (activeState) {
@@ -356,11 +342,8 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
   showPowerOffCountdown(displaymessagetext, displaymessagetext2);
 #endif
 
-  //(optional) add 2 text lines
   display.setFont(FontType::Normal);
-  //display.setCursor(align_center(displaymessagetext), 44); // 9 pixel space between lines
-  display.printCentered(displaymessagetext, 44);
-  //display.setCursor(align_center(displaymessagetext2), 53);
+  display.printCentered(displaymessagetext, displaymessagetext2, 44);
   display.printCentered(displaymessagetext2, 53);
 
   // add status icons

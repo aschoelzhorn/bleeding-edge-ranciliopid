@@ -26,6 +26,7 @@ public:
     int getHeight() override;
     void clearRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h) override;
     void printCentered(const char* c, uint16_t y) override;
+    void printCentered(const char* line1, const char* line2, uint16_t y) override;
 };
 
 #endif // DUMMYDISPLAY_H

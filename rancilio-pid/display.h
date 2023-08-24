@@ -8,11 +8,6 @@ const int Display = DISPLAY_HARDWARE;
 #include "rancilio-enums.h"
 #include "controls.h"
 
-#define MACHINE_TYPE_GAGGIA
-// Uncomment the appropriate MACHINE_TYPE_XYZ line based on your need
-//#define MACHINE_TYPE_ECM
-//#define MACHINE_TYPE_RANCILIO
-
 #if DISPLAY_HARDWARE == 4
 
 #ifdef MACHINE_TYPE_GAGGIA
@@ -35,7 +30,7 @@ const int Display = DISPLAY_HARDWARE;
 #elif defined(MACHINE_TYPE_RANCILIO)
 #include "display/icons/icon_rancilio.h"
 #else
-#include "display/icons/icon_generic_.h"
+#include "display/icons/icon_generic.h"
 #endif
 
 #include "display/icons/icon_shared.h"
@@ -70,8 +65,6 @@ const int userActivityWaitPeriod = 180000;
 
 void InitDisplay();
 
-
-// void prepare(void);
 bool screenSaverRunning();
 void displaymessage(State, char*, char*);
 void displaymessage_helper(State, char*, char*);

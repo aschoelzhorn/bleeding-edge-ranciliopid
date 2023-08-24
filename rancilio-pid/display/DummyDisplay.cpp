@@ -58,3 +58,6 @@ int DummyDisplay::getHeight() {
 
 void DummyDisplay::printCentered(const char* c, uint16_t y) {
 }
+
+void DummyDisplay::printCentered(const char* line1, const char* line2, uint16_t y) {
+}

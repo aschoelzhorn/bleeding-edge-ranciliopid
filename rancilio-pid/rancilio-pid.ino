@@ -324,7 +324,7 @@ unsigned long scaleSensorCheckTimer = 2000;
 
 #if (DISPLAY_HARDWARE == 0)
     DisplayManager display;
-#elif
+#else
     DisplayManager display(displayInstance);
 #endif  
 
@@ -1885,7 +1885,5 @@ void setup() {
 
   DEBUG_print("End of setup()\n");
 
-  //hideBootLogo();
-  //hideBootMessage();
   clearDisplay();
 }
