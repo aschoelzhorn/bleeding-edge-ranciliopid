@@ -322,7 +322,11 @@ unsigned long scaleSensorCheckTimer = 2000;
   TFT_eSPI displayInstance = TFT_eSPI();
 #endif
 
-DisplayManager display(displayInstance);
+#if (DISPLAY_HARDWARE == 0)
+    DisplayManager display;
+#elif
+    DisplayManager display(displayInstance);
+#endif  
 
 /********************************************************
  * CONTROLS

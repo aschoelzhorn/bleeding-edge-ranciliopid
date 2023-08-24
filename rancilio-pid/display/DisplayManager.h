@@ -11,13 +11,20 @@
 #include "ST7789Display.h"
 #include <TFT_eSPI.h>
 #include <TFT_eWidget.h>
-#else
+#elif (DISPLAY_HARDWARE == 1) || (DISPLAY_HARDWARE == 2) || (DISPLAY_HARDWARE == 3)
 #define U8G2_DISPLAY
 #include "U8g2Display.h"
+#else
+#define NO_DISPLAY
 #endif
 
 #if (DISPLAY_HARDWARE == 3)
 #include <SPI.h>
+#endif
+
+#if (DISPLAY_HARDWARE == 0)
+#define NO_DISPLAY
+#include "DummyDisplay.h"
 #endif
 
 class DisplayManager {
@@ -29,6 +36,10 @@ public:
 
 #ifdef ST7789_DISPLAY
     DisplayManager(TFT_eSPI& tftInstance);
+#endif
+
+#ifdef NO_DISPLAY
+    DisplayManager();
 #endif
 
     virtual void init();    

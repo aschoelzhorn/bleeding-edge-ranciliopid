@@ -12,6 +12,12 @@ DisplayManager::DisplayManager(TFT_eSPI& tftInstance) {
 }
 #endif
 
+#ifdef NO_DISPLAY
+DisplayManager::DisplayManager() {
+    display = new DummyDisplay();
+}
+#endif
+
 void DisplayManager::init() {
     display->init();
 }
