@@ -5,7 +5,8 @@
 #include "display.h"
 #include "rancilio-debug.h"
 #include "rancilio-network.h"
-#include "display/status_images.h"
+
+#include "display/ImageDictionary.h"
 
 #include "display/DisplayManager.h"
 extern DisplayManager display;  // declare the extern DisplayManager object to use the same instance everywhere
@@ -126,6 +127,28 @@ void displaymessage(State activeState, char* displaymessagetext, char* displayme
   }
 }
 
+
+std::map<StatusImage, const unsigned char*> statusImageDictionary = {
+    {StatusImage::Coldstart, coldstart_bits},
+    {StatusImage::Brewing, brewing_bits},
+    {StatusImage::BrewReady, brew_ready_bits},
+    {StatusImage::BrewAcceptable, brew_acceptable_bits},
+    {StatusImage::Steam, steam_bits},
+    {StatusImage::OuterZone, outer_zone_bits},
+    {StatusImage::Clean, clean_bits},
+    {StatusImage::Menu, menu_bits}
+};
+
+std::map<StatusImage, const unsigned char*> statusImageRotatedDictionary = {
+    {StatusImage::Coldstart, coldstart_rotate_bits},
+    {StatusImage::Brewing, brewing_rotate_bits},
+    {StatusImage::BrewReady, brew_ready_rotate_bits},
+    {StatusImage::BrewAcceptable, brew_acceptable_rotate_bits},
+    {StatusImage::Steam, steam_rotate_bits},
+    {StatusImage::OuterZone, outer_zone_rotate_bits},
+    {StatusImage::Clean, clean_rotate_bits},
+    {StatusImage::Menu, menu_rotate_bits}
+};
 
 void drawStatusImage(StatusImage image, bool flip) { 
   if (image_flip) {
@@ -364,7 +387,7 @@ void showMenu(char** displaymessagetext, char** displaymessagetext2) {
   const unsigned int align_right_1digits_decimal = display.getWidth() - 56 + 12;
   menuMap* menuConfigPosition = getMenuConfigPosition(menuConfig, menuPosition);
   if (!menuConfigPosition) return;
-  drawStatusImage(StatusImage::Menu);
+  drawStatusImage(StatusImage::Menu, image_flip);
   display.setFont(FontType::Big);
   if (!strcmp(menuConfigPosition->value->type, "bool")) {
     bool menuValue;

@@ -2,11 +2,15 @@
 #define _display_H
 
 #include "userConfig.h"
-const int Display = DISPLAY_HARDWARE;
+// const int Display = DISPLAY_HARDWARE;
 
+#include <map>
 #include "rancilio-pid.h"
 #include "rancilio-enums.h"
 #include "controls.h"
+#include "display/status_images.h"
+
+const int Display = DISPLAY_HARDWARE;
 
 #if DISPLAY_HARDWARE == 4
 
@@ -48,6 +52,8 @@ const int Display = DISPLAY_HARDWARE;
 #else
 #include "display/icons/icon_simple.h" // also used as placeholder for ICON_COLLECTION==3
 #endif
+
+
 
 #ifdef ESP32
 static State activeStateBuffer;

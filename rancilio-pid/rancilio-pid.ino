@@ -306,6 +306,7 @@ unsigned long scaleSensorCheckTimer = 2000;
  * Display
  ******************************************************/
 #include "display/DisplayManager.h"
+//#include "display/status_images.h"
 
 // This codeblock should be in class Displaymanager, but then I get a SegmentationFault on init for U8g2
 // Attention: refresh takes around 42ms (esp32: 26ms)!

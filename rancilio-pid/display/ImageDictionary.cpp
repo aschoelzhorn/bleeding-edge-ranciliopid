@@ -1,21 +1,8 @@
-#pragma once
+// ImageDictionary.cpp
 
-#ifndef status_images_h
-#define status_images_h
+#include "ImageDictionary.h"
 
-enum class StatusImage {
-    Coldstart = 0,
-    Brewing = 1,
-    BrewReady = 2,
-    BrewAcceptable = 3,
-    Steam = 4,
-    OuterZone = 5,
-    Clean = 6,
-    Menu = 7,
-    SoftwareUpdate = 8
-};
-
-// std::map<StatusImage, const unsigned char*> statusImageDictionary = {
+// const std::map<StatusImage, const unsigned char*> ImageDictionary::dict = {
 //     {StatusImage::Coldstart, coldstart_bits},
 //     {StatusImage::Brewing, brewing_bits},
 //     {StatusImage::BrewReady, brew_ready_bits},
@@ -26,7 +13,7 @@ enum class StatusImage {
 //     {StatusImage::Menu, menu_bits}
 // };
 
-// std::map<StatusImage, const unsigned char*> statusImageRotatedDictionary = {
+// const std::map<StatusImage, const unsigned char*> ImageDictionary::dictRotated = {
 //     {StatusImage::Coldstart, coldstart_rotate_bits},
 //     {StatusImage::Brewing, brewing_rotate_bits},
 //     {StatusImage::BrewReady, brew_ready_rotate_bits},
@@ -37,5 +24,12 @@ enum class StatusImage {
 //     {StatusImage::Menu, menu_rotate_bits}
 // };
 
+// const unsigned char* ImageDictionary::getStatusImage(StatusImage image) {
+//     return statusImageDictionary[image];
+// }
 
-#endif
+// const unsigned char* ImageDictionary::getStatusImageRotated(StatusImage image) {
+//     return statusImageRotatedDictionary[image];
+// }
+
+
