@@ -1115,7 +1115,7 @@ void CheckMqttConnection() {
       #if (SCALE_SENSOR_ENABLE)
       scaleCalibration();
       #endif
-      displaymessage(State::Undefined, (char*)"Calibrating", (char*)"check logs");
+      showStatusMessage((char*)"Calibrating", (char*)"check logs");
     }
     return;
 #endif
@@ -1326,7 +1326,7 @@ void CheckMqttConnection() {
       digitalWrite(pinRelayHeater, LOW); // Stop heating
       char line2[17];
       snprintf(line2, sizeof(line2), "Temp. %0.2f", tempSensor.getCurrentTemperature());
-      displaymessage(State::Undefined, (char*)"Check Temp. Sensor!", (char*)line2);
+      showStatusMessage((char*)"Check Temp. Sensor!", (char*)line2);
 
     } else if (emergencyStop) {
       // Deactivate PID
@@ -1345,7 +1345,7 @@ void CheckMqttConnection() {
           "%0.0f\xB0"
           "C",
           tempSensor.getCurrentTemperature());
-      displaymessage(State::Undefined, (char*)"Emergency Stop!", (char*)line2);
+      showStatusMessage((char*)"Emergency Stop!", (char*)line2);
 
     } else {
       if (millis() - recurringOutput > 15000) {
@@ -1775,7 +1775,7 @@ void HandleOTA() {
 
 void InitOTA() {  
   if (ota && !forceOffline) {
-    //displaymessage(State::Undefined, (char*)"Init OTA", (char*)"");
+    showBootMessage((char*)"Init OTA");
     // TODO: OTA logic has to be refactored so have clean setup() and loop() parts
     // wifi connection is done during blynk connection
     ArduinoOTA.setHostname(hostname); //  Device name for OTA
@@ -1795,7 +1795,7 @@ void InitOTA() {
 		  DEBUG_print("OTA update in progress: %u%%\r", percent);
 		  char line2[17];
 		  snprintf(line2, sizeof(line2), "%u%% / 100%%", percent);
-		  displaymessage(State::Undefined, (char*)"Updating Software", (char*)line2);
+		  showStatusMessage((char*)"Updating Software", (char*)line2);
 	  });    
 	  ArduinoOTA.onError([](ota_error_t error) {
 		  ERROR_print("OTA update error\n");
@@ -1835,6 +1835,7 @@ void setup() {
 #else
   showBootMessage((char*)DISPLAY_TEXT, (char*)sysVersion);
 #endif
+  
   delay(5000);
 
   controlsConfig = parseControlsConfig();

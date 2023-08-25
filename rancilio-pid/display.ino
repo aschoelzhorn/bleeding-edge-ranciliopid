@@ -5,6 +5,7 @@
 #include "display.h"
 #include "rancilio-debug.h"
 #include "rancilio-network.h"
+#include "display/status_images.h"
 
 #include "display/DisplayManager.h"
 extern DisplayManager display;  // declare the extern DisplayManager object to use the same instance everywhere
@@ -16,9 +17,6 @@ unsigned int enableScreenSaver = ENABLE_SCREEN_SAVER;
 bool screenSaverOn = false;
 const unsigned int powerOffCountDownStart = 300;
 
-void InitDisplay() {
-  display.init();
-}
 
 bool softwareUpdateCheck() {
   return activeState == State::SoftwareUpdate;
@@ -129,36 +127,14 @@ void displaymessage(State activeState, char* displaymessagetext, char* displayme
 }
 
 
-void showBootLogo() {
-  int posX = (display.getWidth() - logo_width) / 2;
-  display.drawImage(posX, 0, logo_width, logo_height, logo_bits);
+void drawStatusImage(StatusImage image, bool flip) { 
+  if (image_flip) {
+    display.drawImage(0, 0, icon_width, icon_height, statusImageDictionary[image]);
+  } else {
+    display.drawImage(0, 0, icon_width, icon_height, statusImageRotatedDictionary[image]);
+  }
 }
 
-void hideBootLogo() {
-  int posX = (display.getWidth() - logo_width) / 2;
-  display.clearRect(posX, 0, logo_width, logo_height);
-}
-
-void clearDisplay() {
-  display.clearBuffer();
-}
-
-void showBootMessage(char* displaymessagetext) {
-  showBootMessage(displaymessagetext, (char*)"");
-}
-
-void showBootMessage(char* displaymessagetext, char* displaymessagetext2) {
-  display.setFont(FontType::Normal);
-  hideBootMessage();
-  int posY = logo_height + 2; // 4 is perfect for the gaggia logo, but not for the rest (height 45, only line one is shown)
-  // todo: maybe add a (calculated) parameter for leading (=line spacing)
-  display.printCentered(displaymessagetext, displaymessagetext2, posY);
-}
-
-void hideBootMessage() {
-  int posY = logo_height;
-  display.clearRect(0, posY, display.getWidth(), display.getHeight() - posY);
-}
 
 void displaymessage_helper(State activeState, char* displaymessagetext, char* displaymessagetext2) {
   display.clearBuffer();
@@ -173,8 +149,8 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
   } else {
     image_flip = !image_flip;
     unsigned int align_right;
-    const unsigned int align_right_2digits = display.getWidth() - 56;
-    const unsigned int align_right_3digits = display.getWidth() - 56 - 12;
+    const unsigned int align_right_2digits = display.getWidth() - 56; // TODO replace these magic numbers, what is 56?
+    const unsigned int align_right_3digits = display.getWidth() - 56 - 12; // TODO replace these magic numbers, what is 56 and what is 12?
 
     bool showLastBrewStatistics = ( (brewTimer > 0) && (currentWeight != 0) && 
      (millis() <= brewStatisticsTimer + brewStatisticsAdditionalDisplayTime) ) ? true : false;
@@ -187,73 +163,37 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
       switch (activeState) {
         case State::ColdStart:
         case State::StabilizeTemperature:
-          if (image_flip) {
-            display.drawImage(0, 0, icon_width, icon_height, coldstart_rotate_bits);
-          } else {
-            display.drawImage(0, 0, icon_width, icon_height, coldstart_bits);
-          }
+          drawStatusImage(StatusImage::Coldstart, image_flip);
           break;
         case State::BrewDetected: // brew
-          if (image_flip) {
-            display.drawImage(0, 0, icon_width, icon_height, brewing_bits);
-          } else {
-            display.drawImage(0, 0, icon_width, icon_height, brewing_rotate_bits);
-          }
+          drawStatusImage(StatusImage::Brewing, image_flip);
           break;
         case State::InnerZoneDetected:
           if (brewReady) {
-            if (image_flip) {
-              display.drawImage(0, 0, icon_width, icon_height, brew_ready_bits);
-            } else {
-              display.drawImage(0, 0, icon_width, icon_height, brew_ready_rotate_bits);
-            }
+            drawStatusImage(StatusImage::BrewReady, image_flip);
           } else { // inner zone
-            if (image_flip) {
-              display.drawImage(0, 0, icon_width, icon_height, brew_acceptable_bits);
-            } else {
-              display.drawImage(0, 0, icon_width, icon_height, brew_acceptable_rotate_bits);
-            }
+            drawStatusImage(StatusImage::BrewAcceptable, image_flip);
           }
           break;
         case State::OuterZoneDetected:
           if (Input >= steamReadyTemp) { // fallback: if hardware steaming button is used still show steaming icon
-            if (image_flip) {
-              display.drawImage(0, 0, icon_width, icon_height, steam_bits);
-            } else {
-              display.drawImage(0, 0, icon_width, icon_height, steam_rotate_bits);
-            }
+            drawStatusImage(StatusImage::Steam, image_flip);
           } else {
-            if (image_flip) {
-              display.drawImage(0, 0, icon_width, icon_height, outer_zone_bits);
-            } else {
-              display.drawImage(0, 0, icon_width, icon_height, outer_zone_rotate_bits);
-            }
+            drawStatusImage(StatusImage::OuterZone, image_flip);
           }
           break;
         case State::SteamMode: // steaming state (detected via controlAction STEAMING)
           if (Input >= steamReadyTemp) {
-            if (image_flip) {
-              display.drawImage(0, 0, icon_width, icon_height, steam_bits);
-            } else {
-              display.drawImage(0, 0, icon_width, icon_height, steam_rotate_bits);
-            }
+            drawStatusImage(StatusImage::Steam, image_flip);
           } else {
             // TODO create new icons for steam phase
-            if (image_flip) {
-              display.drawImage(0, 0, icon_width, icon_height, outer_zone_bits);
-            } else {
-              display.drawImage(0, 0, icon_width, icon_height, outer_zone_rotate_bits);
-            }
+            drawStatusImage(StatusImage::OuterZone, image_flip);
           }
           break;
         case State::SleepMode: // sleeping state
           break;
         case State::CleanMode: // cleaning state
-          if (image_flip) {
-            display.drawImage(0, 0, icon_width, icon_height, clean_bits);
-          } else {
-            display.drawImage(0, 0, icon_width, icon_height, clean_rotate_bits);
-          }
+          drawStatusImage(StatusImage::Clean, image_flip);
           break;
       }
 #endif
@@ -424,11 +364,7 @@ void showMenu(char** displaymessagetext, char** displaymessagetext2) {
   const unsigned int align_right_1digits_decimal = display.getWidth() - 56 + 12;
   menuMap* menuConfigPosition = getMenuConfigPosition(menuConfig, menuPosition);
   if (!menuConfigPosition) return;
-  if (image_flip) {
-    display.drawImage(0, 0, icon_width, icon_height, menu_rotate_bits);
-  } else {
-    display.drawImage(0, 0, icon_width, icon_height, menu_bits);
-  }
+  drawStatusImage(StatusImage::Menu);
   display.setFont(FontType::Big);
   if (!strcmp(menuConfigPosition->value->type, "bool")) {
     bool menuValue;
@@ -514,3 +450,64 @@ void showPowerOffCountdown(char* displaymessagetext, char* displaymessagetext2) 
     display.println(" s");
   }
 }
+
+/************************************
+* new implementations
+*************************************/
+void InitDisplay() {
+  display.init();
+}
+
+void showBootLogo() {
+  int posX = (display.getWidth() - logo_width) / 2;
+  display.drawImage(posX, 0, logo_width, logo_height, logo_bits);
+}
+
+void hideBootLogo() {
+  int posX = (display.getWidth() - logo_width) / 2;
+  display.clearRect(posX, 0, logo_width, logo_height);
+}
+
+void clearDisplay() {
+  display.clearBuffer();
+}
+
+void showBootMessage(char* displaymessagetext) {
+  showBootMessage(displaymessagetext, (char*)"");
+}
+
+void showBootMessage(char* displaymessagetext, char* displaymessagetext2) {
+#if ENABLE_BOOT_MESSAGES == 1  
+  display.setFont(FontType::Normal);
+  hideBootMessage();
+  int posY = logo_height + 2; // Oled: 4 is perfect for the gaggia logo, but not for the rest (height 45, only line one is shown)
+  // todo: maybe add a (calculated) parameter for leading (=line spacing)
+  display.printCentered(displaymessagetext, displaymessagetext2, posY);
+#endif  
+}
+
+void hideBootMessage() {
+  int posY = logo_height;
+  display.clearRect(0, posY, display.getWidth(), display.getHeight() - posY);
+}
+
+void showStatusMessage(char* displaymessagetext) {
+  showStatusMessage(displaymessagetext, (char*)"");
+}
+
+void showStatusMessage(char* displaymessagetext, char* displaymessagetext2) {
+  display.setFont(FontType::Normal);
+  hideStatusMessage();
+  // status messages are shown in the lower half of the display
+  // upper half is for icons und stuff
+  int posY = display.getHeight() / 2;  
+  display.printCentered(displaymessagetext, displaymessagetext2, posY);
+}
+
+void hideStatusMessage() {
+  // status messages are shown in the lower half of the display
+  // upper half is for icons und stuff
+  int posY = display.getHeight() / 2;
+  display.clearRect(0, posY, display.getWidth(), display.getHeight() - posY);
+}
+

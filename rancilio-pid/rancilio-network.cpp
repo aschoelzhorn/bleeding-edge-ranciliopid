@@ -75,7 +75,7 @@ bool isWifiWorking() {
       #else
       WiFi.disconnect(true); // Delete SDK WiFi config
       #endif
-// displaymessage(State::Undefined, "Connecting Wifi", "");
+// showStatusMessage((char*)"Connecting Wifi");
 #ifdef STATIC_IP
       IPAddress STATIC_IP;
       IPAddress STATIC_GATEWAY;

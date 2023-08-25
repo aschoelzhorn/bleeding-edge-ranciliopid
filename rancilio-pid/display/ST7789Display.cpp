@@ -15,7 +15,7 @@ void ST7789Display::init() {
 }
 
 void ST7789Display::clearBuffer() {
-   // No need to clear a buffer for this library
+   tft.fillScreen(TFT_BLACK);
 }
 
 void ST7789Display::sendBuffer() {
@@ -36,18 +36,17 @@ void ST7789Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, co
 
 void ST7789Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) {
     tft.setSwapBytes(true); // swap the byte order for pushImage() - corrects endianness
-    //tft.fillScreen(TFT_BLACK);
     tft.pushImage(x,y,w,h,bitmap);
     tft.setSwapBytes(false);
 }
 
 void ST7789Display::setFont(FontType fontType) {
     if (fontType == FontType::Small) {
-       tft.setFreeFont(&FreeSans12pt7b);
+       tft.setFreeFont(&FreeSans9pt7b);
     } else if (fontType == FontType::Normal) {
-       tft.setFreeFont(&FreeSans18pt7b);
+       tft.setFreeFont(&FreeSans12pt7b);
     } else if (fontType == FontType::Big) {
-       tft.setFreeFont(&FreeSans24pt7b);
+       tft.setFreeFont(&FreeSans18pt7b);
     } else if (fontType == FontType::OpenIconicArrow) {
          tft.setFreeFont(&FreeMono12pt7b);
     } else if (fontType == FontType::OpenIconicEmbedded) {

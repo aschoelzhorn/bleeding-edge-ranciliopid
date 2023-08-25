@@ -65,13 +65,13 @@ const int userActivityWaitPeriod = 180000;
 
 void InitDisplay();
 
-bool screenSaverRunning();
+//bool screenSaverRunning();
 void displaymessage(State, char*, char*);
-void displaymessage_helper(State, char*, char*);
-void showScreenSaver();
-void showMenu(char**, char**);
-void showPowerOffCountdown(char*, char*);
-void showSoftwareUpdate();
+//void displaymessage_helper(State, char*, char*);
+//void showScreenSaver();
+//void showMenu(char**, char**);
+//void showPowerOffCountdown(char*, char*);
+//void showSoftwareUpdate();
 
 void showBootLogo();
 void hideBootLogo();
@@ -80,6 +80,10 @@ void displayMessageCentered(char*, uint16_t y);
 void showBootMessage(char*);
 void showBootMessage(char*, char*);
 void hideBootMessage();
+
+void showStatusMessage(char*);
+void showStatusMessage(char*, char*);
+void hideStatusMessage();
 
 void clearDisplay();
 
