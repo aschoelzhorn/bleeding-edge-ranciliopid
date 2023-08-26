@@ -25,11 +25,11 @@
 // };
 
 // const unsigned char* ImageDictionary::getStatusImage(StatusImage image) {
-//     return statusImageDictionary[image];
+//     return imageDictionary[image];
 // }
 
 // const unsigned char* ImageDictionary::getStatusImageRotated(StatusImage image) {
-//     return statusImageRotatedDictionary[image];
+//     return imageRotatedDictionary[image];
 // }
 
 

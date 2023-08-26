@@ -1,6 +1,8 @@
 #include "ST7789Display.h"
 #include "../userConfig.h"
 
+#include <float.h>
+
 ST7789Display::ST7789Display(TFT_eSPI& tftInstance) : tft(tftInstance) {
 }
 
@@ -106,3 +108,43 @@ void ST7789Display::printCentered(const char* line1, const char* line2, uint16_t
     tft.drawString(line1, posX, y);
     tft.drawString(line2, posX, y + tft.fontHeight());
 }
+
+void ST7789Display::printRightAligned(const char* c, uint16_t y) {
+    int posX = tft.width() - tft.textWidth(c);
+    tft.drawString(c, posX, y);
+}
+
+void ST7789Display::printRightAligned(float data, unsigned int digits, uint16_t y) {
+    int dataDigits = 0;
+    if (data - 100 > -FLT_EPSILON) {
+        dataDigits = 3;
+    } else {
+        dataDigits = 2;
+    }
+    int charWidth = tft.textWidth("0"); // Width of a single character
+    int numWidth = charWidth * (dataDigits + 1 + digits); // Include decimal point
+    int posX = tft.width() - numWidth;
+    tft.drawFloat(data, digits, posX, y);
+}
+
+void ST7789Display::printTemperatures(float input, float setPoint, bool steaming) {
+    setFont(FontType::Big);
+    printRightAligned(input, 1, 0 + topMargin);
+//   setFont(FontType::Small);
+//   tft.print((char)176);
+//   tft.println("C");
+//   setFont(FontType::OpenIconicEmbedded);
+//   tft.drawGlyph(align_right - 11, 3 + 6, 0x0046);
+
+  // if (Input <= *activeSetPoint + 5 || activeState == State::SteamMode) { //only show setpoint if we are not steaming
+    if (!steaming) {
+        setFont(FontType::Big);
+        printRightAligned(setPoint, 1, tft.fontHeight());
+    // setFont(FontType::Small);
+    // tft.print((char)176);
+    // tft.println("C");
+    // setFont(FontType::OpenIconicOther);
+    //tft.drawGlyph(align_right - 11, 20 + 6, 0x047);  // small circle in circle
+    }    
+}
+

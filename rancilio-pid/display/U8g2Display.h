@@ -27,6 +27,9 @@ public:
     void clearRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h) override;
     void printCentered(const char* c, uint16_t y) override;
     void printCentered(const char* line1, const char* line2, uint16_t y) override;
+    void printRightAligned(const char* c, uint16_t y) override;
+    void printRightAligned(float data, unsigned int digits, uint16_t y) override;
+    void printTemperatures(float t1, float t2, bool steaming) override;
 
 private:
     U8G2& u8g2;

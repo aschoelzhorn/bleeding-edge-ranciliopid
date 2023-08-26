@@ -63,6 +63,9 @@ public:
     virtual void clearRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
     virtual void printCentered(const char* c, uint16_t y);
     virtual void printCentered(const char* line1, const char* line2, uint16_t y);
+    virtual void printRightAligned(const char* c, uint16_t y);
+    virtual void printRightAligned(float data, unsigned int digits, uint16_t y);
+    virtual void printTemperatures(float t1, float t2, bool steaming);
 
 private:
    IDisplay* display;  // Use a pointer to IDisplay to allow dynamic initialization

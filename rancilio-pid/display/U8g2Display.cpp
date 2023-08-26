@@ -1,6 +1,8 @@
 #include "U8g2Display.h"
 #include "../userConfig.h"
 
+#include <float.h>
+
 U8g2Display::U8g2Display(U8G2& u8g2Instance) : u8g2(u8g2Instance) {}
 
 void U8g2Display::init(void) {
@@ -141,3 +143,65 @@ void U8g2Display::printCentered(const char* line1, const char* line2, uint16_t y
 
     u8g2.sendBuffer();
 }
+
+void U8g2Display::printRightAligned(const char* c, uint16_t y) {
+    int posX = u8g2.getWidth() - u8g2.getStrWidth(c);
+    u8g2.setCursor(posX, y);
+    u8g2.print(c);
+    u8g2.sendBuffer();
+}
+
+void U8g2Display::printRightAligned(float data, unsigned int digits, uint16_t y) {
+    int dataDigits = 0;
+    if (data - 100 > -FLT_EPSILON) {
+        dataDigits = 3;
+    } else {
+        dataDigits = 2;
+    }
+    
+    int charWidth = u8g2.getStrWidth("0"); // Width of a single character
+    int numWidth = charWidth * (dataDigits + 1 + digits); // Include decimal point
+
+    int posX = u8g2.getWidth() - numWidth;
+    u8g2.setCursor(posX, y);
+    u8g2.print(data, digits);
+    u8g2.sendBuffer();
+}
+
+void U8g2Display::printTemperatures(float input, float setPoint, bool steaming) {
+  unsigned int align_right;
+  const unsigned int align_right_2digits = u8g2.getWidth() - 56; // TODO replace these magic numbers, what is 56?
+  const unsigned int align_right_3digits = u8g2.getWidth() - 56 - 12; // TODO replace these magic numbers, what is 56 and what is 12?
+
+  if (input - 100 > -FLT_EPSILON) {
+    align_right = align_right_3digits;
+  } else {
+    align_right = align_right_2digits;
+  }
+  setFont(FontType::Big);
+  u8g2.setCursor(align_right, 3);
+  u8g2.print(input, 1);
+  setFont(FontType::Small);
+  u8g2.print((char)176);
+  u8g2.println("C");
+  setFont(FontType::OpenIconicEmbedded);
+  u8g2.drawGlyph(align_right - 11, 3 + 6, 0x0046);
+
+  // if (Input <= *activeSetPoint + 5 || activeState == State::SteamMode) { //only show setpoint if we are not steaming
+  if (!steaming) {
+    if (setPoint >= 100) {
+      align_right = align_right_3digits;
+    } else {
+      align_right = align_right_2digits;
+    }
+    setFont(FontType::Big);
+    u8g2.setCursor(align_right, 20);
+    u8g2.print(setPoint, 1);
+    setFont(FontType::Small);
+    u8g2.print((char)176);
+    u8g2.println("C");
+    setFont(FontType::OpenIconicOther);
+    u8g2.drawGlyph(align_right - 11, 20 + 6, 0x047);  // small circle in circle
+  }
+}
+

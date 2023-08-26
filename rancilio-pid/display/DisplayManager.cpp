@@ -93,3 +93,15 @@ void DisplayManager::printCentered(const char* c, uint16_t y) {
 void DisplayManager::printCentered(const char* line1, const char* line2, uint16_t y) {
     display->printCentered(line1, line2, y);
 }
+
+void DisplayManager::printRightAligned(const char* c, uint16_t y) {
+    display->printRightAligned(c, y);
+}
+
+void DisplayManager::printRightAligned(float data, unsigned int digits, uint16_t y) {
+    display->printRightAligned(data, digits, y);
+}
+
+void DisplayManager::printTemperatures(float t1, float t2, bool steaming) {
+    display->printTemperatures(t1, t2, steaming);
+}

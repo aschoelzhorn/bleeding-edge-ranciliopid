@@ -15,7 +15,16 @@ enum class StatusImage {
     SoftwareUpdate = 8
 };
 
-// std::map<StatusImage, const unsigned char*> statusImageDictionary = {
+enum class StatusIcon {
+    Profile_1 = 0,
+    Profile_2 = 1,
+    Profile_3 = 2,
+    Wifi_Not_Ok = 3,
+    Blynk_Not_Ok = 4,
+    Mqtt_Not_Ok = 5
+};
+
+// std::map<StatusImage, const unsigned char*> imageDictionary = {
 //     {StatusImage::Coldstart, coldstart_bits},
 //     {StatusImage::Brewing, brewing_bits},
 //     {StatusImage::BrewReady, brew_ready_bits},
@@ -26,7 +35,7 @@ enum class StatusImage {
 //     {StatusImage::Menu, menu_bits}
 // };
 
-// std::map<StatusImage, const unsigned char*> statusImageRotatedDictionary = {
+// std::map<StatusImage, const unsigned char*> imageRotatedDictionary = {
 //     {StatusImage::Coldstart, coldstart_rotate_bits},
 //     {StatusImage::Brewing, brewing_rotate_bits},
 //     {StatusImage::BrewReady, brew_ready_rotate_bits},

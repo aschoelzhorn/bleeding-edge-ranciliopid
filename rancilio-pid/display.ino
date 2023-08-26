@@ -6,7 +6,7 @@
 #include "rancilio-debug.h"
 #include "rancilio-network.h"
 
-#include "display/ImageDictionary.h"
+//#include "display/ImageDictionary.h"
 
 #include "display/DisplayManager.h"
 extern DisplayManager display;  // declare the extern DisplayManager object to use the same instance everywhere
@@ -128,7 +128,7 @@ void displaymessage(State activeState, char* displaymessagetext, char* displayme
 }
 
 
-std::map<StatusImage, const unsigned char*> statusImageDictionary = {
+std::map<StatusImage, const unsigned char*> imageDictionary = {
     {StatusImage::Coldstart, coldstart_bits},
     {StatusImage::Brewing, brewing_bits},
     {StatusImage::BrewReady, brew_ready_bits},
@@ -139,7 +139,7 @@ std::map<StatusImage, const unsigned char*> statusImageDictionary = {
     {StatusImage::Menu, menu_bits}
 };
 
-std::map<StatusImage, const unsigned char*> statusImageRotatedDictionary = {
+std::map<StatusImage, const unsigned char*> imageRotatedDictionary = {
     {StatusImage::Coldstart, coldstart_rotate_bits},
     {StatusImage::Brewing, brewing_rotate_bits},
     {StatusImage::BrewReady, brew_ready_rotate_bits},
@@ -150,111 +150,30 @@ std::map<StatusImage, const unsigned char*> statusImageRotatedDictionary = {
     {StatusImage::Menu, menu_rotate_bits}
 };
 
-void drawStatusImage(StatusImage image, bool flip) { 
+std::map<StatusIcon, const unsigned char*> statusIconDictionary = {
+    {StatusIcon::Profile_1, profile_1_bits},
+    {StatusIcon::Profile_2, profile_2_bits},
+    {StatusIcon::Profile_3, profile_3_bits},
+    {StatusIcon::Wifi_Not_Ok, wifi_not_ok_bits},
+    {StatusIcon::Blynk_Not_Ok, blynk_not_ok_bits},
+    {StatusIcon::Mqtt_Not_Ok, mqtt_not_ok_bits}
+};
+
+void showImage(StatusImage image, bool flip) { 
   if (image_flip) {
-    display.drawImage(0, 0, icon_width, icon_height, statusImageDictionary[image]);
+    display.drawImage(0, 0, icon_width, icon_height, imageDictionary[image]);
   } else {
-    display.drawImage(0, 0, icon_width, icon_height, statusImageRotatedDictionary[image]);
+    display.drawImage(0, 0, icon_width, icon_height, imageRotatedDictionary[image]);
   }
 }
 
 
-void displaymessage_helper(State activeState, char* displaymessagetext, char* displaymessagetext2) {
-  display.clearBuffer();
-  display.setBitmapMode(1);
 
-  if (softwareUpdateCheck()) {
-    showSoftwareUpdate();
-  } else if (screenSaverCheck()) {
-    showScreenSaver();
-  } else if (menuCheck()) {
-    showMenu(&displaymessagetext, &displaymessagetext2);
-  } else {
-    image_flip = !image_flip;
-    unsigned int align_right;
-    const unsigned int align_right_2digits = display.getWidth() - 56; // TODO replace these magic numbers, what is 56?
-    const unsigned int align_right_3digits = display.getWidth() - 56 - 12; // TODO replace these magic numbers, what is 56 and what is 12?
+void showTemperatures(float t1, float t2, bool steaming) {
+  display.printTemperatures(t1, t2, steaming);
+}
 
-    bool showLastBrewStatistics = ( (brewTimer > 0) && (currentWeight != 0) && 
-     (millis() <= brewStatisticsTimer + brewStatisticsAdditionalDisplayTime) ) ? true : false;
-
-#if (ICON_COLLECTION == 3)
-      // text only mode
-      // I deleted the code in here, why drawImage in text only mode?
-#else
-      // display icons
-      switch (activeState) {
-        case State::ColdStart:
-        case State::StabilizeTemperature:
-          drawStatusImage(StatusImage::Coldstart, image_flip);
-          break;
-        case State::BrewDetected: // brew
-          drawStatusImage(StatusImage::Brewing, image_flip);
-          break;
-        case State::InnerZoneDetected:
-          if (brewReady) {
-            drawStatusImage(StatusImage::BrewReady, image_flip);
-          } else { // inner zone
-            drawStatusImage(StatusImage::BrewAcceptable, image_flip);
-          }
-          break;
-        case State::OuterZoneDetected:
-          if (Input >= steamReadyTemp) { // fallback: if hardware steaming button is used still show steaming icon
-            drawStatusImage(StatusImage::Steam, image_flip);
-          } else {
-            drawStatusImage(StatusImage::OuterZone, image_flip);
-          }
-          break;
-        case State::SteamMode: // steaming state (detected via controlAction STEAMING)
-          if (Input >= steamReadyTemp) {
-            drawStatusImage(StatusImage::Steam, image_flip);
-          } else {
-            // TODO create new icons for steam phase
-            drawStatusImage(StatusImage::OuterZone, image_flip);
-          }
-          break;
-        case State::SleepMode: // sleeping state
-          break;
-        case State::CleanMode: // cleaning state
-          drawStatusImage(StatusImage::Clean, image_flip);
-          break;
-      }
-#endif
-   // }
-
-    // display current and target temperature
-    if (activeState != State::Undefined && activeState != State::BrewDetected && !showLastBrewStatistics) {
-      if (Input - 100 > -FLT_EPSILON) {
-        align_right = align_right_3digits;
-      } else {
-        align_right = align_right_2digits;
-      }
-      display.setFont(FontType::Big);
-      display.setCursor(align_right, 3);
-      display.print(Input, 1);
-      display.setFont(FontType::Small);
-      display.print((char)176);
-      display.println("C");
-      display.setFont(FontType::OpenIconicEmbedded);
-      display.drawGlyph(align_right - 11, 3 + 6, 0x0046);
-
-      // if (Input <= *activeSetPoint + 5 || activeState == State::SteamMode) { //only show setpoint if we are not steaming
-      if (!steaming) {
-        if (*activeSetPoint >= 100) {
-          align_right = align_right_3digits;
-        } else {
-          align_right = align_right_2digits;
-        }
-        display.setFont(FontType::Big);
-        display.setCursor(align_right, 20);
-        display.print(*activeSetPoint, 1);
-        display.setFont(FontType::Small);
-        display.print((char)176);
-        display.println("C");
-        display.setFont(FontType::OpenIconicOther);
-        display.drawGlyph(align_right - 11, 20 + 6, 0x047);
-      }
-    } else if (activeState == State::BrewDetected || showLastBrewStatistics) {  //brew
+void showBrewingInfo() {
       totalBrewTime = ( (OnlyPID || BREWTIME_TIMER == 0 )? *activeBrewTime : *activePreinfusion + *activePreinfusionPause + *activeBrewTime) * 1000;
       unsigned int align_right_left_value = display.getWidth() - 56 - 5;
       unsigned int align_right_right_value = display.getWidth() - 56 + 28;
@@ -297,6 +216,73 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
       } else {
         display.drawGlyph(align_right_left_value - 11, 20 + 6, 0x04f);
       }
+}
+
+void displaymessage_helper(State activeState, char* displaymessagetext, char* displaymessagetext2) {
+  display.clearBuffer();
+  display.setBitmapMode(1);
+
+  if (softwareUpdateCheck()) {
+    showSoftwareUpdate();
+  } else if (screenSaverCheck()) {
+    showScreenSaver();
+  } else if (menuCheck()) {
+    showMenu(&displaymessagetext, &displaymessagetext2);
+  } else {
+    image_flip = !image_flip;
+
+    bool showLastBrewStatistics = ( (brewTimer > 0) && (currentWeight != 0) && 
+     (millis() <= brewStatisticsTimer + brewStatisticsAdditionalDisplayTime) ) ? true : false;
+
+#if (ICON_COLLECTION == 3)
+      // text only mode
+      // I deleted the code in here, why drawImage in text only mode?
+#else
+      // display icons
+      switch (activeState) {
+        case State::ColdStart:
+        case State::StabilizeTemperature:
+          showImage(StatusImage::Coldstart, image_flip);
+          break;
+        case State::BrewDetected: // brew
+          showImage(StatusImage::Brewing, image_flip);
+          break;
+        case State::InnerZoneDetected:
+          if (brewReady) {
+            showImage(StatusImage::BrewReady, image_flip);
+          } else { // inner zone
+            showImage(StatusImage::BrewAcceptable, image_flip);
+          }
+          break;
+        case State::OuterZoneDetected:
+          if (Input >= steamReadyTemp) { // fallback: if hardware steaming button is used still show steaming icon
+            showImage(StatusImage::Steam, image_flip);
+          } else {
+            showImage(StatusImage::OuterZone, image_flip);
+          }
+          break;
+        case State::SteamMode: // steaming state (detected via controlAction STEAMING)
+          if (Input >= steamReadyTemp) {
+            showImage(StatusImage::Steam, image_flip);
+          } else {
+            // TODO create new icons for steam phase
+            showImage(StatusImage::OuterZone, image_flip);
+          }
+          break;
+        case State::SleepMode: // sleeping state
+          break;
+        case State::CleanMode: // cleaning state
+          showImage(StatusImage::Clean, image_flip);
+          break;
+      } // switch (activeState)
+#endif
+   // }
+
+    // display current and target temperature
+    if (activeState != State::Undefined && activeState != State::BrewDetected && !showLastBrewStatistics) {
+      showTemperatures(Input, *activeSetPoint, steaming);
+    } else if (activeState == State::BrewDetected || showLastBrewStatistics) {  //brew
+      showBrewingInfo();
     }
   }
 
@@ -305,18 +291,29 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
   showPowerOffCountdown(displaymessagetext, displaymessagetext2);
 #endif
 
-  display.setFont(FontType::Normal);
-  display.printCentered(displaymessagetext, displaymessagetext2, 44);
-  display.printCentered(displaymessagetext2, 53);
+  showStatusMessage(displaymessagetext, displaymessagetext2);
 
   // add status icons
   if (millis() >= 10000) {
-    byte icon_y = 64 - (status_icon_height - 1);
+    showStatusIcons();
+  }
+  display.sendBuffer();
+}
+
+void showStatusIcons() { 
+    byte icon_y = display.getHeight() - (status_icon_height - 1);
     byte icon_counter = 0;
     #if (ENABLE_PROFILE_STATUS > 0)
-      if (profile == 1 && ENABLE_PROFILE_STATUS == 1 && !screenSaverOn) { display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_1_bits); icon_counter++; }
-      else if (profile == 2 && !screenSaverOn) { display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_2_bits); icon_counter++; }
-      else if (profile == 3 && !screenSaverOn) { display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_3_bits); icon_counter++; }
+      if (profile == 1 && ENABLE_PROFILE_STATUS == 1 && !screenSaverOn) {
+        display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_1_bits);
+        icon_counter++;
+      } else if (profile == 2 && !screenSaverOn) { 
+        display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_2_bits);
+        icon_counter++;
+      } else if (profile == 3 && !screenSaverOn) {
+        display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_3_bits);
+        icon_counter++;
+      }
     #endif
     #if (ENABLE_FAILURE_STATUS_ICONS == 1)
       if (image_flip) {   
@@ -332,14 +329,14 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
           display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, mqtt_not_ok_bits);
           icon_counter++;
         }
-    }
+      }
     #endif
-  }
-  display.sendBuffer();
 }
 
+
 void showSoftwareUpdate() {
-    display.drawImage(41, 0, update_icon_width, update_icon_height, update_bits);
+    int posX = (display.getWidth() - update_icon_width) / 2;
+    display.drawImage(posX, 0, update_icon_width, update_icon_height, update_bits);
 }
 
 void showScreenSaver() {
@@ -387,7 +384,7 @@ void showMenu(char** displaymessagetext, char** displaymessagetext2) {
   const unsigned int align_right_1digits_decimal = display.getWidth() - 56 + 12;
   menuMap* menuConfigPosition = getMenuConfigPosition(menuConfig, menuPosition);
   if (!menuConfigPosition) return;
-  drawStatusImage(StatusImage::Menu, image_flip);
+  showImage(StatusImage::Menu, image_flip);
   display.setFont(FontType::Big);
   if (!strcmp(menuConfigPosition->value->type, "bool")) {
     bool menuValue;

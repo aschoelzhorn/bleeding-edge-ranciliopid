@@ -61,3 +61,13 @@ void DummyDisplay::printCentered(const char* c, uint16_t y) {
 
 void DummyDisplay::printCentered(const char* line1, const char* line2, uint16_t y) {
 }
+
+void DummyDisplay::printRightAligned(const char* c, uint16_t y) {
+}
+
+void DummyDisplay::printRightAligned(float data, unsigned int digits, uint16_t y) {
+}
+
+void DummyDisplay::printTemperatures(float t1, float t2, bool steaming) {
+}
+

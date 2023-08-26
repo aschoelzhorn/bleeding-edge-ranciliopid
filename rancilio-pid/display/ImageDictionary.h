@@ -55,6 +55,6 @@ public:
      //static const unsigned char* getStatusImageRotated(StatusImage image);
 
 private:
-//     static const std::map<StatusImage, const unsigned char*> statusImageDictionary;
-//     static const std::map<StatusImage, const unsigned char*> statusImageRotatedDictionary;
+//     static const std::map<StatusImage, const unsigned char*> imageDictionary;
+//     static const std::map<StatusImage, const unsigned char*> imageRotatedDictionary;
 };
