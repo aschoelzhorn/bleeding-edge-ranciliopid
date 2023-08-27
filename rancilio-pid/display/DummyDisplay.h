@@ -30,6 +30,8 @@ public:
     void printRightAligned(const char* c, uint16_t y) override;
     void printRightAligned(float data, unsigned int digits, uint16_t y) override;
     void printTemperatures(float t1, float t2, bool steaming) override;
+    Viewport getView(Area) override;
+    void clearView(Area) override;
 };
 
 #endif // DUMMYDISPLAY_H

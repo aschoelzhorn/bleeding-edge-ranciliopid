@@ -1,6 +1,6 @@
 // ImageDictionary.h
 
-#pragma once
+     #pragma once
 
 #include <map>
 #include "status_images.h"  // Include the enum

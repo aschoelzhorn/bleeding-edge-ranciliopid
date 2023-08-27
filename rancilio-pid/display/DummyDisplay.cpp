@@ -71,3 +71,17 @@ void DummyDisplay::printRightAligned(float data, unsigned int digits, uint16_t y
 void DummyDisplay::printTemperatures(float t1, float t2, bool steaming) {
 }
 
+Viewport dummy = Viewport(MyPoint(), 0, 0);
+
+std::map<Area, Viewport> areaMap = {
+    {Area::Bootlogo, dummy},
+};
+
+Viewport DummyDisplay::getView(Area area) {
+    return areaMap[area];
+}
+
+void DummyDisplay::clearView(Area area) {
+}
+
+

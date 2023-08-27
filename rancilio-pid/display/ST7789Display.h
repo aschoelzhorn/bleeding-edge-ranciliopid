@@ -5,6 +5,15 @@
 #include <TFT_eWidget.h>
 #include "IDisplay.h"
 
+// Meter colour schemes
+#define RED2RED 0
+#define GREEN2GREEN 1
+#define BLUE2BLUE 2
+#define BLUE2RED 3
+#define GREEN2RED 4
+#define RED2GREEN 5
+#define BLUE2GREEN 6
+
 class ST7789Display : public IDisplay {
 public:
     ST7789Display(TFT_eSPI& tftInstance);
@@ -33,9 +42,22 @@ public:
 
     void printTemperatures(float t1, float t2, bool steaming) override;
 
+    Viewport getView(Area) override;
+    void clearView(Area) override;
+
 private:
     TFT_eSPI& tft;
     unsigned int topMargin = 10;
+    int ringMeter(int value, int vmin, int vmax, int x, int y, int r, const char *units, byte scheme);
+    unsigned int rainbow(byte value);
+    float sineWave(int phase);
+
+    void initViews();
+
+    std::map<Area, Viewport> areaMap;
+    Viewport bootlogo;
+    Viewport bootmessage;
+    Viewport statusmessage;
 };
 
 #endif // ST7789DISPLAY_H

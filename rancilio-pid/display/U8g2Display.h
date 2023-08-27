@@ -31,10 +31,18 @@ public:
     void printRightAligned(float data, unsigned int digits, uint16_t y) override;
     void printTemperatures(float t1, float t2, bool steaming) override;
 
+    Viewport getView(Area) override;
+    void clearView(Area) override;
+
 private:
     U8G2& u8g2;
-
     void prepare();
+    void initViews();
+
+    std::map<Area, Viewport> areaMap;
+    Viewport bootlogo;
+    Viewport bootmessage;
+    Viewport statusmessage;
 };
 
 #endif // U8G2DISPLAY_H

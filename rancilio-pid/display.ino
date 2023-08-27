@@ -479,8 +479,12 @@ void InitDisplay() {
 }
 
 void showBootLogo() {
-  int posX = (display.getWidth() - logo_width) / 2;
-  display.drawImage(posX, 0, logo_width, logo_height, logo_bits);
+  //int posX = (display.getWidth() - logo_width) / 2;
+  MyPoint p1 = display.getView(Area::Bootlogo).getUpperLeft();
+  display.drawImage(p1.X, p1.Y, logo_width, logo_height, logo_bits);
+
+  // this could also be changed to something like
+  //display.drawImageCentered(ViewPort, image);
 }
 
 void hideBootLogo() {
@@ -517,17 +521,17 @@ void showStatusMessage(char* displaymessagetext) {
 
 void showStatusMessage(char* displaymessagetext, char* displaymessagetext2) {
   display.setFont(FontType::Normal);
-  hideStatusMessage();
+  //hideStatusMessage();
   // status messages are shown in the lower half of the display
   // upper half is for icons und stuff
-  int posY = display.getHeight() / 2;  
+  int posY = 40; //display.getHeight() / 2;
   display.printCentered(displaymessagetext, displaymessagetext2, posY);
 }
 
 void hideStatusMessage() {
   // status messages are shown in the lower half of the display
   // upper half is for icons und stuff
-  int posY = display.getHeight() / 2;
+  int posY = 40; // display.getHeight() / 2;
   display.clearRect(0, posY, display.getWidth(), display.getHeight() - posY);
 }
 

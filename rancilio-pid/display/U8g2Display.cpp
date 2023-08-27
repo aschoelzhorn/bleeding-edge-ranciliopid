@@ -17,6 +17,25 @@ void U8g2Display::init(void) {
   prepare();
   u8g2.setFlipMode(ROTATE_DISPLAY);
   u8g2.clearBuffer();
+
+  initViews();    
+}
+
+void U8g2Display::initViews() {
+    int logo_width  = 45;
+
+    MyPoint p1 = MyPoint((this->getWidth() - logo_width) / 2, 0);
+    MyPoint p2 = MyPoint(0, logo_width);
+
+    bootlogo = Viewport(p1, this->getHeight() / 2, 10);
+    bootmessage = Viewport(MyPoint((this->getWidth() - logo_width) / 2, 0), 10, 10);
+    statusmessage = Viewport(MyPoint((this->getWidth() - logo_width) / 2, 0), 10, 10);
+
+    areaMap = {
+        {Area::Bootlogo, this->bootlogo},
+        {Area::BootMessage, this->bootmessage},
+        {Area::StatusMessage, this->statusmessage},
+    };        
 }
 
 void U8g2Display::prepare(void) {
@@ -205,3 +224,11 @@ void U8g2Display::printTemperatures(float input, float setPoint, bool steaming) 
   }
 }
 
+Viewport U8g2Display::getView(Area area) {
+    return areaMap[area];
+}
+
+void U8g2Display::clearView(Area area) {
+    Viewport view = getView(area);
+    clearRect(view.getUpperLeft().X, view.getUpperLeft().Y, view.getWidth(), view.getHeight());
+}

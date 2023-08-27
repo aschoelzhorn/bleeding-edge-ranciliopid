@@ -1,6 +1,10 @@
 #ifndef IDISPLAY_H
 #define IDISPLAY_H
 
+#include <map>
+
+#include "Viewport.h"
+
 enum class FontType {
     Small,
     Normal,
@@ -11,6 +15,12 @@ enum class FontType {
     OpenIconicOther
 };
 
+enum class Area {
+    Bootlogo,
+    BootMessage,
+    StatusMessage,
+    StatusIcons,
+};
 
 class IDisplay {
 public:
@@ -31,12 +41,16 @@ public:
     virtual int getWidth();
     virtual int getHeight();
     virtual void clearRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+    
     virtual void printCentered(const char* c, uint16_t y);
     virtual void printCentered(const char* line1, const char* line2, uint16_t y);
 
     virtual void printRightAligned(const char* c, uint16_t y);
     virtual void printRightAligned(float data, unsigned int digits, uint16_t y);
     virtual void printTemperatures(float t1, float t2, bool steaming);
+
+    virtual Viewport getView(Area);
+    virtual void clearView(Area);    
 };
 
 #endif // IDISPLAY_H

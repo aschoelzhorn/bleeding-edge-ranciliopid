@@ -105,3 +105,11 @@ void DisplayManager::printRightAligned(float data, unsigned int digits, uint16_t
 void DisplayManager::printTemperatures(float t1, float t2, bool steaming) {
     display->printTemperatures(t1, t2, steaming);
 }
+
+Viewport DisplayManager::getView(Area area) {
+    return display->getView(area);
+}
+
+void DisplayManager::clearView(Area area) {
+    display->clearView(area);
+}

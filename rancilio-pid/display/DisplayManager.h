@@ -67,6 +67,9 @@ public:
     virtual void printRightAligned(float data, unsigned int digits, uint16_t y);
     virtual void printTemperatures(float t1, float t2, bool steaming);
 
+    virtual Viewport getView(Area);
+    virtual void clearView(Area);
+
 private:
    IDisplay* display;  // Use a pointer to IDisplay to allow dynamic initialization
 };
