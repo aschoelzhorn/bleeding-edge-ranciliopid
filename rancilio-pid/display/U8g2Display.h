@@ -33,6 +33,7 @@ public:
 
     Viewport getView(Area) override;
     void clearView(Area) override;
+    void fillView(Area, uint32_t color) override;
 
 private:
     U8G2& u8g2;

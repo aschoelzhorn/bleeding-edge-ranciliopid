@@ -32,7 +32,7 @@ void U8g2Display::initViews() {
     statusmessage = Viewport(MyPoint((this->getWidth() - logo_width) / 2, 0), 10, 10);
 
     areaMap = {
-        {Area::Bootlogo, this->bootlogo},
+        {Area::BootLogo, this->bootlogo},
         {Area::BootMessage, this->bootmessage},
         {Area::StatusMessage, this->statusmessage},
     };        
@@ -231,4 +231,16 @@ Viewport U8g2Display::getView(Area area) {
 void U8g2Display::clearView(Area area) {
     Viewport view = getView(area);
     clearRect(view.getUpperLeft().X, view.getUpperLeft().Y, view.getWidth(), view.getHeight());
+}
+
+void U8g2Display::fillView(Area area, uint32_t color) {
+    Viewport view = getView(area);
+
+    if (color != 0) {
+        color = 1;
+    }
+    
+    u8g2.setDrawColor(color);
+    u8g2.drawBox(view.getUpperLeft().X, view.getUpperLeft().Y, view.getWidth(), view.getHeight());
+    u8g2.sendBuffer();
 }

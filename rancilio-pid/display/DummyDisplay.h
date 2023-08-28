@@ -32,6 +32,7 @@ public:
     void printTemperatures(float t1, float t2, bool steaming) override;
     Viewport getView(Area) override;
     void clearView(Area) override;
+    void fillView(Area, uint32_t color) override;
 };
 
 #endif // DUMMYDISPLAY_H

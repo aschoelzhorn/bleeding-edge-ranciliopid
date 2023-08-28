@@ -74,7 +74,7 @@ void DummyDisplay::printTemperatures(float t1, float t2, bool steaming) {
 Viewport dummy = Viewport(MyPoint(), 0, 0);
 
 std::map<Area, Viewport> areaMap = {
-    {Area::Bootlogo, dummy},
+    {Area::BootLogo, dummy},
 };
 
 Viewport DummyDisplay::getView(Area area) {
@@ -84,4 +84,5 @@ Viewport DummyDisplay::getView(Area area) {
 void DummyDisplay::clearView(Area area) {
 }
 
-
+void DummyDisplay::fillView(Area area, uint32_t color) {
+}

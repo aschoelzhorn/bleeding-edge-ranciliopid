@@ -69,6 +69,7 @@ public:
 
     virtual Viewport getView(Area);
     virtual void clearView(Area);
+    virtual void fillView(Area, uint32_t color);
 
 private:
    IDisplay* display;  // Use a pointer to IDisplay to allow dynamic initialization

@@ -113,3 +113,8 @@ Viewport DisplayManager::getView(Area area) {
 void DisplayManager::clearView(Area area) {
     display->clearView(area);
 }
+
+void DisplayManager::fillView(Area area, uint32_t color) {
+    display->fillView(area, color);
+}
+

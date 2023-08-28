@@ -13,11 +13,11 @@ Viewport::Viewport(MyPoint startPoint, int width, int height) {
 }
 
 int Viewport::getHeight() {
-    return width;
+    return height;
 }
 
 int Viewport::getWidth() {
-    return height;
+    return width;
 }
 
 MyPoint Viewport::getUpperLeft() {
@@ -34,4 +34,11 @@ MyPoint Viewport::getLowerLeft() {
 
 MyPoint Viewport::getLowerRight() {
     return MyPoint(startPoint.X + width, startPoint.Y + height);
+}
+
+
+String Viewport::getDebugString() {
+    String output = "X/Y: " + String(startPoint.X) + " / " + String(startPoint.Y) + ", w=" + String(width) + ", h=" + String(height);
+    //snprintf((char*)displaymessagetextBuffer, sizeof(displaymessagetextBuffer), "%s", displaymessagetext);
+    return output;
 }

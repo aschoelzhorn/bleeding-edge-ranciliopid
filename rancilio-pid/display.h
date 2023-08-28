@@ -2,56 +2,56 @@
 #define _display_H
 
 #include "userConfig.h"
-// const int Display = DISPLAY_HARDWARE;
+const int Display = DISPLAY_HARDWARE;
 
 #include <map>
 #include "rancilio-pid.h"
 #include "rancilio-enums.h"
 #include "controls.h"
-#include "display/status_images.h"
+// #include "display/status_images.h"
 
-const int Display = DISPLAY_HARDWARE;
+//const int Display = DISPLAY_HARDWARE;
 
-#if DISPLAY_HARDWARE == 4
+// #if DISPLAY_HARDWARE == 4
 
-#ifdef MACHINE_TYPE_GAGGIA
-#include "display/icons/icon_gaggia_color.h"
-#elif defined(MACHINE_TYPE_ECM)
-#include "display/icons/icon_ecm_color.h"
-#elif defined(MACHINE_TYPE_RANCILIO)
-#include "display/icons/icon_rancilio_color.h"
-#else
-#include "display/icons/icon_generic_color_.h"
-#endif
-#include "display/icons/icon_shared_color.h"
+// #ifdef MACHINE_TYPE_GAGGIA
+// #include "display/icons/icon_gaggia_color.h"
+// #elif defined(MACHINE_TYPE_ECM)
+// #include "display/icons/icon_ecm_color.h"
+// #elif defined(MACHINE_TYPE_RANCILIO)
+// #include "display/icons/icon_rancilio_color.h"
+// #else
+// #include "display/icons/icon_generic_color_.h"
+// #endif
+// #include "display/icons/icon_shared_color.h"
 
-#else
+// #else
 
-#ifdef MACHINE_TYPE_GAGGIA
-#include "display/icons/icon_gaggia.h"
-#elif defined(MACHINE_TYPE_ECM)
-#include "display/icons/icon_ecm.h"
-#elif defined(MACHINE_TYPE_RANCILIO)
-#include "display/icons/icon_rancilio.h"
-#else
-#include "display/icons/icon_generic.h"
-#endif
+// #ifdef MACHINE_TYPE_GAGGIA
+// #include "display/icons/icon_gaggia.h"
+// #elif defined(MACHINE_TYPE_ECM)
+// #include "display/icons/icon_ecm.h"
+// #elif defined(MACHINE_TYPE_RANCILIO)
+// #include "display/icons/icon_rancilio.h"
+// #else
+// #include "display/icons/icon_generic.h"
+// #endif
 
-#include "display/icons/icon_shared.h"
-#endif
+// #include "display/icons/icon_shared.h"
+// #endif
 
-#if (ENABLE_BIG_STATUS_ICONS)
-#include "display/icons/icon_big.h"
-#else
-#include "display/icons/icon.h"
-#endif
-#if (ICON_COLLECTION == 2)
-#include "display/icons/icon_winter.h"
-#elif (ICON_COLLECTION == 1)
-#include "display/icons/icon_smiley.h"
-#else
-#include "display/icons/icon_simple.h" // also used as placeholder for ICON_COLLECTION==3
-#endif
+// #if (ENABLE_BIG_STATUS_ICONS)
+// #include "display/icons/icon_big.h"
+// #else
+// #include "display/icons/icon.h"
+// #endif
+// #if (ICON_COLLECTION == 2)
+// #include "display/icons/icon_winter.h"
+// #elif (ICON_COLLECTION == 1)
+// #include "display/icons/icon_smiley.h"
+// #else
+// #include "display/icons/icon_simple.h" // also used as placeholder for ICON_COLLECTION==3
+// #endif
 
 
 

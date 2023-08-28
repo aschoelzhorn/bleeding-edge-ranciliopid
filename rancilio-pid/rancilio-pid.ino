@@ -329,6 +329,10 @@ unsigned long scaleSensorCheckTimer = 2000;
     DisplayManager display(displayInstance);
 #endif  
 
+#ifdef DISPLAY_HARDWARE_TEST
+#include "display/display_test.h"
+#endif    
+
 /********************************************************
  * CONTROLS
  ******************************************************/
@@ -1052,6 +1056,9 @@ void CheckMqttConnection() {
    * LOOP()
    ***********************************/
   void loop() {
+#ifdef DISPLAY_HARDWARE_TEST
+    display_test_loop();
+#else
     tempSensor.refresh(&Input, activeState, *activeSetPoint, &secondlatestTemperature); // measure and store current temperature 
     
     if (tempSensor.isMalfunction()) {
@@ -1384,6 +1391,9 @@ void CheckMqttConnection() {
 #ifdef ESP32
     yieldIfNecessary();  // it seems esp32 multicore needs some time to complete internal house keeping
 #endif
+
+#endif
+
   }
 
   /***********************************
@@ -1813,11 +1823,13 @@ void InitOTA() {
 * CODEBLOCK for OTA end
 ******************************************************/
 
-
 /***********************************
  * SETUP()
  ***********************************/
 void setup() {
+#ifdef DISPLAY_HARDWARE_TEST
+    display_test_setup();
+#else
  #ifdef ESP32
   WiFi.useStaticBuffers(true);
   // required for remoteDebug to work
@@ -1888,4 +1900,5 @@ void setup() {
   DEBUG_print("End of setup()\n");
 
   clearDisplay();
+#endif  
 }

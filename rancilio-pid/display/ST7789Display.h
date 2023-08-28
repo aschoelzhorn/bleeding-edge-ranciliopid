@@ -44,6 +44,7 @@ public:
 
     Viewport getView(Area) override;
     void clearView(Area) override;
+    void fillView(Area, uint32_t color) override;
 
 private:
     TFT_eSPI& tft;
@@ -55,9 +56,15 @@ private:
     void initViews();
 
     std::map<Area, Viewport> areaMap;
+    // these two don't overlap
     Viewport bootlogo;
     Viewport bootmessage;
+
+    // these four don't overlap
     Viewport statusmessage;
+    Viewport statusicons;
+    Viewport actionimage;
+    Viewport temperature;
 };
 
 #endif // ST7789DISPLAY_H

@@ -8,6 +8,7 @@
 // #DEFINE STATUSMESSAGE = 4
 
 #include "MyPoint.h"
+#include <Arduino.h>
 
 class Viewport {
 public:
@@ -21,6 +22,8 @@ public:
 
     MyPoint getLowerLeft();
     MyPoint getLowerRight();
+
+    String getDebugString();
 
 private:
     MyPoint startPoint;

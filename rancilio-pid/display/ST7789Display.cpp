@@ -25,17 +25,29 @@ void ST7789Display::init() {
 void ST7789Display::initViews() {
     int logo_width  = 45;
 
-    MyPoint p1 = MyPoint((this->getWidth() - logo_width) / 2, 0);
-    MyPoint p2 = MyPoint(0, logo_width);
+    int width = getWidth();
+    int height = getHeight();
 
-    bootlogo = Viewport(p1, this->getHeight() / 2, 10);
-    bootmessage = Viewport(MyPoint((this->getWidth() - logo_width) / 2, 0), 10, 10);
-    statusmessage = Viewport(MyPoint((this->getWidth() - logo_width) / 2, 0), 10, 10);
+    int status_icon_height = 15;
+
+    bootlogo = Viewport(MyPoint(0, 0), width, height / 2);
+    bootmessage = Viewport(MyPoint(0, height / 2), width, height / 2);
+    
+    actionimage = Viewport(MyPoint(0, 0), width / 2, height / 2);
+    temperature = Viewport(MyPoint(width / 2, 0), width / 2, height / 2);
+    
+    statusmessage = Viewport(MyPoint(0, height / 2), width, (height/2)-status_icon_height);
+    statusicons = Viewport(MyPoint(0, height - status_icon_height), width, status_icon_height);
 
     areaMap = {
-        {Area::Bootlogo, this->bootlogo},
+        {Area::BootLogo, this->bootlogo},
         {Area::BootMessage, this->bootmessage},
+        
+        {Area::ActionImage, this->actionimage},
+        {Area::Temperature, this->temperature},
         {Area::StatusMessage, this->statusmessage},
+        {Area::StatusIcons, this->statusicons},
+        
     };    
 }
 
@@ -299,5 +311,10 @@ Viewport ST7789Display::getView(Area area) {
 void ST7789Display::clearView(Area area) {
     Viewport view = getView(area);
     clearRect(view.getUpperLeft().X, view.getUpperLeft().Y, view.getWidth(), view.getHeight());
+}
+
+void ST7789Display::fillView(Area area, uint32_t color) {
+    Viewport view = getView(area);
+    tft.fillRect(view.getUpperLeft().X, view.getUpperLeft().Y, view.getWidth(), view.getHeight(), color);
 }
 

@@ -16,10 +16,12 @@ enum class FontType {
 };
 
 enum class Area {
-    Bootlogo,
+    BootLogo,
     BootMessage,
     StatusMessage,
     StatusIcons,
+    ActionImage,
+    Temperature
 };
 
 class IDisplay {
@@ -50,7 +52,8 @@ public:
     virtual void printTemperatures(float t1, float t2, bool steaming);
 
     virtual Viewport getView(Area);
-    virtual void clearView(Area);    
+    virtual void clearView(Area);
+    virtual void fillView(Area view, uint32_t color);
 };
 
 #endif // IDISPLAY_H

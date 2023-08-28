@@ -480,7 +480,7 @@ void InitDisplay() {
 
 void showBootLogo() {
   //int posX = (display.getWidth() - logo_width) / 2;
-  MyPoint p1 = display.getView(Area::Bootlogo).getUpperLeft();
+  MyPoint p1 = display.getView(Area::BootLogo).getUpperLeft();
   display.drawImage(p1.X, p1.Y, logo_width, logo_height, logo_bits);
 
   // this could also be changed to something like
