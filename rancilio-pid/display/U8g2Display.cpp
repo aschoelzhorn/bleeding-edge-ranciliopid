@@ -22,14 +22,14 @@ void U8g2Display::init(void) {
 }
 
 void U8g2Display::initViews() {
-    int logo_width  = 45;
+    int logowidth  = 45;
 
-    MyPoint p1 = MyPoint((this->getWidth() - logo_width) / 2, 0);
-    MyPoint p2 = MyPoint(0, logo_width);
+    MyPoint p1 = MyPoint((this->getWidth() - logowidth) / 2, 0);
+    MyPoint p2 = MyPoint(0, logowidth);
 
     bootlogo = Viewport(p1, this->getHeight() / 2, 10);
-    bootmessage = Viewport(MyPoint((this->getWidth() - logo_width) / 2, 0), 10, 10);
-    statusmessage = Viewport(MyPoint((this->getWidth() - logo_width) / 2, 0), 10, 10);
+    bootmessage = Viewport(MyPoint((this->getWidth() - logowidth) / 2, 0), 10, 10);
+    statusmessage = Viewport(MyPoint((this->getWidth() - logowidth) / 2, 0), 10, 10);
 
     areaMap = {
         {Area::BootLogo, this->bootlogo},
@@ -243,4 +243,14 @@ void U8g2Display::fillView(Area area, uint32_t color) {
     u8g2.setDrawColor(color);
     u8g2.drawBox(view.getUpperLeft().X, view.getUpperLeft().Y, view.getWidth(), view.getHeight());
     u8g2.sendBuffer();
+}
+
+void U8g2Display::drawImageCentered(Area area, const uint8_t *bitmap) {
+    Viewport view = getView(area);
+    drawImage(view.getUpperLeft().X, view.getUpperLeft().Y, 45, 45, bitmap); // TODO: replace 45
+}
+
+void U8g2Display::drawImageCentered(Area area, const uint16_t *bitmap) {
+    Viewport view = getView(area);
+    drawImage(view.getUpperLeft().X, view.getUpperLeft().Y, 45, 45, bitmap); // TODO: replace 45
 }

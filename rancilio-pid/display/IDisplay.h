@@ -54,6 +54,9 @@ public:
     virtual Viewport getView(Area);
     virtual void clearView(Area);
     virtual void fillView(Area view, uint32_t color);
+
+    virtual void drawImageCentered(Area, const uint8_t *bitmap);
+    virtual void drawImageCentered(Area, const uint16_t *bitmap);
 };
 
 #endif // IDISPLAY_H

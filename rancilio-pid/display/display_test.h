@@ -4,7 +4,7 @@
 #include <float.h>
 #include "display.h"
 
-//#include "display/ImageDictionary.h"
+#include "display/ImageDictionary.h"
 
 #include "display/DisplayManager.h"
 extern DisplayManager display;  // declare the extern DisplayManager object to use the same instance everywhere

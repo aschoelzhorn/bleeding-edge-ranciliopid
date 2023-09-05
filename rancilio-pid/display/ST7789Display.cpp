@@ -5,8 +5,6 @@
 
 
 
-
-
 ST7789Display::ST7789Display(TFT_eSPI& tftInstance) : tft(tftInstance) {
 }
 
@@ -23,12 +21,12 @@ void ST7789Display::init() {
 }
 
 void ST7789Display::initViews() {
-    int logo_width  = 45;
+    //int logowidth  = 45;
 
     int width = getWidth();
     int height = getHeight();
 
-    int status_icon_height = 15;
+    int statusicon_height = 15;
 
     bootlogo = Viewport(MyPoint(0, 0), width, height / 2);
     bootmessage = Viewport(MyPoint(0, height / 2), width, height / 2);
@@ -36,8 +34,8 @@ void ST7789Display::initViews() {
     actionimage = Viewport(MyPoint(0, 0), width / 2, height / 2);
     temperature = Viewport(MyPoint(width / 2, 0), width / 2, height / 2);
     
-    statusmessage = Viewport(MyPoint(0, height / 2), width, (height/2)-status_icon_height);
-    statusicons = Viewport(MyPoint(0, height - status_icon_height), width, status_icon_height);
+    statusmessage = Viewport(MyPoint(0, height / 2), width, (height/2)-statusicon_height);
+    statusicons = Viewport(MyPoint(0, height - statusicon_height), width, statusicon_height);
 
     areaMap = {
         {Area::BootLogo, this->bootlogo},
@@ -318,3 +316,12 @@ void ST7789Display::fillView(Area area, uint32_t color) {
     tft.fillRect(view.getUpperLeft().X, view.getUpperLeft().Y, view.getWidth(), view.getHeight(), color);
 }
 
+void ST7789Display::drawImageCentered(Area area, const uint8_t *bitmap) {
+    Viewport view = getView(area);
+    drawImage(view.getUpperLeft().X, view.getUpperLeft().Y, 45, 45, bitmap);
+}
+
+void ST7789Display::drawImageCentered(Area area, const uint16_t *bitmap) {
+    Viewport view = getView(area);
+    drawImage(view.getUpperLeft().X, view.getUpperLeft().Y, 45, 45, bitmap);
+}  

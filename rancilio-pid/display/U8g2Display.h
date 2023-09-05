@@ -35,6 +35,9 @@ public:
     void clearView(Area) override;
     void fillView(Area, uint32_t color) override;
 
+    void drawImageCentered(Area, const uint8_t *bitmap) override;
+    void drawImageCentered(Area, const uint16_t *bitmap) override;    
+
 private:
     U8G2& u8g2;
     void prepare();

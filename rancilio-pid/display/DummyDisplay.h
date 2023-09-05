@@ -33,6 +33,8 @@ public:
     Viewport getView(Area) override;
     void clearView(Area) override;
     void fillView(Area, uint32_t color) override;
+    void drawImageCentered(Area, const uint8_t *bitmap) override;
+    void drawImageCentered(Area, const uint16_t *bitmap) override;    
 };
 
 #endif // DUMMYDISPLAY_H

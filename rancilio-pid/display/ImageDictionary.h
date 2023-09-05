@@ -10,8 +10,13 @@
 
 #include <pgmspace.h>
 
-
 #if DISPLAY_HARDWARE == 4
+
+// #define g_logo_width 216
+// #define g_logo_height 131
+
+using LogoType = uint16_t;
+// using LogoData = std::array<LogoType, g_logo_width * g_logo_height>;
 
 #ifdef MACHINE_TYPE_GAGGIA
 #include "icons/icon_gaggia_color.h"
@@ -26,6 +31,7 @@
 
 #else
 
+using LogoType = const char;
 #ifdef MACHINE_TYPE_GAGGIA
 #include "icons/icon_gaggia.h"
 #elif defined(MACHINE_TYPE_ECM)
@@ -56,16 +62,17 @@
 class ImageDictionary {
 public:
      ImageDictionary();
-     //static const unsigned char* getStatusImage(StatusImage image);
-     //static const unsigned char* getStatusImageRotated(StatusImage image);
 
+     // void init();
+
+     const LogoType* getLogo(StatusImage);
      const unsigned char* getImage(StatusImage);
      const unsigned char* getImageRotated(StatusImage);
      const unsigned char* getStatusIcon(StatusIcon);
-
+     
+     //std::map<StatusImage, LogoType*> logoDictionary;
 private:
-//     static const std::map<StatusImage, const unsigned char*> imageDictionary;
-//     static const std::map<StatusImage, const unsigned char*> imageRotatedDictionary;
+     std::map<StatusImage, const LogoType*> logoDictionary;
      std::map<StatusImage, const unsigned char*> imageDictionary;
      std::map<StatusImage, const unsigned char*> imageRotatedDictionary;
      std::map<StatusIcon, const unsigned char*> statusIconDictionary;

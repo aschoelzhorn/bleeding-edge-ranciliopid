@@ -118,3 +118,11 @@ void DisplayManager::fillView(Area area, uint32_t color) {
     display->fillView(area, color);
 }
 
+void DisplayManager::drawImageCentered(Area area, const uint8_t *bitmap) {
+    display->drawImageCentered(area, bitmap);
+}
+
+void DisplayManager::drawImageCentered(Area area, const uint16_t *bitmap) {
+    display->drawImageCentered(area, bitmap);
+}
+

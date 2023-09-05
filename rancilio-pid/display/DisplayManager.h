@@ -71,6 +71,9 @@ public:
     virtual void clearView(Area);
     virtual void fillView(Area, uint32_t color);
 
+    virtual void drawImageCentered(Area, const uint8_t *bitmap);
+    virtual void drawImageCentered(Area, const uint16_t *bitmap);    
+
 private:
    IDisplay* display;  // Use a pointer to IDisplay to allow dynamic initialization
 };

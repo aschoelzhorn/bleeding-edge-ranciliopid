@@ -5,6 +5,7 @@
 
 ImageDictionary images;
 
+
 void display_test_setup() {
     Serial.begin(115200);
     Serial.println("display_test_setup");
@@ -23,60 +24,75 @@ void display_test_setup() {
     display.fillView(Area::BootLogo, TFT_BLUE);
     Serial.println();
 
-    delay(2000);
+    delay(200);
     Serial.println("Area::BootMessage, TFT_GREEN");
     Serial.println(bootMessage.getDebugString());
     display.fillView(Area::BootMessage, TFT_GREEN);
     Serial.println();
 
-    delay(2000);
+    delay(200);
     Serial.println("clear");
     display.clearBuffer();
     Serial.println();
-    delay(2000);
+    delay(200);
 
     Serial.println("Area::ActionImage, TFT_RED");
     Serial.println(actionImage.getDebugString());
     display.fillView(Area::ActionImage, TFT_RED);
-    delay(2000);
     Serial.println();
 
     Serial.println("Area::Temperature, TFT_DARKGREY");
     Serial.println(temperature.getDebugString());
     display.fillView(Area::Temperature, TFT_DARKGREY);    
-    delay(2000);
     Serial.println();
 
     Serial.println("Area::StatusMessage, TFT_ORANGE");
     Serial.println(statusMessage.getDebugString());
     display.fillView(Area::StatusMessage, TFT_ORANGE);    
-    delay(2000);
     Serial.println();
 
     Serial.println("Area::StatusIcons, TFT_WHITE");
     Serial.println(statusIcons.getDebugString());
     display.fillView(Area::StatusIcons, TFT_WHITE);
-    delay(2000);
+    delay(200);
     Serial.println();
 
+    // images.init();
 }
 
 void display_test_loop() {
 
-display.clearBuffer();
+    display.clearBuffer();
 
 // showBootLogo()
 //   //int posX = (display.getWidth() - logo_width) / 2;
+
+int logowidth = 216;
+int logoheight = 131;
+
+
+// const unsigned char* retrievedData = images.getImage(StatusImage::Clean);
+// if (retrievedData != nullptr) {
+//     Serial.println("retrievedData != nullptr");
+// } else {
+//     Serial.println("retrievedData == nullptr !!!!!");
+// }
+//display.drawImage(0, 0, 45, 45, retrievedData);
+
 MyPoint p1 = display.getView(Area::BootLogo).getUpperLeft();
+display.drawImage(p1.X, p1.Y, logowidth, logoheight, images.getLogo(StatusImage::MachineLogo));
+//display.drawImage(p1.X, p1.Y, ecm_logo_width, ecm_logo_height, ecm_logo_bits);
+//uint16_t* image_data = images.getLogo(StatusImage::MachineLogo);
 
-int logo_width = 45;
-int logo_height = 45;
+//const uint16_t* dataPointer = images.logoDictionary[StatusImage::MachineLogo];
+//const uint16_t* actualData = dataPointer;
+//display.drawImage(p1.X, p1.Y, logowidth, logoheight, actualData);
 
-display.drawImage(p1.X, p1.Y, logo_width, logo_height, images.getImage(StatusImage::Brewing));
+//display.drawImage(p1.X, p1.Y, 45, 45, images.getImage(StatusImage::Brewing));
 //   // this could also be changed to something like
 //display.drawImageCentered(ViewPort, image);
 
-//     delay(1000);
+delay(1000);
 
 // // hideBootLogo()
 //   int posX = (display.getWidth() - logo_width) / 2;
