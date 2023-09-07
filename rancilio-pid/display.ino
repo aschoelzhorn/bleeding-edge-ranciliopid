@@ -480,16 +480,17 @@ void InitDisplay() {
 
 void showBootLogo() {
   //int posX = (display.getWidth() - logo_width) / 2;
-  MyPoint p1 = display.getView(Area::BootLogo).getUpperLeft();
-  display.drawImage(p1.X, p1.Y, logo_width, logo_height, logo_bits);
+  // MyPoint p1 = display.getView(Area::BootLogo).getUpperLeft();
+  // display.drawImage(p1.X, p1.Y, logo_width, logo_height, logo_bits);
 
   // this could also be changed to something like
-  //display.drawImageCentered(ViewPort, image);
+  display.drawImageCentered(Area::BootLogo, logo_width, logo_height, logo_bits);
 }
 
 void hideBootLogo() {
-  int posX = (display.getWidth() - logo_width) / 2;
-  display.clearRect(posX, 0, logo_width, logo_height);
+  //int posX = (display.getWidth() - logo_width) / 2;
+  //display.clearRect(posX, 0, logo_width, logo_height);
+  display.clearView(Area::BootLogo);
 }
 
 void clearDisplay() {
@@ -504,15 +505,19 @@ void showBootMessage(char* displaymessagetext, char* displaymessagetext2) {
 #if ENABLE_BOOT_MESSAGES == 1  
   display.setFont(FontType::Normal);
   hideBootMessage();
-  int posY = logo_height + 2; // Oled: 4 is perfect for the gaggia logo, but not for the rest (height 45, only line one is shown)
+  
+  //int posY = logo_height + 2; // Oled: 4 is perfect for the gaggia logo, but not for the rest (height 45, only line one is shown)
   // todo: maybe add a (calculated) parameter for leading (=line spacing)
-  display.printCentered(displaymessagetext, displaymessagetext2, posY);
+  //display.printCentered(displaymessagetext, displaymessagetext2, posY);
+  display.printCentered(Area::BootMessage, displaymessagetext, displaymessagetext2);
+
 #endif  
 }
 
 void hideBootMessage() {
-  int posY = logo_height;
-  display.clearRect(0, posY, display.getWidth(), display.getHeight() - posY);
+  //int posY = logo_height;
+  //display.clearRect(0, posY, display.getWidth(), display.getHeight() - posY);
+  display.clearView(Area::BootMessage);  
 }
 
 void showStatusMessage(char* displaymessagetext) {

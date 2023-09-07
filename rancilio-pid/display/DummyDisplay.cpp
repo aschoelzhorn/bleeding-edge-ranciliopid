@@ -87,8 +87,14 @@ void DummyDisplay::clearView(Area area) {
 void DummyDisplay::fillView(Area area, uint32_t color) {
 }
 
-void DummyDisplay::drawImageCentered(Area, const uint8_t *bitmap) {
+void DummyDisplay::drawImageCentered(Area, int, int, const uint8_t *bitmap) {
 }
 
-void DummyDisplay::drawImageCentered(Area, const uint16_t *bitmap) {
+void DummyDisplay::drawImageCentered(Area, int, int, const uint16_t *bitmap) {
 }  
+
+void DummyDisplay::printCentered(Area, const char* c) {
+}
+
+void DummyDisplay::printCentered(Area, const char* line1, const char* line2) {
+}

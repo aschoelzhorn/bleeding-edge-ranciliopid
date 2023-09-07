@@ -31,7 +31,7 @@ using LogoType = uint16_t;
 
 #else
 
-using LogoType = const char;
+using LogoType = const unsigned char;
 #ifdef MACHINE_TYPE_GAGGIA
 #include "icons/icon_gaggia.h"
 #elif defined(MACHINE_TYPE_ECM)

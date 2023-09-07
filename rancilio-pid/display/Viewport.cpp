@@ -12,6 +12,9 @@ Viewport::Viewport(MyPoint startPoint, int width, int height) {
     this->startPoint = startPoint;
 }
 
+Viewport::Viewport(int x, int y, int width, int height) : Viewport(MyPoint(x, y), width, height) {
+}
+
 int Viewport::getHeight() {
     return height;
 }

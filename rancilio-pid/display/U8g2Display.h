@@ -35,8 +35,11 @@ public:
     void clearView(Area) override;
     void fillView(Area, uint32_t color) override;
 
-    void drawImageCentered(Area, const uint8_t *bitmap) override;
-    void drawImageCentered(Area, const uint16_t *bitmap) override;    
+    void drawImageCentered(Area, int, int, const uint8_t *bitmap) override;
+    void drawImageCentered(Area, int, int, const uint16_t *bitmap) override;
+
+    void printCentered(Area, const char* c) override;
+    void printCentered(Area, const char* line1, const char* line2) override;
 
 private:
     U8G2& u8g2;
@@ -46,6 +49,9 @@ private:
     std::map<Area, Viewport> areaMap;
     Viewport bootlogo;
     Viewport bootmessage;
+    Viewport actionImage;
+    Viewport statusIcons;
+    Viewport temperature;
     Viewport statusmessage;
 };
 

@@ -18,9 +18,9 @@ enum class FontType {
 enum class Area {
     BootLogo,
     BootMessage,
+    ActionImage, // like icon for heating, brewing, cleaning, ....
     StatusMessage,
     StatusIcons,
-    ActionImage,
     Temperature
 };
 
@@ -55,8 +55,11 @@ public:
     virtual void clearView(Area);
     virtual void fillView(Area view, uint32_t color);
 
-    virtual void drawImageCentered(Area, const uint8_t *bitmap);
-    virtual void drawImageCentered(Area, const uint16_t *bitmap);
+    virtual void drawImageCentered(Area, int, int, const uint8_t *bitmap);
+    virtual void drawImageCentered(Area, int, int, const uint16_t *bitmap);
+
+    virtual void printCentered(Area, const char* c);
+    virtual void printCentered(Area, const char* line1, const char* line2);
 };
 
 #endif // IDISPLAY_H

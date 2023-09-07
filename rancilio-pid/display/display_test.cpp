@@ -5,6 +5,14 @@
 
 ImageDictionary images;
 
+#define TFT_BLUE        0x001F      /*   0,   0, 255 */
+#define TFT_GREEN       0x07E0      /*   0, 255,   0 */
+#define TFT_DARKGREY        0x07FF      /*   0, 255, 255 */
+#define TFT_RED         0xF800      /* 255,   0,   0 */
+#define TFT_ORANGE     0xF81F      /* 255,   0, 255 */
+#define TFT_YELLOW      0xFFE0      /* 255, 255,   0 */
+#define TFT_WHITE       0xFFFF      /* 255, 255, 255 */
+
 
 void display_test_setup() {
     Serial.begin(115200);
@@ -64,7 +72,7 @@ void display_test_loop() {
 
     display.clearBuffer();
 
-// showBootLogo()
+ showBootLogo();
 //   //int posX = (display.getWidth() - logo_width) / 2;
 
 int logowidth = 216;
@@ -79,8 +87,10 @@ int logoheight = 131;
 // }
 //display.drawImage(0, 0, 45, 45, retrievedData);
 
-MyPoint p1 = display.getView(Area::BootLogo).getUpperLeft();
-display.drawImage(p1.X, p1.Y, logowidth, logoheight, images.getLogo(StatusImage::MachineLogo));
+// MyPoint p1 = display.getView(Area::BootLogo).getUpperLeft();
+// display.drawImage(p1.X, p1.Y, logowidth, logoheight, images.getLogo(StatusImage::MachineLogo));
+
+
 //display.drawImage(p1.X, p1.Y, ecm_logo_width, ecm_logo_height, ecm_logo_bits);
 //uint16_t* image_data = images.getLogo(StatusImage::MachineLogo);
 
@@ -94,9 +104,9 @@ display.drawImage(p1.X, p1.Y, logowidth, logoheight, images.getLogo(StatusImage:
 
 delay(1000);
 
-// // hideBootLogo()
+hideBootLogo();
 //   int posX = (display.getWidth() - logo_width) / 2;
 //   display.clearRect(posX, 0, logo_width, logo_height);
 
-//   delay(1000);
+delay(1000);
 }

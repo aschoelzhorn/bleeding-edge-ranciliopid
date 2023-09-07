@@ -118,11 +118,18 @@ void DisplayManager::fillView(Area area, uint32_t color) {
     display->fillView(area, color);
 }
 
-void DisplayManager::drawImageCentered(Area area, const uint8_t *bitmap) {
-    display->drawImageCentered(area, bitmap);
+void DisplayManager::drawImageCentered(Area area, int w, int h, const uint8_t *bitmap) {
+    display->drawImageCentered(area, w, h, bitmap);
 }
 
-void DisplayManager::drawImageCentered(Area area, const uint16_t *bitmap) {
-    display->drawImageCentered(area, bitmap);
+void DisplayManager::drawImageCentered(Area area, int w, int h, const uint16_t *bitmap) {
+    display->drawImageCentered(area, w, h, bitmap);
 }
 
+void DisplayManager::printCentered(Area area, const char* c) {
+    display->printCentered(area, c);
+}
+
+void DisplayManager::printCentered(Area area, const char* line1, const char* line2) {
+    display->printCentered(area, line1, line2);
+}

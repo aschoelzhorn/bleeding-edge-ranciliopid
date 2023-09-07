@@ -316,12 +316,20 @@ void ST7789Display::fillView(Area area, uint32_t color) {
     tft.fillRect(view.getUpperLeft().X, view.getUpperLeft().Y, view.getWidth(), view.getHeight(), color);
 }
 
-void ST7789Display::drawImageCentered(Area area, const uint8_t *bitmap) {
+void ST7789Display::drawImageCentered(Area area, int width, int height, const uint8_t *bitmap) {
     Viewport view = getView(area);
-    drawImage(view.getUpperLeft().X, view.getUpperLeft().Y, 45, 45, bitmap);
+    int xDelta = (view.getWidth() - width) / 2;
+    drawImage(view.getUpperLeft().X + xDelta, view.getUpperLeft().Y, width, height, bitmap);
 }
 
-void ST7789Display::drawImageCentered(Area area, const uint16_t *bitmap) {
+void ST7789Display::drawImageCentered(Area area, int width, int height, const uint16_t *bitmap) {
     Viewport view = getView(area);
-    drawImage(view.getUpperLeft().X, view.getUpperLeft().Y, 45, 45, bitmap);
-}  
+    int xDelta = (view.getWidth() - width) / 2;
+    drawImage(view.getUpperLeft().X + xDelta, view.getUpperLeft().Y, width, height, bitmap);
+}
+
+void ST7789Display::printCentered(Area area, const char* line1) {
+}
+
+void ST7789Display::printCentered(Area area, const char* line1, const char* line2) {
+}

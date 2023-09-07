@@ -71,8 +71,11 @@ public:
     virtual void clearView(Area);
     virtual void fillView(Area, uint32_t color);
 
-    virtual void drawImageCentered(Area, const uint8_t *bitmap);
-    virtual void drawImageCentered(Area, const uint16_t *bitmap);    
+    virtual void drawImageCentered(Area, int, int, const uint8_t *bitmap);
+    virtual void drawImageCentered(Area, int, int, const uint16_t *bitmap);
+
+    virtual void printCentered(Area, const char* c);
+    virtual void printCentered(Area, const char* line1, const char* line2);
 
 private:
    IDisplay* display;  // Use a pointer to IDisplay to allow dynamic initialization

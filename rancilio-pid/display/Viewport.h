@@ -13,7 +13,8 @@
 class Viewport {
 public:
     Viewport();
-    Viewport(MyPoint startingPoint, int width, int height);    
+    Viewport(MyPoint startingPoint, int width, int height);
+    Viewport(int x, int y, int width, int height);
     int getHeight();
     int getWidth();
 
