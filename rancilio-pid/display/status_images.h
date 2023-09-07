@@ -19,12 +19,12 @@ enum class StatusImage {
 };
 
 enum class StatusIcon {
-    Profile_1 = 0,
-    Profile_2 = 1,
-    Profile_3 = 2,
-    Wifi_Not_Ok = 3,
-    Blynk_Not_Ok = 4,
-    Mqtt_Not_Ok = 5
+    Profile_1 = 1,
+    Profile_2 = 2,
+    Profile_3 = 3,
+    Wifi_Not_Ok = 4,
+    Blynk_Not_Ok = 5,
+    Mqtt_Not_Ok = 6
 };
 
 #endif

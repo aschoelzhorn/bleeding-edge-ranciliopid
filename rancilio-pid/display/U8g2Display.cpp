@@ -43,8 +43,9 @@ void U8g2Display::initViews() {
     areaMap = {
         {Area::BootLogo, this->bootlogo},
         {Area::BootMessage, this->bootmessage},
-        {Area::StatusMessage, this->actionImage},
-        {Area::ActionImage, this->temperature},
+        {Area::ActionImage, this->actionImage},
+        //{Area::StatusMessage, this->statusmessage},
+        {Area::Temperature, this->temperature},
         {Area::StatusIcons, this->statusIcons},
     };        
 }
@@ -199,6 +200,7 @@ void U8g2Display::printRightAligned(float data, unsigned int digits, uint16_t y)
 }
 
 void U8g2Display::printTemperatures(float input, float setPoint, bool steaming) {
+//    Viewport view = getView(Area::Temperature);
   unsigned int align_right;
   const unsigned int align_right_2digits = u8g2.getWidth() - 56; // TODO replace these magic numbers, what is 56?
   const unsigned int align_right_3digits = u8g2.getWidth() - 56 - 12; // TODO replace these magic numbers, what is 56 and what is 12?
@@ -268,8 +270,12 @@ void U8g2Display::drawImageCentered(Area area, int width, int height, const uint
     drawImage(view.getUpperLeft().X + xDelta, view.getUpperLeft().Y, width, height, bitmap);
 }
 
-void U8g2Display::printCentered(Area, const char* line1) {
+void U8g2Display::printCentered(Area area, const char* line1) {
+    Viewport view = getView(area);
+    printCentered(line1, view.getUpperLeft().Y);
 }
 
-void U8g2Display::printCentered(Area, const char* line1, const char* line2) {
+void U8g2Display::printCentered(Area area, const char* line1, const char* line2) {
+    Viewport view = getView(area);
+    printCentered(line1, line2, view.getUpperLeft().Y);
 }

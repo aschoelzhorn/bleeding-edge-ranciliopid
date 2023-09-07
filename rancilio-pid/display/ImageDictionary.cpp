@@ -19,8 +19,7 @@ ImageDictionary::ImageDictionary() {
         {StatusImage::OuterZone, outer_zone_bits},
         {StatusImage::Clean, clean_bits},
         {StatusImage::Menu, menu_bits},
-        {StatusImage::SoftwareUpdate, update_bits},
-        {StatusImage::Test, test_bits}
+        {StatusImage::SoftwareUpdate, update_bits}
     };
 
     imageRotatedDictionary = {

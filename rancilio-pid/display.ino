@@ -6,7 +6,7 @@
 #include "rancilio-debug.h"
 #include "rancilio-network.h"
 
-//#include "display/ImageDictionary.h"
+#include "display/ImageDictionary.h"
 
 #include "display/DisplayManager.h"
 extern DisplayManager display;  // declare the extern DisplayManager object to use the same instance everywhere
@@ -18,6 +18,8 @@ unsigned int enableScreenSaver = ENABLE_SCREEN_SAVER;
 bool screenSaverOn = false;
 const unsigned int powerOffCountDownStart = 300;
 
+
+ImageDictionary images;
 
 bool softwareUpdateCheck() {
   return activeState == State::SoftwareUpdate;
@@ -128,45 +130,13 @@ void displaymessage(State activeState, char* displaymessagetext, char* displayme
 }
 
 
-std::map<StatusImage, const unsigned char*> imageDictionary = {
-    {StatusImage::Coldstart, coldstart_bits},
-    {StatusImage::Brewing, brewing_bits},
-    {StatusImage::BrewReady, brew_ready_bits},
-    {StatusImage::BrewAcceptable, brew_acceptable_bits},
-    {StatusImage::Steam, steam_bits},
-    {StatusImage::OuterZone, outer_zone_bits},
-    {StatusImage::Clean, clean_bits},
-    {StatusImage::Menu, menu_bits}
-};
-
-std::map<StatusImage, const unsigned char*> imageRotatedDictionary = {
-    {StatusImage::Coldstart, coldstart_rotate_bits},
-    {StatusImage::Brewing, brewing_rotate_bits},
-    {StatusImage::BrewReady, brew_ready_rotate_bits},
-    {StatusImage::BrewAcceptable, brew_acceptable_rotate_bits},
-    {StatusImage::Steam, steam_rotate_bits},
-    {StatusImage::OuterZone, outer_zone_rotate_bits},
-    {StatusImage::Clean, clean_rotate_bits},
-    {StatusImage::Menu, menu_rotate_bits}
-};
-
-std::map<StatusIcon, const unsigned char*> statusIconDictionary = {
-    {StatusIcon::Profile_1, profile_1_bits},
-    {StatusIcon::Profile_2, profile_2_bits},
-    {StatusIcon::Profile_3, profile_3_bits},
-    {StatusIcon::Wifi_Not_Ok, wifi_not_ok_bits},
-    {StatusIcon::Blynk_Not_Ok, blynk_not_ok_bits},
-    {StatusIcon::Mqtt_Not_Ok, mqtt_not_ok_bits}
-};
-
 void showImage(StatusImage image, bool flip) { 
   if (image_flip) {
-    display.drawImage(0, 0, icon_width, icon_height, imageDictionary[image]);
+    display.drawImageCentered(Area::ActionImage, icon_width, icon_height, images.getImage(image));
   } else {
-    display.drawImage(0, 0, icon_width, icon_height, imageRotatedDictionary[image]);
+    display.drawImageCentered(Area::ActionImage, icon_width, icon_height, images.getImageRotated(image));
   }
 }
-
 
 
 void showTemperatures(float t1, float t2, bool steaming) {
@@ -303,14 +273,14 @@ void displaymessage_helper(State activeState, char* displaymessagetext, char* di
 void showStatusIcons() { 
     byte icon_y = display.getHeight() - (status_icon_height - 1);
     byte icon_counter = 0;
-    #if (ENABLE_PROFILE_STATUS > 0)
-      if (profile == 1 && ENABLE_PROFILE_STATUS == 1 && !screenSaverOn) {
+    #if (ENABLE_PROFILE_STATUS > 0 && !screenSaverOn)
+      if (profile == 1 && ENABLE_PROFILE_STATUS == 1) {
         display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_1_bits);
         icon_counter++;
-      } else if (profile == 2 && !screenSaverOn) { 
+      } else if (profile == 2) { 
         display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_2_bits);
         icon_counter++;
-      } else if (profile == 3 && !screenSaverOn) {
+      } else if (profile == 3) {
         display.drawImage(icon_counter * (status_icon_width - 1), icon_y, status_icon_width, status_icon_height, profile_3_bits);
         icon_counter++;
       }
@@ -479,17 +449,10 @@ void InitDisplay() {
 }
 
 void showBootLogo() {
-  //int posX = (display.getWidth() - logo_width) / 2;
-  // MyPoint p1 = display.getView(Area::BootLogo).getUpperLeft();
-  // display.drawImage(p1.X, p1.Y, logo_width, logo_height, logo_bits);
-
-  // this could also be changed to something like
   display.drawImageCentered(Area::BootLogo, logo_width, logo_height, logo_bits);
 }
 
 void hideBootLogo() {
-  //int posX = (display.getWidth() - logo_width) / 2;
-  //display.clearRect(posX, 0, logo_width, logo_height);
   display.clearView(Area::BootLogo);
 }
 
@@ -505,18 +468,12 @@ void showBootMessage(char* displaymessagetext, char* displaymessagetext2) {
 #if ENABLE_BOOT_MESSAGES == 1  
   display.setFont(FontType::Normal);
   hideBootMessage();
-  
-  //int posY = logo_height + 2; // Oled: 4 is perfect for the gaggia logo, but not for the rest (height 45, only line one is shown)
-  // todo: maybe add a (calculated) parameter for leading (=line spacing)
-  //display.printCentered(displaymessagetext, displaymessagetext2, posY);
   display.printCentered(Area::BootMessage, displaymessagetext, displaymessagetext2);
 
 #endif  
 }
 
 void hideBootMessage() {
-  //int posY = logo_height;
-  //display.clearRect(0, posY, display.getWidth(), display.getHeight() - posY);
   display.clearView(Area::BootMessage);  
 }
 

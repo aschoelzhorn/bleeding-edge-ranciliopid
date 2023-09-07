@@ -329,7 +329,12 @@ void ST7789Display::drawImageCentered(Area area, int width, int height, const ui
 }
 
 void ST7789Display::printCentered(Area area, const char* line1) {
+    Viewport view = getView(area);
+    printCentered(line1, view.getUpperLeft().Y);
 }
 
 void ST7789Display::printCentered(Area area, const char* line1, const char* line2) {
+    Viewport view = getView(area);
+    printCentered(line1, line2, view.getUpperLeft().Y);
 }
+

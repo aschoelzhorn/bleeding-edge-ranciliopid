@@ -3,7 +3,7 @@
 #include "ImageDictionary.h"
 
 
-ImageDictionary images;
+ImageDictionary images2;
 
 #define TFT_BLUE        0x001F      /*   0,   0, 255 */
 #define TFT_GREEN       0x07E0      /*   0, 255,   0 */
@@ -79,7 +79,7 @@ int logowidth = 216;
 int logoheight = 131;
 
 
-// const unsigned char* retrievedData = images.getImage(StatusImage::Clean);
+// const unsigned char* retrievedData = images2.getImage(StatusImage::Clean);
 // if (retrievedData != nullptr) {
 //     Serial.println("retrievedData != nullptr");
 // } else {
@@ -88,17 +88,17 @@ int logoheight = 131;
 //display.drawImage(0, 0, 45, 45, retrievedData);
 
 // MyPoint p1 = display.getView(Area::BootLogo).getUpperLeft();
-// display.drawImage(p1.X, p1.Y, logowidth, logoheight, images.getLogo(StatusImage::MachineLogo));
+// display.drawImage(p1.X, p1.Y, logowidth, logoheight, images2.getLogo(StatusImage::MachineLogo));
 
 
 //display.drawImage(p1.X, p1.Y, ecm_logo_width, ecm_logo_height, ecm_logo_bits);
-//uint16_t* image_data = images.getLogo(StatusImage::MachineLogo);
+//uint16_t* image_data = images2.getLogo(StatusImage::MachineLogo);
 
-//const uint16_t* dataPointer = images.logoDictionary[StatusImage::MachineLogo];
+//const uint16_t* dataPointer = images2.logoDictionary[StatusImage::MachineLogo];
 //const uint16_t* actualData = dataPointer;
 //display.drawImage(p1.X, p1.Y, logowidth, logoheight, actualData);
 
-//display.drawImage(p1.X, p1.Y, 45, 45, images.getImage(StatusImage::Brewing));
+//display.drawImage(p1.X, p1.Y, 45, 45, images2.getImage(StatusImage::Brewing));
 //   // this could also be changed to something like
 //display.drawImageCentered(ViewPort, image);
 
