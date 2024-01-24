@@ -26,6 +26,10 @@
 #include "controls.h"
 #include "PIDBias.h"
 
+#ifdef DISPLAY_TEST
+#include "webserver_displaytest.h"
+#endif 
+
 const char* sysVersion PROGMEM = "3.2.5";
 
 /********************************************************
@@ -301,6 +305,12 @@ float scaleSensorWeightOffsetMin = 0.05;
 float scaleSensorWeightOffsetAtStop = 0;
 unsigned long previousTimerScaleStatistics = 0;
 unsigned long scaleSensorCheckTimer = 2000;
+
+/********************************************************
+ * Display
+ ******************************************************/
+#include "display/DisplayManager.h"
+DisplayManager display;
 
 /********************************************************
  * CONTROLS
@@ -584,7 +594,6 @@ void setGpioAction(int action, bool mode) {
       brewState = 0;
     }
   }
-
 
   /********************************************************
    * state Detection
@@ -936,7 +945,7 @@ void setGpioAction(int action, bool mode) {
                   "p:%5.2f + i:%5.2f(%5.2f) + d:%5.2f (RSSI=%d)\n",
           Input, (*activeSetPoint - Input), tempSensor.pastTemperatureChange(10*10) / 2, convertOutputToUtilisation(Output, windowSize), steadyPower + bPID.GetSteadyPowerOffsetCalculated(),
           convertOutputToUtilisation(bPID.GetOutputP(), windowSize), convertOutputToUtilisation(bPID.GetSumOutputI(), windowSize), convertOutputToUtilisation(bPID.GetOutputI(), windowSize),
-          convertOutputToUtilisation(bPID.GetOutputD(), windowSize), WiFi.RSSI());
+          convertOutputToUtilisation(bPID.GetOutputD(), windowSize), wifi_rssi);
     } else if (ret == 2) { // PID is disabled but compute() should have run
       isrCounter = 0;
       pidComputeLastRunTime = millis();
@@ -1013,7 +1022,7 @@ void CheckMqttConnection() {
         if (publishSettingsAfterClientConnect != 0 && millis() - publishSettingsAfterClientConnect >= 2000) { //delay is needed else messages are dropped
           publishSettingsAfterClientConnect = 0;
           mqttPublishPersistedSettings();
-        }
+      }
       }
 #if (MQTT_ENABLE == 1)
       if (millis() >= previousTimerMqttHandle + 100) {
@@ -1036,6 +1045,10 @@ void CheckMqttConnection() {
    * LOOP()
    ***********************************/
   void loop() {
+    if (activeState == State::SoftwareUpdate) {
+      return;
+    }
+
     tempSensor.refresh(&Input, activeState, *activeSetPoint, &secondlatestTemperature); // measure and store current temperature 
     
     if (tempSensor.isMalfunction()) {
@@ -1069,7 +1082,7 @@ void CheckMqttConnection() {
       if (!isWifiWorking()) {
 #if (MQTT_ENABLE == 2)
 #if defined(ESP8266)
-      MQTT_server_cleanupClientCons();
+        MQTT_server_cleanupClientCons();
 #endif
 #endif
         checkWifi(inSensitivePhase());
@@ -1102,7 +1115,7 @@ void CheckMqttConnection() {
       #if (SCALE_SENSOR_ENABLE)
       scaleCalibration();
       #endif
-      displaymessage(State::Undefined, (char*)"Calibrating", (char*)"check logs");
+      showStatusMessage((char*)"Calibrating", (char*)"check logs");
     }
     return;
 #endif
@@ -1177,7 +1190,9 @@ void CheckMqttConnection() {
 
     // Sicherheitsabfrage
     if (!tempSensor.isMalfunction() && !emergencyStop && Input > 0) {
+#ifndef DISPLAY_TEST // if defined, state comes from external, in current implementation from embedded webserver
       updateState();
+#endif
 
       /* state 1: Water is very cold, set heater to full power */
       if (activeState == State::ColdStart) {
@@ -1290,7 +1305,7 @@ void CheckMqttConnection() {
       }
 
       maintenance(); // update displayMessageLine1 & Line2
-      displaymessage(activeState, (char*)displayMessageLine1, (char*)displayMessageLine2);
+      updateDisplay(activeState, (char*)displayMessageLine1, (char*)displayMessageLine2);
 
       sendToBlynk();
       
@@ -1311,10 +1326,9 @@ void CheckMqttConnection() {
         }
       }
       digitalWrite(pinRelayHeater, LOW); // Stop heating
-      char line2[17];
-      snprintf(line2, sizeof(line2), "Temp. %0.2f", tempSensor.getCurrentTemperature());
-      displaymessage(State::Undefined, (char*)"Check Temp. Sensor!", (char*)line2);
-
+      snprintf(displayMessageLine2, sizeof(displayMessageLine2), "Temp. %0.2f", tempSensor.getCurrentTemperature());
+      snprintf(displayMessageLine1, sizeof(displayMessageLine1), "Check Temp. Sensor!");
+      showStatusMessage(displayMessageLine1, displayMessageLine2);
     } else if (emergencyStop) {
       // Deactivate PID
       if (pidMode == 1) {
@@ -1327,13 +1341,9 @@ void CheckMqttConnection() {
         }
       }
       digitalWrite(pinRelayHeater, LOW); // Stop heating
-      char line2[17];
-      snprintf(line2, sizeof(line2),
-          "%0.0f\xB0"
-          "C",
-          tempSensor.getCurrentTemperature());
-      displaymessage(State::Undefined, (char*)"Emergency Stop!", (char*)line2);
-
+      snprintf(displayMessageLine2, sizeof(displayMessageLine2), "%0.0f\xB0 C", tempSensor.getCurrentTemperature());
+      snprintf(displayMessageLine1, sizeof(displayMessageLine1), "Emergency Stop!");
+      showStatusMessage(displayMessageLine1, displayMessageLine2);
     } else {
       if (millis() - recurringOutput > 15000) {
         ERROR_print("unknown error\n");
@@ -1522,8 +1532,7 @@ void CheckMqttConnection() {
     DEBUG_print("aggoKp: %0.2f | aggoTn: %0.2f | aggoTv: %0.2f\n", aggoKp, aggoTn, aggoTv);
     DEBUG_print("profile: %u | starttemp: %0.2f \n", profile, *activeStartTemp);
     DEBUG_print("setPointSteam: %0.2f | activeSetPoint: %0.2f\n", setPointSteam, *activeSetPoint);
-    DEBUG_print("brewDetection: %d | brewDetectionSensitivity: %0.2f | brewDetectionPower: %0.2f\n",
-        brewDetection, brewDetectionSensitivity, brewDetectionPower);
+    DEBUG_print("brewDetection: %d | brewDetectionSensitivity: %0.2f | brewDetectionPower: %0.2f\n", brewDetection, brewDetectionSensitivity, brewDetectionPower);
     DEBUG_print("activeBrewTime: %0.2f | activePreinfusion: %0.2f | activePreinfusionPause: %0.2f\n", *activeBrewTime, *activePreinfusion, *activePreinfusionPause);
     DEBUG_print("activeBrewTimeEndDetection: %d | activeScaleSensorWeightSetPoint: %0.2f\n", *activeBrewTimeEndDetection, *activeScaleSensorWeightSetPoint);
     DEBUG_print("cleaningCycles: %d | cleaningInterval: %d | cleaningPause: %d\n", cleaningCycles, cleaningInterval, cleaningPause);
@@ -1602,6 +1611,7 @@ void CheckMqttConnection() {
   * Init PID
   ******************************************************/
   void InitPid() {
+    showBootMessage((char*)"Init PID");
     bPID.SetSampleTime(windowSize);
     bPID.SetOutputLimits(0, windowSize);
     bPID.SetMode(AUTOMATIC);
@@ -1622,6 +1632,7 @@ void CheckMqttConnection() {
  ******************************************************/
 void InitWaterLevelSensor() {
 	#if (WATER_LEVEL_SENSOR_ENABLE)
+ 	showBootMessage((char*)"Init water level sensor");
 	#ifdef ESP32
 		Wire1.begin(WATER_LEVEL_SENSOR_SDA, WATER_LEVEL_SENSOR_SCL,
 			100000U); // Wire0 cannot be re-used due to core0 stickyness
@@ -1633,7 +1644,7 @@ void InitWaterLevelSensor() {
 		waterSensor.setTimeout(300);
 		if (!waterSensor.init()) {
 		  ERROR_println("Water level sensor cannot be initialized");
-		  displaymessage(State::Undefined, (char*)"Water sensor defect", (char*)"");
+		  showBootMessage((char*)"Water sensor defect");
 		}
 		// increased accuracy by increase timing budget to 200 ms
 		waterSensor.setMeasurementTimingBudget(200000);
@@ -1650,6 +1661,7 @@ void InitWaterLevelSensor() {
  * variables like profile-dependent ones are always fetched from eeprom.
  ******************************************************/
 void InititialSyncEeprom(bool force_read) {	 
+    showBootMessage((char*)"Sync EEprom");
     #ifndef ESP32
     EEPROM.begin(432);
     #endif
@@ -1686,6 +1698,7 @@ void InitMqttPublishSettings() {
  * TEMP SENSOR
  ******************************************************/
 void InitTemperaturSensor() {
+    showBootMessage((char*)"Init temp. sensor");
     isrCounter = 950; // required
     tempSensor.init();
 
@@ -1697,7 +1710,7 @@ void InitTemperaturSensor() {
         secondlatestTemperature = Input;
         break;
       }
-      displaymessage(State::Undefined, (char*)"Temp sensor defect", (char*)"");
+      showBootMessage((char*)"Temp. sensor defect");
       ERROR_print("Temp sensor defect. Cannot read consistent values. Retrying\n");
       HandleOTA();
       delay(1000);
@@ -1745,8 +1758,9 @@ void EnableTimerAlarm() {
 }
 
 // OTA
-unsigned long previousTimerOtaHandle = 0;
+unsigned long previousTimerOtaHandle = 0; 
 const bool ota = OTA;
+const char* OTAhost = OTAHOST;
 const char* OTApass = OTAPASS;
 
 void HandleOTA() {
@@ -1758,9 +1772,10 @@ void HandleOTA() {
 
 void InitOTA() {  
   if (ota && !forceOffline) {
+    showBootMessage((char*)"Init OTA");
     // TODO: OTA logic has to be refactored so have clean setup() and loop() parts
     // wifi connection is done during blynk connection
-    ArduinoOTA.setHostname(hostname); //  Device name for OTA
+    ArduinoOTA.setHostname(OTAhost); //  Device name for OTA
     ArduinoOTA.setPassword(OTApass); //  Password for OTA
     ArduinoOTA.setRebootOnSuccess(true); // reboot after successful update 
 
@@ -1770,17 +1785,18 @@ void InitOTA() {
 		  Output = 0;
 		  DisableTimerAlarm();
 		  digitalWrite(pinRelayHeater, LOW); // Stop heating
-		  activeState = State::SoftwareUpdate;
 	  });
 	  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+      activeState = State::SoftwareUpdate;
 		  int percent = progress / (total / 100);
-		  DEBUG_print("OTA update in progress: %u%%\r", percent);
-		  char line2[17];
-		  snprintf(line2, sizeof(line2), "%u%% / 100%%", percent);
-		  displaymessage(State::Undefined, (char*)"Updating Software", (char*)line2);
+		  DEBUG_print("OTA update in progress: %u%%\n", percent);
+      // TODO: I have no idea why, but as soon as I want to update the display, the update stops at different progress between 1% and 80%
+		  //char line2[17];
+		  //snprintf(line2, sizeof(line2), "%u%% / 100%%", percent);
+      //showStatusMessage((char*)"Updating Software", (char*)line2);
 	  });    
 	  ArduinoOTA.onError([](ota_error_t error) {
-		  ERROR_print("OTA update error\n");
+		  ERROR_print("OTA update error: %d\n", error);
 		  EnableTimerAlarm();
 	  });
 	  // Enable interrupts if OTA is finished
@@ -1803,18 +1819,21 @@ void setup() {
   WiFi.useStaticBuffers(true);
   // required for remoteDebug to work
   WiFi.mode(WIFI_STA);
-#endif
-
+ #endif
+  
   InitDebug();
-
   DefineTriggerTypes();
   InitPins();
 
+  InitDisplay();
+  showBootLogo();
+
 #if defined(OVERWRITE_VERSION_DISPLAY_TEXT)
-  displaymessage(State::Undefined, (char*)DISPLAY_TEXT, (char*)OVERWRITE_VERSION_DISPLAY_TEXT);
+  showBootMessage((char*)DISPLAY_TEXT, (char*)OVERWRITE_VERSION_DISPLAY_TEXT);
 #else
-  displaymessage(State::Undefined, (char*)DISPLAY_TEXT, (char*)sysVersion);
+  showBootMessage((char*)DISPLAY_TEXT, (char*)sysVersion);
 #endif
+  
   delay(1000);
 
   controlsConfig = parseControlsConfig();
@@ -1829,10 +1848,12 @@ void setup() {
     ERROR_print("Brewswitch is already turned on after power on. Don't brew until it is turned off.\n");
     waitingForBrewSwitchOff = true;
   }
-
+  
   InitPid();
   InitScale();
-  InititialSyncEeprom(InitNetworking());
+
+  bool eeprom_force_read = InitNetworking();
+  InititialSyncEeprom(eeprom_force_read);
 
   set_profile();
 
@@ -1862,4 +1883,10 @@ void setup() {
   pidComputeLastRunTime = currentTime;
 
   DEBUG_print("End of setup()\n");
+
+#ifdef DISPLAY_TEST
+  SetupDisplayTest();
+#endif 
+
+  clearDisplay();
 }

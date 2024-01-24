@@ -5,7 +5,6 @@
 #include "scale.h"
 #include "rancilio-debug.h"
 #include "rancilio-enums.h"
-#include "display.h"
 
 bool getTareAsyncStatus() {
   return scaleTareSuccess;
@@ -112,6 +111,7 @@ void IRAM_ATTR dataReadyISR() {
 }
 
 void initScale() {
+  showBootMessage((char*)"Init scale");
   long stabilizingtime = 2000; // tare precision can be improved by adding a few seconds of stabilizing time
   boolean _tare = true; //set this to false if you don't want tare to be performed in the next step
   for (int i=0; i<3;i++) {
@@ -120,7 +120,7 @@ void initScale() {
     //DEBUG_print("currentWeight: %0.2f (index=%d, getTareTimeoutFlag=%d, getSignalTimeoutFlag=%d)\n", currentWeight, LoadCell.getReadIndex(), LoadCell.getTareTimeoutFlag(), LoadCell.getSignalTimeoutFlag());
     if (LoadCell.getTareTimeoutFlag() || LoadCell.getSignalTimeoutFlag()) {
       ERROR_print("HX711 cannot be initialized (#%u)\n", i);
-      displaymessage(State::Undefined, (char*)"Scale sensor defect", (char*)"");
+      showBootMessage((char*)"Scale sensor defect");
     }
     else {
       DEBUG_print("HX711 initialized (#%u)\n", i);

@@ -2,6 +2,7 @@
 #define TEMPERATURESENSOR_H
 
 #include "rancilio-enums.h"
+#include "userConfig.h"
 
 class TemperatureSensor {
    

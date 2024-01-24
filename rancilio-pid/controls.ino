@@ -413,7 +413,7 @@ const char* convertDefineToVariable(char *str) {
   return NULL;
 }
 
-const char* convertDefineToReadAbleVariable(char *str) {
+const char* convertDefineToReadableVariable(char *str) {
   if (!strcmp(str, "SETPOINT")) return "Brew Temperature";
   if (!strcmp(str, "SETPOINTSTEAM")) return "Steaming Temp.";
   if (!strcmp(str, "BREWTIME")) return "Brew Duration";

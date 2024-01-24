@@ -1,0 +1,70 @@
+// ImageDictionary.cpp
+
+#include "ImageDictionary.h"
+#include <Arduino.h>
+
+ImageDictionary::ImageDictionary() {
+
+    logoDictionary = {
+           {StatusImage::MachineLogo, logo_bits},
+       //    {StatusImage::GenericLogo, generic_logo_bits}
+    };
+
+    imageDictionary = {
+        {StatusImage::Coldstart, coldstart_bits},
+        {StatusImage::Brewing, brewing_bits},
+        {StatusImage::BrewReady, brew_ready_bits},
+        {StatusImage::BrewAcceptable, brew_acceptable_bits},
+        {StatusImage::Steam, steam_bits},
+        {StatusImage::OuterZone, outer_zone_bits},
+        {StatusImage::Clean, clean_bits},
+        {StatusImage::Menu, menu_bits},
+        {StatusImage::SoftwareUpdate, update_bits}
+    };
+
+    imageRotatedDictionary = {
+        {StatusImage::Coldstart, coldstart_rotate_bits},
+        {StatusImage::Brewing, brewing_rotate_bits},
+        {StatusImage::BrewReady, brew_ready_rotate_bits},
+        {StatusImage::BrewAcceptable, brew_acceptable_rotate_bits},
+        {StatusImage::Steam, steam_rotate_bits},
+        {StatusImage::OuterZone, outer_zone_rotate_bits},
+        {StatusImage::Clean, clean_rotate_bits},
+        {StatusImage::Menu, menu_rotate_bits}
+    };
+
+    profileIconDictionary = {
+        {ProfileIcon::Profile_1, profile_1_bits},
+        {ProfileIcon::Profile_2, profile_2_bits},
+        {ProfileIcon::Profile_3, profile_3_bits}
+    };
+
+    statusIconDictionary = {
+        {StatusIcon::Wifi_Not_Ok, wifi_not_ok_bits},
+        {StatusIcon::Blynk_Not_Ok, blynk_not_ok_bits},
+        {StatusIcon::Mqtt_Not_Ok, mqtt_not_ok_bits},
+        {StatusIcon::Wifi_Ok, wifi_ok_bits},
+        {StatusIcon::Blynk_Ok, blynk_ok_bits},
+        {StatusIcon::Mqtt_Ok, mqtt_ok_bits}
+    };   
+}
+
+const LogoType* ImageDictionary::getLogo(StatusImage image) {
+    return logoDictionary[image];
+}
+
+const unsigned char* ImageDictionary::getImage(StatusImage image) {
+    return imageDictionary[image];
+}
+
+const unsigned char* ImageDictionary::getImageRotated(StatusImage image){
+    return imageRotatedDictionary[image];
+}
+
+const LogoType* ImageDictionary::getStatusIcon(StatusIcon icon) {
+    return statusIconDictionary[icon];
+}
+
+const LogoType* ImageDictionary::getProfileIcon(ProfileIcon icon) {
+    return profileIconDictionary[icon];
+}

@@ -3,7 +3,7 @@
  * https://github.com/medlor/bleeding-edge-ranciliopid
  *****************************************************/
 #include "Arduino.h"
-#include "sensorMock.h"
+#include "TemperatureSensorMock.h"
 
 float temperature_simulate_steam(float minValue) {
   unsigned long now = millis();

@@ -1,4 +1,5 @@
-# PERFECT COFFEE PID 
+# PERFECT COFFEE PID
+
 (former bleeding edge ranciliopid)
 
 ## Do it yourself, open-source PID for your espresso machine  
@@ -6,9 +7,11 @@
 Version 3.2.5
 
 ## Support / Contact
+
 You can chat with us directly using our [discord server](https://discord.gg/VA5ZeacFdw).
 
 ## Videos
+
 [![Introduction](https://img.youtube.com/vi/dQWHeygS9ws/hqdefault.jpg)](https://www.youtube.com/watch?v=dQWHeygS9ws)
 <details>
   <summary>Click for more videos!</summary>
@@ -23,12 +26,12 @@ Two cups of a double cappuccino with the new Steamfunction | [![Two cups of a do
 
 &nbsp;
 
+## Most important features compared to the rancilio-pid software
 
-## Most important features compared to the rancilio-pid software:
 1. New PID Controller "Multi-state PID with steadyPower (Bias)"
    - Target-Temperature for brewing and steaming (!) is automatically controlled by PID.
    - Auto-Tuning of all PID settings. No knowledge or special tunings required.
-   - Distinct PID settings dependend on the current "state" of the machine. 
+   - Distinct PID settings dependend on the current "state" of the machine.
    - Most of the settings are either static or semi-automatically tuned, which does not require an PHD (German: Diplom) to understand.
    - Currently 5 states are implemented:
      - Coldstart (machine is cold)
@@ -62,7 +65,7 @@ Two cups of a double cappuccino with the new Steamfunction | [![Two cups of a do
      - MENU_INC  := increase value shown in menu
      - MENU_DEC  := decrease value shown in menu
    - while also supporting the switch types: toggles (eg switches) and triggers (eg push buttons)
-   - added MQTT support to control ACTIONS using topics ../actions/<ACTION> with supported payloads of 0|1|-1 (off|on|switch)
+   - added MQTT support to control ACTIONS using topics ``../actions/<ACTION>`` with supported payloads of 0|1|-1 (off|on|switch)
      Example: "custom/Küche.Rancilio2/actions/STEAMING"
    - added Blynk support to control ACTIONS using virtual pins
 1. MultiToggle triggers any ACTION based on multiple simultaneous hardware-button states (eg. if hotwater+steaming button is pressed then start the action CLEANING). MultiToggle can trigger up to six ACTIONS just by using the three rancilio's hardware-switches and therefore reduces the need for external control (mqtt, blynk, resistor-circuit, ..).
@@ -73,7 +76,7 @@ Two cups of a double cappuccino with the new Steamfunction | [![Two cups of a do
 1. Huge performance tunings and improvements under the hood which stabilizes the system (eg in situations of bad WIFI, hardware issues,..).
 1. MQTT support to integrate machine in smart-home solutions and to easier extract details for graphing/alerting.
 1. ACTION "SLEEPING" can be used to shutdown heater and turn the display off either after a period on user inactivity (default 120min) or by user request. Any user activity (controlActions, Hardware-Buttons, MQTT Actions, brew Detection,..) will wake up the maschine.
-1. Added RemoteDebug over telnet so that we dont need USB to debug/tune pid anymore (https://github.com/JoaoLopesF/RemoteDebug). While using OTA updates you can remotely debug and update the software!
+1. Added RemoteDebug over telnet so that we don't need USB to debug/tune pid anymore (<https://github.com/JoaoLopesF/RemoteDebug>). While using OTA updates you can remotely debug and update the software!
 1. "Brew Ready" Detection implemented, which detects when the temperature has stabilized at setPoint. It can send an
    MQTT event or have hardware pin 15 triggered (which can be used to turn a LED on).
 1. All heater power relevant settings are now set and given in percent (and not absolute output) and therefore better to understand
@@ -81,48 +84,58 @@ Two cups of a double cappuccino with the new Steamfunction | [![Two cups of a do
 1. Safetly toogle added to shutdown heater on sensor malfunction (TEMPSENSORRECOVERY)
 1. Many useful functions to be used internally getAverageTemperature(), pastTemperatureChange() + updateTemperatureHistory())
 
-## ATTENTION:
+## ATTENTION
+
 - This software is tested thoroughly with the pid-only hardware solution on Silvia 5e, and with a permanently run full-hardware solution on an 10 year old Silvia. Also a 10 year old Gaggia Classic is tested successfully. I am grateful for any further feedback. 
 - Please monitor our machine's temperature closely the first few run times. The muti-state pid controller should never lead to temperatures greater than 5 degress above setpoint!
 
 ## Sample data log
+
 - You can use the mqtt interface to export live data for monitoring purposes as can be seen in this [Grafana Dashboard](https://snapshot.raintank.io/dashboard/snapshot/lYe7XigrehSfVsvAWYifEwd2d5hNC0dl).
 
 ## Instructions on how to migrate from official rancilio to bleeding-edge
-Installation is as explained on http://rancilio-pid.de/ but with following adapations:
+
+Installation is as explained on <http://rancilio-pid.de/> but with following adapations:
+
 1. Make screenshots of the official "Blynk App Dashboard" so that you can revert anytime.
 1. Copy file userConfig.h.SAMPLE to userConfig.h and edit this file accordingly.
    - I propose to set MQTT_ENABLE=2 instead of blynk. But it is up to you.
-     ```
+     ``
      #define MQTT_ENABLE 2
-     ```
+     ``
 1. Copy contents of folder ranciliopid\arduino-libs to your arduino sketchbook location (normally C:\Users\YOUR_NAME\Documents\Arduino)
    - Important: Open arduino IDE and configure the setting Tools->"lwip Variant" -> "1.4 High Bandwidth"
 1. Flash and enjoy your espresso.
 1. No tuning should be required normally. If you want/need to then use the method described below.
 
 ## Instructions on how to update to the latest version of bleeding-edge
+
 1. Just overwrite all existing files with a newly released version.
-2. Open your userConfig.h file, which had not been overwritten in previous step, and manually check (line by line!) that all updates to the new file userConfig.h.SAMPLE are reflected in your own userConfig.h. 
+2. Open your userConfig.h file, which had not been overwritten in previous step, and manually check (line by line!) that all updates to the new file userConfig.h.SAMPLE are reflected in your own userConfig.h.
 3. Compile, upload and enjoy!
 
 ## Remote Control APIs
+
 - MQTT
-  - Instructions can be found at https://github.com/medlor/bleeding-edge-ranciliopid/wiki/MQTT-Setup
+  - Instructions can be found at <https://github.com/medlor/bleeding-edge-ranciliopid/wiki/MQTT-Setup>
 - Blynk
-  - Instructions can be found at https://github.com/medlor/bleeding-edge-ranciliopid/wiki/Blynk-Setup
+  - Instructions can be found at <https://github.com/medlor/bleeding-edge-ranciliopid/wiki/Blynk-Setup>
 
 ## Tunings instructions
-- Instructions can be found at https://github.com/medlor/bleeding-edge-ranciliopid/wiki/PID-Tuning
+
+- Instructions can be found at <https://github.com/medlor/bleeding-edge-ranciliopid/wiki/PID-Tuning>
 
 ## Debugging Howto
-- Instructions can be found at https://github.com/medlor/bleeding-edge-ranciliopid/wiki/Debugging-Howto
+
+- Instructions can be found at <https://github.com/medlor/bleeding-edge-ranciliopid/wiki/Debugging-Howto>
 
 ## How to use a simple LED as brewReady signal
-- Instructions can be found at https://github.com/medlor/bleeding-edge-ranciliopid/wiki/How-to-use-a-simple-LED-as-brewReady-signal
+
+- Instructions can be found at <https://github.com/medlor/bleeding-edge-ranciliopid/wiki/How-to-use-a-simple-LED-as-brewReady-signal>
 
 ## Instructions on how to create new icon collections
-- Instructions can be found at https://github.com/medlor/bleeding-edge-ranciliopid/wiki/Instructions-on-how-to-create-new-icon-collections
+
+- Instructions can be found at <https://github.com/medlor/bleeding-edge-ranciliopid/wiki/Instructions-on-how-to-create-new-icon-collections>
 
 ## Changelog
 - 3.2.5:
@@ -151,7 +164,7 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
   - Added Blynk state caching.
   - Fix: Some "include" issues when arduinoIDE is used. Thanks Helge!
   - Fix: Support for Expressif v5.3.
-  - Performance improvements. 
+  - Performance improvements.
   - Removed legacy grafana.
 - 3.2.2:
   - Refactor: Moved blynk code into own files. Thanks aschoelzhorn!
@@ -179,30 +192,30 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
       - esp8266: Upgrade espressif8266 from v2 to v4
       - esp8266: Update to latest uMQTTBroker
     - ArduinoIDE:
-      - Upgrade Boardmanager from 
-        - ESP32:v1.0.6 to v2.0.4 
+      - Upgrade Boardmanager from
+        - ESP32:v1.0.6 to v2.0.4
         - ESP8266:v2.7.4 to 3.0.2
       - Important: Update all manually installed libs like RemoteDebug and ZACWire (see Wiki)!
 - 3.2.0:
   - NEW FEATURE (ESP32 & ONLYPID=0): Add *SCALE* functionality for brewing based on a PR by [Hoondie](https://github.com/avolmensky) (Many thanks Hoondie!).
-    - Rewrite of brew() function to supports stopping brewing by time or weight (see userConfig.h BREWTIME_END_DETECTION):    
+    - Rewrite of brew() function to supports stopping brewing by time or weight (see userConfig.h BREWTIME_END_DETECTION):
     - Setup guide in [Wiki](https://github.com/medlor/bleeding-edge-ranciliopid/wiki/Scale-Setup)
       - 3D printer models:
         - [3D Scale Case made by Hoondie](https://www.thingiverse.com/thing:5226789) (Many thanks Hoondie!).
-        - [PerfectCoffeePid Scale Case](https://github.com/medlor/bleeding-edge-ranciliopid/tree/master/3d-models/PerfectCoffeePid-Scale). 
+        - [PerfectCoffeePid Scale Case](https://github.com/medlor/bleeding-edge-ranciliopid/tree/master/3d-models/PerfectCoffeePid-Scale).
     - Display shows actual weight while brewing and additionally brewStatistics/flowRate a couple of seconds after brew (all themes are supported).
     - Automatic tuning of target-weight offset to adapt to dipping effects after brew ends.
   - Refactoring und noticeable further features:
     - Implemented manual calibration feature:
-      - Howto: 
-        - Set ENABLE_CALIBRATION_MODE=1, start machine without any weight on the scale, 
+      - Howto:
+        - Set ENABLE_CALIBRATION_MODE=1, start machine without any weight on the scale,
           after around 20s put a known weight (which is set in SCALE_SENSOR_CALIBRATION_WEIGHT) on the scale.
           The LOG will show the calculated SCALE_SENSOR_CALIBRATION_FACTOR which has to be added to the userConfig.h .
     - Send brewStatistics to display, mqtt events and LOG: "Brew statistics: 37.36g in 29.78s (1.25g/s) with profile 1".
       - FlowRate also included in output.
       - Display shows brewStatistics after brew for a couple of seconds.
-    - Use powerOff and powerUp to save energy and to reduce interrupt conflicts. HX711 is only enabled when brew is running. 
-    - 3rd party library for the HX711_ADC by Olav Kallhovd (https://github.com/olkal/HX711_ADC) adapted to our needs (Many thanks Olav!):
+    - Use powerOff and powerUp to save energy and to reduce interrupt conflicts. HX711 is only enabled when brew is running.
+    - 3rd party library for the HX711_ADC by Olav Kallhovd (<https://github.com/olkal/HX711_ADC>) adapted to our needs (Many thanks Olav!):
       - [custom async implementation](https://github.com/medlor/HX711_ADC) while using ISR to ...
         - reduce processing delays
         - reduce competing interrupts between TSIC, display and scale
@@ -212,7 +225,7 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
     - If HX711 cannot be initialized on start of brew, fallback to time-based brewing.
     - New scale settings are now tied to "Profiles":
       - Set following settings in userConfig.h / MQTT / "CONTROLS_CONFIG" / Blynk (V64 := activeBrewTimeEndDetection , V65 := activeScaleSensorWeightSetPoint):
-        - BREWTIME_END_DETECTIONX: if 0, stop by time else stop by weight 
+        - BREWTIME_END_DETECTIONX: if 0, stop by time else stop by weight
         - SCALE_SENSOR_WEIGHT_SETPOINTX = weight when to stop brewing
     - Custom scaleConfigOverwrite.h
     - ArduinoIDE: Added library/HX711_ADC_fix which has to be manually copied to your arduino library path. (see wiki)
@@ -220,7 +233,7 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
   - ArduinoIDE: "library/RemoteDebug" minor compile fix.
   - ArduinoIDE: Add check to force esp32 board version 1.0.6.
   - brew() is only called at most every 1ms.
-  - Fix: If you have an analog toggle configured for BREWING and dont turn it off before power-off, 
+  - Fix: If you have an analog toggle configured for BREWING and dont turn it off before power-off,
       then brewing will no longer automatically start on power-on.
   - userConfig.h Changes:
     - BREWTIMER_MODE renamed to BREWTIME_TIMER
@@ -235,7 +248,7 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
   - NEW FEATURE: Add support for up to 3 "*Profiles*", which can be used to quickly switch between different brew settings (eg. when different beans are used).
     - An individual profile comprises of following settings:
       - Brew Temperature / setPoint
-      - Brew Time 
+      - Brew Time
       - Preinfusion time and pause
       - Coldstart Temperature / startTemp
     - Profiles can be selected by any means, eg mqtt/blynk/menu/.. . The variable for this is "profile".
@@ -257,7 +270,7 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
     - Following menu operations are supported (can be extended on request):
       - SETPOINT, SETPOINTSTEAM, BREWTIME, PREINFUSION, PREINFUSION_PAUSE, PID_ON
   - NEW FEATURE: The calculation of the "total brew time" can be adjusted with the userConfig.h setting BREWTIMER_MODE.
-     - 0: (default) brewtime-countdown is equal BREWTIMEX. 
+     - 0: (default) brewtime-countdown is equal BREWTIMEX.
      - 1: brewtime-countdown is BREWTIMEX + PREINFUSIONX + PREINFUSION_PAUSEX
   - userConfig.h Changes:
     - Added:
@@ -295,10 +308,10 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
   - Add full support for platformio, code cleanup and fix compile warnings.
     - Force espressif8266 to Version 2 (until external libs are adapted)
   - Arduino IDE: Remove some libaries which from now on have to be installed manually, see [Wiki](https://github.com/medlor/bleeding-edge-ranciliopid/wiki/How-to-compile-on-Arduino-Platformio).
-  - Performance improvement: 
+  - Performance improvement:
     - controlActions are now using interrupts with an optional debounce feature (instead of polling each gpio).
   - Update ESP32 schematic to reflect recommendation to use 5v (instead of 3.3v) for the TSIC.
-  - Fix: 
+  - Fix:
     - DISPLAY_TEXT_STATE is working on exp8266.
     - controllerActions: Improve debouncing of analog(ADC) and digital buttons/switches.
     - Improve steaming cycle-times.
@@ -317,7 +330,7 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
   - Feature: Add support to detect low water using a VL53L0X Time of Flight distance sensor. see [Howto](https://github.com/medlor/bleeding-edge-ranciliopid/wiki/Water-level-measurement-using-VL53L0X-(Time-of-Flight-distance-sensor))
   - Helge supplied a 3d printing model for rancilio silvia's water tank lid which can be used with the VL53L0X sensor. (thanks Helge!)
   - Update ZACWire to v1.3.2. (Thanks Adrian)
-  - UserConfig change: 
+  - UserConfig change:
     - Renamed DEBUG_FORCE_GPIO_CHECK to ENABLE_CALIBRATION_MODE.
   - Fix: Show general logo when MASCHINE_TYPE is set to unknown.
 - 2.7.1:
@@ -325,7 +338,7 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
     - Adaptions:
       - New cleaning icon: ["washing hand"](https://thenounproject.com/matfine/collection/cleaning-icon/?i=2749704) by [Mat fine](https://thenounproject.com/matfine) from [the Noun Project](https://thenounproject.com/matfine/collection/cleaning-icon/?i=2749704) licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
       - New Blynk VPins (read-only/pull) defined: see [Blynk-Setup](https://github.com/medlor/bleeding-edge-ranciliopid/wiki/Blynk-Setup)
-      - New userConfig Settings: 
+      - New userConfig Settings:
         - CLEANING_CYCLES, CLEANING_INTERVAL, CLEANING_PAUSE.
         - Set CLEANING_ENABLE_AUTOMATIC=1 to use automatic cleaning program instead of manual modus.
   - Feature: (Silvia5E): ENABLE_POWER_OFF_COUNTDOWN timer (in minutes) is available via mqtt("powerOffTimer")/blynk(V45).
@@ -356,7 +369,7 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
   - Feature: Added new state "SLEEPING", which shutdowns heater and turns display off either after a period on user inactivity (default 120min) or by user request using the new ControlAction "SLEEPING". Any user activity  (controlActions, Hardware-Buttons, MQTT Actions, brew Detection,..) will wake up the maschine.
     - New userConfig setting: userConfig HEATER_INACTIVITY_TIMER (0 to disable)
   - Feature: (!OnlyPid|Full Control) Added a CLEANING mode which sets pre-infusion pause to 0seconds and disables auto-tuning for as long as mode is active. Use "CLEANING" ControlAction or activate steaming to restore normal operation.
-  - Feature: You can now set INPUT/INPUT_PULLDOWN/INPUT_PULLUP in CONTROLS_CONFIG. 
+  - Feature: You can now set INPUT/INPUT_PULLDOWN/INPUT_PULLUP in CONTROLS_CONFIG.
   - Feature: (ENABLE_HARDWARE_LED=2) New settings ENABLE_HARDWARE_LED_RGB_ON/ENABLE_HARDWARE_LED_RGB_OFF to set specific colors.
   - Breaking changes:
     - CONTROLS_CONFIG format changes to support new INPUT/INPUT_PULLDOWN/INPUT_PULLUP settings.
@@ -410,10 +423,10 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
   - Important FIX: mqtt interface for STEADYPOWER_OFFSET_TIME working again. This setting is currenly wrongly set and need to be re-set for auto-tuning to work!
   - Fix: EMERGENCY_TEMP setting disables pid when temperature is > and re-enables when < setPoint. Please check your setting to be reasonable high (eg. Rancilio 135 degree). Should at least be higher than SETPOINT_STEAM.
   - Feature/Fix: New setting STEAM_READY_TEMP to show our special steaming-icon only when temperature is above.
-    - There is support for special "in-steaming-state" icons, but I am in no mood to paint them yet. Feel free. 
+    - There is support for special "in-steaming-state" icons, but I am in no mood to paint them yet. Feel free.
   - BREWDETECTION_POWER is now in active right after a brew is detected and not when temp <1.5degree below setpoint.
   - Attention: Major userConfig adaptions. Create a backup!
-    - BREAKING CHANGE: 
+    - BREAKING CHANGE:
       - OnlyPid=1: Software based brewDetection has to set with "2" (and not "1"!!) in userConfig BREWDETECTION.
     - Added:
       - SETPOINT_STEAM
@@ -461,11 +474,11 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
     2. MQTT Server (runs on bleeding-edge arduino) to not depend on a remotely running service
     3. MQTT Client to connect to an mqtt-services (eg used by smart-home software)
   - MQTT fully implemented so you can publish and subscribe to configure settings and monitor states.
-  - THANKS: Added Adrian's library to efficiently read TSIC values (https://github.com/lebuni/ZACwire-Library)
-  - ATTENTION: New default values in userConfig.h. 
+  - THANKS: Added Adrian's library to efficiently read TSIC values (<https://github.com/lebuni/ZACwire-Library>)
+  - ATTENTION: New default values in userConfig.h.
     - It is recommended to intially use default values for STEADYPOWER, STEADYPOWER_OFFSET_TIME, STEADYPOWER_OFFSET, STARTTEMP, BREWDETECTION_POWER, BREWDETECTION_SENSITIVITY. Additionally BREWTIME is from now on also used in ONLYPID=1.
     - GPIO Pin Mapping moved to userConfig.h.
-  - ATTENTION: Installation process changed. Libs must be installed as described in "Instructions on how to migrate from official rancilio to bleeding-edge 
+  - ATTENTION: Installation process changed. Libs must be installed as described in "Instructions on how to migrate from official rancilio to bleeding-edge
     - Copy contents of folder ranciliopid\arduino-libs to your arduino sketchbook location (normally C:\Users\YOUR_NAME\Documents\Arduino)
   - Improve PID:
     - Auto-tuning for starttemp is implemented. No need to adapt the STARTTEMP accordingly when SETPOINT is modified
@@ -474,20 +487,20 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
     - One time PID manipulation logic added.
     - PID's I parameter filter is reduced in certain situations more strictly.
   - BrewDetection optimized:
-    - (ONLYPID=1) ATTENTION: The BREWTIME setting defines the time-frame of your "normal" brew (in seconds). 
+    - (ONLYPID=1) ATTENTION: The BREWTIME setting defines the time-frame of your "normal" brew (in seconds).
        When a brew is detected, the brew_timer starts and runs until BREWTIME is reached. During that time
        the heater is heating with BREWDETECTION_POWER.
-    - BREWDETECTION_POWER behaviour changed: 
-      (ONLY_PID=0) The power is applied to heater during the complete brew process. 
+    - BREWDETECTION_POWER behaviour changed:
+      (ONLY_PID=0) The power is applied to heater during the complete brew process.
       (ONLY_PID=1) The power is applied until the brew_timer is larger than BREWTIME or the current temperature is 1.5 Celcius below setpoint.
     - (ONLYPID=1) BREWDETECTION_WAIT setting added: After a brew is started the software based BrewDetection is disabled for this number of seconds to prevent the detection of another brew when flushing water.
-    - (ONLYPID=1) Software BrewDetection estimates the starttime of a brew, so that the brew counter in display is correct. 
+    - (ONLYPID=1) Software BrewDetection estimates the starttime of a brew, so that the brew counter in display is correct.
   - Debug Logs Improvements:
     - Add logs for brewReadyStatistic
     - When connecting by telnet/blynk the hardware- and software configuration is printed
   - Documentation Updates:
-    - Enabled wiki at https://github.com/medlor/bleeding-edge-ranciliopid/wiki/
-      - eg. Howto "Setup MQTT": https://github.com/medlor/bleeding-edge-ranciliopid/wiki/MQTT-Setup
+    - Enabled wiki at <https://github.com/medlor/bleeding-edge-ranciliopid/wiki/>
+      - eg. Howto "Setup MQTT": <https://github.com/medlor/bleeding-edge-ranciliopid/wiki/MQTT-Setup>
     - Added link to sample daily Grafana dashboard.
   - Fix: userConfig.h: AUTH renamed to BLYNKAUTH
   - Fix: No starttemp tuning when when machine is already warm.
@@ -595,7 +608,7 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
   - Temperature polling is also now set to once every second (previous 400ms)
   - Code refactoring/cleanup and fixes of bugs.
   - BurstShot feature added to temporary overwrite PID controls (useful mainly for tests)
-  - Added RemoteDebug over telnet so that we dont need USB to debug/tune pid anymore (https://github.com/JoaoLopesF/RemoteDebug)
+  - Added RemoteDebug over telnet so that we dont need USB to debug/tune pid anymore (<https://github.com/JoaoLopesF/RemoteDebug>)
     - Just "$ telnet rancilio_ip 23"
   - Fix: Recover EmergencyStop when temperature poll in setup() fails
   - EmergencyStop state logging improved
@@ -637,12 +650,13 @@ Installation is as explained on http://rancilio-pid.de/ but with following adapa
   - New feature: Safe-guard: Stop heating forever if sensor is flapping!
   - Fix: Pid.Compute() is now in sync with isrCounter and is not loosing one tick each second. Heater flapping is reduced.
 
-
 # Credits & Special Thanks
+
 To the great work of the rancilio-pid.de team.
-Also to the nice people in our rancilio discord channel and the ones who contribute and give very much appreciated feedback like 
+Also to the nice people in our rancilio discord channel and the ones who contribute and give very much appreciated feedback like
+
 - helge/Helgelino
-- Adrian 
+- Adrian
 - Finnito
 - PedroR/P1Rebo
 - urbantrout
@@ -651,11 +665,11 @@ Also to the nice people in our rancilio discord channel and the ones who contrib
 !! Thank you so much for the tasty cup of coffee I enjoy each day !!  
 
 ## Also special thanks to the great icon artwork
+
 - ["washing hand"](https://thenounproject.com/matfine/collection/cleaning-icon/?i=2749704) by [Mat fine](https://thenounproject.com/matfine) from [the Noun Project](https://thenounproject.com/matfine/collection/cleaning-icon/?i=2749704) licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
 - ["menu"](https://thenounproject.com/icon/menu-2943760/) by [Mat fine](https://thenounproject.com/matfine) from [the Noun Project](https://thenounproject.com/icon/tasks-2943947/) licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/legalcode)
 - ["Glückliche Gesichter Emoticons"](https://pixabay.com/de/illustrations/gl%C3%BCckliche-gesichter-emoticons-5049116/) by [Annalise Batista](https://pixabay.com/de/users/annaliseart-7089643/) licensed under [Pixabay license](https://pixabay.com/de/service/terms/#license)
   
-
-
 # Disclaimer
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

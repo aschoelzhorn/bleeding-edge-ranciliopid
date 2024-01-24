@@ -8,4 +8,6 @@ float convertOutputToUtilisation(double, unsigned int);
 // returns heater utilization in Output
 double convertUtilisationToOutput(float, unsigned int);
 
+bool isEmpty(char* text);
+
 #endif // HELPER_H

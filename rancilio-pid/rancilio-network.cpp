@@ -23,6 +23,7 @@ unsigned int wifiReconnects = 0; // number of reconnects
 unsigned long lastCheckNetwork = 0;
 bool forceOffline = FORCE_OFFLINE;
 
+int8_t wifi_rssi;
 
 /******************************************************
  * WiFi helper scripts
@@ -52,6 +53,7 @@ bool isWifiWorking() {
 #else
     val_wifi = ((!forceOffline) && (WiFi.status() == WL_CONNECTED) && (WiFi.localIP() != IPAddress(0U)));
 #endif
+    wifi_rssi = WiFi.RSSI();
 }
   return val_wifi;
 }
@@ -67,24 +69,25 @@ bool isWifiWorking() {
 
     if (force_connect || (millis() > lastWifiConnectionAttempt + 5000 + (wifiReconnectInterval * (wifiReconnects<=4?wifiReconnects: 4) ))) {
       // noInterrupts();
-      DEBUG_print("Connecting to WIFI with SID %s ...\n", ssid);
+      DEBUG_print("Connecting to WIFI with SSID %s ...\n", ssid);
       WiFi.persistent(false); // Don't save WiFi configuration in flash
       #ifdef ESP32
       WiFi.disconnect();
+      WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
       WiFi.setHostname(hostname);
       #else
       WiFi.disconnect(true); // Delete SDK WiFi config
       #endif
-// displaymessage(State::Undefined, "Connecting Wifi", "");
+// showStatusMessage((char*)"Connecting Wifi");
 #ifdef STATIC_IP
       IPAddress STATIC_IP;
       IPAddress STATIC_GATEWAY;
       IPAddress STATIC_SUBNET;
       WiFi.config(ip, gateway, subnet);
 #endif
-      /* Explicitly set the ESP to be a WiFi-client, otherwise, it by
-default, would try to act as both a client and an access-point and could cause
-network-issues with your other WiFi-devices on your WiFi-network. */
+      /* Explicitly set the ESP to be a WiFi-client, otherwise, by default,
+       it would try to act as both a client and an access-point and could cause
+       network-issues with your other WiFi-devices on your WiFi-network. */
       WiFi.mode(WIFI_STA);
       delay(200); // esp32: prevent "store calibration data failed(0x1105)" errors
 #ifdef ESP32
@@ -134,6 +137,7 @@ bool InitNetworking() {
     DEBUG_print("Staying offline due to forceOffline=1\n");
     return true;
   }
+  showBootMessage((char*)"Init Wifi");
 
   checkWifi(true, 12000UL, false); // wait up to 12 seconds for connection
 
@@ -145,7 +149,7 @@ bool InitNetworking() {
       disableBlynkTemporary();
       lastWifiConnectionAttempt = millis();
     }
-    displaymessage(State::Undefined, (char*)"Cannot connect to Wifi", (char*)"");
+    showBootMessage((char*)"Cannot connect to Wifi");
     delay(1000);
     return true;
   } else {

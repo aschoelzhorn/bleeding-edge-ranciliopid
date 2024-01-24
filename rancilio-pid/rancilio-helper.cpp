@@ -12,3 +12,9 @@ float convertOutputToUtilisation(double Output, unsigned int windowSize) { retur
 
 // returns heater utilization in Output
 double convertUtilisationToOutput(float utilization, unsigned int windowSize) { return (utilization / 100) * windowSize; }
+
+bool isEmpty(char* text) {
+  if (text == nullptr) return true;
+  if (text[0] == '\0') return true;
+  return false;
+}

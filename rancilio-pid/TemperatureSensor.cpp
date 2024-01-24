@@ -4,14 +4,13 @@
  *****************************************************/
 #include "TemperatureSensor.h"
 #include "rancilio-debug.h"
-#include "userConfig.h"
 #include "rancilio-helper.h"
 
 #if (TEMPSENSOR == 3)
   #include <max6675.h>
   MAX6675 thermocouple(pinTemperatureCLK, pinTemperatureCS, pinTemperatureSO);
 #elif (TEMPSENSOR == 9)
-  #include <sensorMock.h>
+  #include <TemperatureSensorMock.h>
 #else
   #include <ZACwire.h>
 #if (!defined(ZACWIRE_VERSION) || (defined(ZACWIRE_VERSION) && ZACWIRE_VERSION < 200L))

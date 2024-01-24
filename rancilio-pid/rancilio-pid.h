@@ -81,7 +81,6 @@ extern float* activePreinfusionPause;
 extern float* activeStartTemp;
 extern float setPointSteam;
 extern int pidON;
-extern unsigned int profile;
 extern const unsigned int windowSize;
 extern bool mqttDisabledTemporary;
 extern unsigned int* activeBrewTimeEndDetection;
@@ -115,7 +114,6 @@ extern int previousPowerOffTimer;
 extern unsigned long lastBrewEnd;
 
 extern unsigned int profile;
-//extern unsigned int activeProfile;
 extern float brewtime1;
 extern float brewtime2;
 extern float brewtime3;
