@@ -284,6 +284,14 @@ int waterSensorCheckTimer = 10000; // how often shall the water level be checked
 unsigned long previousTimerWaterLevelCheck = 0;
 
 /********************************************************
+ * Pressure Sensor 
+ ******************************************************/
+#if (PRESSURE_SENSOR_ENABLE)
+#include "PressureSensor.h"
+PressureSensor pressureSensor;
+#endif
+
+/********************************************************
  * Temperature Sensor 
  ******************************************************/
 const int TempSensorRecovery = TEMPSENSORRECOVERY;
@@ -1061,6 +1069,11 @@ void CheckMqttConnection() {
 
     set_profile();
 
+#if (PRESSURE_SENSOR_ENABLE) 
+    float pressure = pressureSensor.getPressure();
+    DEBUG_print("Current pressue %0.2f\n", pressure);
+#endif    
+
     // brewReady
     if (millis() > lastCheckBrewReady + 1000) {
       lastCheckBrewReady = millis();
@@ -1627,6 +1640,20 @@ void CheckMqttConnection() {
 #endif
   }
 
+
+  /********************************************************
+  * INIT Pressure Sensor
+  ******************************************************/
+  void InitPressureSensor() {
+#if (PRESSURE_SENSOR_ENABLE)
+    showBootMessage((char*)"Init pressure sensor");
+    pressureSensor.initPressureSensor();
+#endif
+  }
+
+
+
+
  /********************************************************
  * WATER LEVEL SENSOR
  ******************************************************/
@@ -1790,10 +1817,10 @@ void InitOTA() {
       activeState = State::SoftwareUpdate;
 		  int percent = progress / (total / 100);
 		  DEBUG_print("OTA update in progress: %u%%\n", percent);
-      // TODO: I have no idea why, but as soon as I want to update the display, the update stops at different progress between 1% and 80%
-		  //char line2[17];
-		  //snprintf(line2, sizeof(line2), "%u%% / 100%%", percent);
-      //showStatusMessage((char*)"Updating Software", (char*)line2);
+      // TODO: I have no idea why, but as soon as I want to update the display, the update stops at different progress between 1% and 80% and the esp32 reboots
+      //snprintf(displayMessageLine2, sizeof(displayMessageLine2), "%u%% / 100%%", percent);
+      //snprintf(displayMessageLine1, sizeof(displayMessageLine1), "Updating Software");
+      //showStatusMessage(displayMessageLine1, displayMessageLine2);
 	  });    
 	  ArduinoOTA.onError([](ota_error_t error) {
 		  ERROR_print("OTA update error: %d\n", error);
@@ -1851,6 +1878,7 @@ void setup() {
   
   InitPid();
   InitScale();
+  InitPressureSensor();
 
   bool eeprom_force_read = InitNetworking();
   InititialSyncEeprom(eeprom_force_read);

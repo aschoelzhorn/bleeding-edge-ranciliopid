@@ -232,6 +232,12 @@
 #define BREWTIME_END_DETECTION3 0  // 0 (default) = brew will end based on time (requires ONLYPID=0) | 1 = brew will end based on weight (requires SCALE_SENSOR_ENABLE=1)
 #define SCALE_SENSOR_WEIGHT_SETPOINT3    36  // Brew weight in grams
 
+/*******
+ * Pressure Sensor
+ *******/
+#define PRESSURE_SENSOR_ENABLE  1          // 0=Off (default), 1=On (only ADS1115 supported)
+#define PRESSURE_SENSOR_SDA    26 //27   //33       // (ESP32 only: dedicated I2C bus required)
+#define PRESSURE_SENSOR_SCL    32 //26   //32       // (ESP32 only: dedicated I2C bus required)
 
 /*******
  * Water level measurement 
