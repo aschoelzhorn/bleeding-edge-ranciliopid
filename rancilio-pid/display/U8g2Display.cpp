@@ -92,7 +92,11 @@ void U8g2Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, cons
 }
 
 void U8g2Display::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) {
-    //u8g2.drawXBMP(x, y, w, h, bitmap); // TODO: show not supported image
+    //u8g2.drawXBMP(x, y, w, h, bitmap); // TODO: show "not supported" image, like a "x"
+}
+
+void U8g2Display::drawImage(uint16_t x, uint16_t y, tImage bitmap) {
+    drawImage(x, y, bitmap.width, bitmap.height, bitmap.data);
 }
 
 void U8g2Display::setFont(FontType fontType) {

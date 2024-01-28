@@ -3,16 +3,16 @@
 Viewport::Viewport() {
     this->width = 0;
     this->height = 0;
-    this->startPoint = MyPoint(0,0);
+    this->startPoint = Point(0,0);
 }
 
-Viewport::Viewport(MyPoint startPoint, int width, int height) {
+Viewport::Viewport(Point startPoint, int width, int height) {
     this->width = width;
     this->height = height;
     this->startPoint = startPoint;
 }
 
-Viewport::Viewport(int x, int y, int width, int height) : Viewport(MyPoint(x, y), width, height) {
+Viewport::Viewport(int x, int y, int width, int height) : Viewport(Point(x, y), width, height) {
 }
 
 int Viewport::getHeight() {
@@ -23,20 +23,20 @@ int Viewport::getWidth() {
     return width;
 }
 
-MyPoint Viewport::getUpperLeft() {
+Point Viewport::getUpperLeft() {
     return startPoint;
 }
 
-MyPoint Viewport::getUpperRight() {
-    return MyPoint(startPoint.X + width, startPoint.Y);
+Point Viewport::getUpperRight() {
+    return Point(startPoint.X + width, startPoint.Y);
 }
 
-MyPoint Viewport::getLowerLeft() {
-    return MyPoint(startPoint.X, startPoint.Y + height);
+Point Viewport::getLowerLeft() {
+    return Point(startPoint.X, startPoint.Y + height);
 }
 
-MyPoint Viewport::getLowerRight() {
-    return MyPoint(startPoint.X + width, startPoint.Y + height);
+Point Viewport::getLowerRight() {
+    return Point(startPoint.X + width, startPoint.Y + height);
 }
 
 

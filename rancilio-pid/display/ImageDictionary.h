@@ -7,10 +7,11 @@
 #include "status_images.h"  // Include the enum
 #include "../userConfig.h"
 #include <pgmspace.h>
+#include "tImage.h"
 
 #if DISPLAY_HARDWARE == 4
 
-using LogoType = uint16_t;
+//using ImageDataType = uint16_t;
 
 #ifdef MACHINE_TYPE_GAGGIA
 #include "icons/icon_gaggia_color.h"
@@ -26,7 +27,7 @@ using LogoType = uint16_t;
 
 #else // DISPLAY_HARDWARE
 
-using LogoType = const unsigned char;
+//using ImageDataType = const unsigned char;
 #ifdef MACHINE_TYPE_GAGGIA
 #include "icons/icon_gaggia.h"
 #elif defined(MACHINE_TYPE_ECM)
@@ -58,36 +59,25 @@ class ImageDictionary {
 public:
      ImageDictionary();
 
-     const LogoType* getLogo(StatusImage);
+     const tImage getLogo(StatusImage);
      const unsigned char* getImage(StatusImage);
      const unsigned char* getImageRotated(StatusImage);
-     const LogoType* getStatusIcon(StatusIcon);
-     const LogoType* getProfileIcon(ProfileIcon);
+     const tImage getStatusIcon(StatusIcon);
+     const tImage getProfileIcon(ProfileIcon);
 
 // add some pointers to make it compile without "ok status icons"
 #if DISPLAY_HARDWARE < 4 
-     const LogoType* wifi_ok_bits = wifi_not_ok_bits;
-     const LogoType* blynk_ok_bits = blynk_not_ok_bits;
-     const LogoType* mqtt_ok_bits = mqtt_not_ok_bits;
+     const ImageDataType* wifi_ok_bits = wifi_not_ok_bits;
+     const ImageDataType* blynk_ok_bits = blynk_not_ok_bits;
+     const ImageDataType* mqtt_ok_bits = mqtt_not_ok_bits;
 #endif
 
 private:
-     std::map<StatusImage, const LogoType*> logoDictionary;
+     std::map<StatusImage, tImage> logoDictionary;
      std::map<StatusImage, const unsigned char*> imageDictionary;
      std::map<StatusImage, const unsigned char*> imageRotatedDictionary;
-     std::map<StatusIcon, const LogoType*> statusIconDictionary;
-     std::map<ProfileIcon, const LogoType*> profileIconDictionary;
+     std::map<StatusIcon, tImage> statusIconDictionary;
+     std::map<ProfileIcon, tImage> profileIconDictionary;
 };
-
-
-// TODO: check if we should use this struct to store in the ImageDictionary, so we can also read the size dynamically (e.g. smaller status icons for smaller displays)
-/*
- typedef struct {
-     const uint16_t *data;
-     uint16_t width;
-     uint16_t height;
-     uint8_t dataSize;
-     } tImage;
-*/
 
 #endif // IMAGE_DICTIONARY_h

@@ -3,10 +3,10 @@
 
 #pragma once
 
-class MyPoint {
+class Point {
     public:
-        MyPoint();
-        MyPoint(int x, int y);
+        Point();
+        Point(int x, int y);
         int X;
         int Y;
 };

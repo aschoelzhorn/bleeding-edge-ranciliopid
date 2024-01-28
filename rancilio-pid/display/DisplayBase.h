@@ -11,6 +11,7 @@ public:
     virtual void setPowerSave(uint32_t is_enabled) = 0; 
     virtual void drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t* bitmap) = 0; 
     virtual void drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t* bitmap) = 0; 
+    virtual void drawImage(uint16_t x, uint16_t y, tImage bitmap) = 0; 
     virtual void setFont(FontType fontType) = 0; 
     virtual void setCursor(int16_t x, int16_t y) = 0; 
     virtual void print(float data, int digits) = 0; 

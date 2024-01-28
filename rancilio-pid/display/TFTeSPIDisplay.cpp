@@ -33,7 +33,7 @@ void TFTeSPIDisplay::initViews() {
 
     int numberOfStatusIcons = 3;
 
-    MyPoint upperLeft = MyPoint(0, 0); // marginY because my display has pixel errors in the first few rows
+    Point upperLeft = Point(0, 0);
 
     bootLogo = Viewport(upperLeft, width, maxBootLogoHeight);
     bootMessage = Viewport(0, bootLogo.getLowerLeft().Y + margin, width, height - bootLogo.getHeight() - margin);
@@ -43,8 +43,8 @@ void TFTeSPIDisplay::initViews() {
     temperature = Viewport(width / 2, upperLeft.Y, width / 2, (height / 2));
 
     statusMessage = Viewport(0, actionImage.getHeight()*2 + margin, getWidth(), getHeight() - actionImage.getHeight()*2 - margin - statusIconHeight);
-    statusIcons = Viewport(MyPoint(0, height - statusIconHeight), statusIconWidth * numberOfStatusIcons, statusIconHeight);
-    profileIcon = Viewport(MyPoint(width - statusIconWidth, height - statusIconHeight), statusIconWidth, statusIconHeight);
+    statusIcons = Viewport(Point(0, height - statusIconHeight), statusIconWidth * numberOfStatusIcons, statusIconHeight);
+    profileIcon = Viewport(Point(width - statusIconWidth, height - statusIconHeight), statusIconWidth, statusIconHeight);
 
     softwareUpdate = Viewport(upperLeft, getWidth(), getHeight()); // fullscreen
 
@@ -80,6 +80,12 @@ void TFTeSPIDisplay::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, c
 void TFTeSPIDisplay::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) {
     tft.setSwapBytes(true); // swap the byte order for pushImage() - corrects endianness
     tft.pushImage(x,y,w,h,bitmap);
+    tft.setSwapBytes(false);
+}
+
+void TFTeSPIDisplay::drawImage(uint16_t x, uint16_t y, tImage bitmap) {
+    tft.setSwapBytes(true); // swap the byte order for pushImage() - corrects endianness
+    tft.pushImage(x, y, bitmap.width, bitmap.height, bitmap.data);
     tft.setSwapBytes(false);
 }
 

@@ -13,6 +13,7 @@ public:
     virtual void setPowerSave(uint32_t is_enabled);
     virtual void drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap);
     virtual void drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap);
+    virtual void drawImage(uint16_t x, uint16_t y, tImage bitmap); 
     virtual void setFont(FontType fontType);
     virtual void setCursor(int16_t x, int16_t y);
     virtual void print(float data, int digits);

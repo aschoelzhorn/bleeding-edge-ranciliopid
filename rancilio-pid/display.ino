@@ -281,7 +281,7 @@ if (ENABLE_PROFILE_STATUS == 2 && profile == 1) {
   ProfileIcon currentIcon = static_cast<ProfileIcon>(profile);
   if (currentIcon != displayHelper.getCurrentProfileIcon()) {
     display.clearRect(icon_x, icon_y, status_icon_width, status_icon_height);
-    display.drawImage(icon_x, icon_y, status_icon_width, status_icon_height, images.getProfileIcon(currentIcon));
+    display.drawImage(icon_x, icon_y, images.getProfileIcon(currentIcon));
     displayHelper.setCurrentProfileIcon(currentIcon);
   }
 }
@@ -341,7 +341,7 @@ void showStatusIcons() {
   if (wifi != StatusIcon::None) {
     if (displayHelper.getStatusIconAtIndex(icon_counter) != wifi) {
       displayHelper.setStatusIconAtIndex(icon_counter, wifi);
-      display.drawImage(x + (icon_counter * (status_icon_width - 1)), y, status_icon_width, status_icon_height, images.getStatusIcon(wifi));
+      display.drawImage(x + (icon_counter * (status_icon_width - 1)), y, images.getStatusIcon(wifi));
     }
     icon_counter++;
   }
@@ -349,7 +349,7 @@ void showStatusIcons() {
   if (blynk != StatusIcon::None) {
     if (displayHelper.getStatusIconAtIndex(icon_counter) != blynk) {
       displayHelper.setStatusIconAtIndex(icon_counter, blynk);
-      display.drawImage(x + (icon_counter * (status_icon_width - 1)), y, status_icon_width, status_icon_height, images.getStatusIcon(blynk));
+      display.drawImage(x + (icon_counter * (status_icon_width - 1)), y, images.getStatusIcon(blynk));
     }
     icon_counter++;
   }
@@ -357,7 +357,7 @@ void showStatusIcons() {
   if (mqtt != StatusIcon::None) {
     if (displayHelper.getStatusIconAtIndex(icon_counter) != mqtt) {
       displayHelper.setStatusIconAtIndex(icon_counter, mqtt);
-      display.drawImage(x + (icon_counter * (status_icon_width - 1)), y, status_icon_width, status_icon_height, images.getStatusIcon(mqtt));
+      display.drawImage(x + (icon_counter * (status_icon_width - 1)), y, images.getStatusIcon(mqtt));
     }
     icon_counter++;
   }
@@ -382,7 +382,7 @@ void showScreenSaver() {
   static unsigned int screen_saver_x_pos = 41;
   static bool screen_saver_direction_right = true;
   const int unsigned screen_saver_step = 4;
-  unsigned int logo_width_tmp = icon_width;
+  unsigned int logo_width_tmp = icon_width; // TODO: the hack with the width doesn't work anymore
   if (enableScreenSaver == 3 && strcmp(MACHINE_TYPE, "gaggia") == 0) {
     logo_width_tmp = 125; // hack which will result in logo only moving left
     screen_saver_x_pos = 5;
@@ -412,7 +412,7 @@ void showScreenSaver() {
     display.drawImage(screen_saver_x_pos, 0, icon_width, icon_height, images.getImage(StatusImage::BrewReady));
   } else if (enableScreenSaver == 3) {
     display.clearBuffer();
-    display.drawImage(screen_saver_x_pos, 0, logo_width_tmp, logo_height, images.getLogo(StatusImage::MachineLogo));
+    display.drawImage(screen_saver_x_pos, 0, images.getLogo(StatusImage::MachineLogo));
   }
   screenSaverOn = true;
 }

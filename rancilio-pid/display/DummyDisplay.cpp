@@ -1,7 +1,7 @@
 #include "DummyDisplay.h"
 
 // this block is needed to avoid crash with no display 
-Viewport dummy = Viewport(MyPoint(), 0, 0);
+Viewport dummy = Viewport(Point(), 0, 0);
 std::map<Area, Viewport> areaMap = {
     {Area::BootLogo, dummy},
 };
@@ -29,6 +29,9 @@ void DummyDisplay::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, con
 }
 
 void DummyDisplay::drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) {
+}
+
+void DummyDisplay::drawImage(uint16_t x, uint16_t y, tImage bitmap) {
 }
 
 void DummyDisplay::setFont(FontType fontType) {

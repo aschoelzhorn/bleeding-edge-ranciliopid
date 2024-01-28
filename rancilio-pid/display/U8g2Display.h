@@ -13,6 +13,7 @@ public:
     void setPowerSave(uint32_t is_enabled) override;
     void drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) override;
     void drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) override;
+    void drawImage(uint16_t x, uint16_t y, tImage bitmap) override;
     void setFont(FontType fontType) override;
     void setCursor(int16_t x, int16_t y) override;
     void print(float data, int digits) override;
