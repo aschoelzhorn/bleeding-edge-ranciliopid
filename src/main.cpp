@@ -41,6 +41,7 @@
 #include "hardware/Switch.h"
 #include "hardware/TempSensorDallas.h"
 #include "hardware/TempSensorTSIC.h"
+#include "hardware/TempSensorMock.h"
 #include "hardware/pinmapping.h"
 
 // User configuration & defaults
@@ -1695,6 +1696,9 @@ void setup() {
     }
     else if (TEMP_SENSOR == 2) {
         tempSensor = new TempSensorTSIC(PIN_TEMPSENSOR);
+    }
+    else if (TEMP_SENSOR == 9) {
+        tempSensor = new TempSensorMock(0);
     }
 
     temperature = tempSensor->getCurrentTemperature();
