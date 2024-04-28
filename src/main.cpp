@@ -21,6 +21,8 @@
 #include <LittleFS.h>
 #include <PID_v1.h>  // for PID calculation
 #include "display/DisplayManager.h"
+#include "display/DisplayPageManager.h"
+#include "display/DisplayPage.h"
 #include <WiFiManager.h>
 #include <os.h>
 
@@ -46,6 +48,9 @@
 // User configuration & defaults
 #include "defaults.h"
 #include "userConfig.h" // needs to be configured by the user
+
+// DTOs
+#include "DTOs/brewData.h"
 
 hw_timer_t* timer = NULL;
 
@@ -105,6 +110,7 @@ int brewControlType = BREWCONTROL_TYPE;
 
 // Display
 DisplayManager display;
+DisplayPageManager displayPageManager(&display);
 
 // WiFi
 uint8_t wifiCredentialsSaved = 0;
@@ -398,28 +404,62 @@ int getSignalStrength() {
     }
 }
 
-// Horizontal or vertical display
-#if (DISPLAY_HARDWARE != 0)
-#if (DISPLAYTEMPLATE < 20) // horizontal templates
-#include "display/displayCommon.h"
-#endif
+// // Horizontal or vertical display
+// #if (DISPLAY_HARDWARE != 0)
+// #if (DISPLAYTEMPLATE < 20) // horizontal templates
+// #include "display/displayCommon.h"
+// #endif
 
-#if (DISPLAYTEMPLATE >= 20) // vertical templates
-#include "display/displayRotateUpright.h"
-#endif
+// #if (DISPLAYTEMPLATE >= 20) // vertical templates
+// #include "display/displayRotateUpright.h"
+// #endif
+
 
 #if (DISPLAYTEMPLATE == 1)
 #include "display/displayTemplateStandard.h"
+//DisplayPage *page = displayPageManager.getPage(DisplayPageType::Standard);
 #elif (DISPLAYTEMPLATE == 2)
-#include "display/displayTemplateMinimal.h"
+//#include "display/displayTemplateMinimal.h"
+DisplayPage *page = displayPageManager.getPage(DisplayPageType::Minimal);
 #elif (DISPLAYTEMPLATE == 3)
-#include "display/displayTemplateTempOnly.h"
+//#include "display/displayTemplateTempOnly.h"
+DisplayPage *page = displayPageManager.getPage(DisplayPageType::TemperatureOnly);
 #elif (DISPLAYTEMPLATE == 4)
 #include "display/displayTemplateScale.h"
+//DisplayPage *page = displayPageManager.getPage(DisplayPageType::Scale);
 #elif (DISPLAYTEMPLATE == 20)
 #include "display/displayTemplateUpright.h"
 #endif
-#endif
+
+//#endif
+
+bool changed = false;
+
+void printScreen() {
+
+    BrewData b;
+    b.brewtimesoftware = brewtimesoftware;
+    b.currBrewState = currBrewState;
+    b.isBrewDetected = isBrewDetected;
+    b.timeBrewDetection = timeBrewDetection;
+    b.timeBrewed = timeBrewed;
+    b.totalBrewTime = totalBrewTime;
+
+    PidData p;
+    p.mode = bPID.GetMode();
+    p.pidOutput = pidOutput;
+
+    // switch of page during runtime
+    if (temperature > 35 && changed == false) {
+        LOGF(DEBUG, "CHANGE PAGE");
+        LOGF(DEBUG, "old page name: %s", page->getPageName());
+        changed = true;
+        page = displayPageManager.getPage(DisplayPageType::Minimal);
+        LOGF(DEBUG, "new page name: %s", page->getPageName());
+    }
+
+    page->printScreen(temperature, setpoint, isrCounter, offlineMode, b, p);
+}
 
 Timer printDisplayTimer(&printScreen, 100);
 
@@ -562,7 +602,7 @@ void refreshTemp() {
  */
 void initOfflineMode() {
 #if DISPLAY_HARDWARE != 0
-    displayMessage("", "", "", "", "Begin Fallback,", "No Wifi");
+    page->displayMessage("", "", "", "", "Begin Fallback,", "No Wifi");
 #endif
 
     LOG(INFO, "Start offline mode with eeprom values, no wifi :(");
@@ -570,7 +610,7 @@ void initOfflineMode() {
 
     if (readSysParamsFromStorage() != 0) {
 #if DISPLAY_HARDWARE != 0
-        displayMessage("", "", "", "", "No eeprom,", "Values");
+        page->displayMessage("", "", "", "", "No eeprom,", "Values");
 #endif
 
         LOG(INFO, "No working eeprom value, I am sorry, but use default offline value :)");
@@ -596,7 +636,7 @@ void checkWifi() {
 
                 if (!setupDone) {
 #if DISPLAY_HARDWARE != 0
-                    displayMessage("", "", "", "", langstring_wifirecon, String(wifiReconnects));
+                    page->displayMessage("", "", "", "", langstring_wifirecon, String(wifiReconnects));
 #endif
                 }
 
@@ -1244,7 +1284,7 @@ void wiFiSetup() {
         LOGF(INFO, "Connecting to WiFi: %s", String(hostname));
 
 #if DISPLAY_HARDWARE != 0
-        displayLogo("Connecting to: ", HOSTNAME);
+        page->displayLogo("Connecting to: ", HOSTNAME);
 #endif
     }
 
@@ -1270,7 +1310,7 @@ void wiFiSetup() {
         LOG(INFO, "WiFi connection timed out...");
 
 #if DISPLAY_HARDWARE != 0
-        displayLogo(langstring_nowifi[0], langstring_nowifi[1]);
+        page->displayLogo(langstring_nowifi[0], langstring_nowifi[1]);
 #endif
 
         wm.disconnect();
@@ -1280,7 +1320,7 @@ void wiFiSetup() {
     }
 
 #if DISPLAY_HARDWARE != 0
-    displayLogo(langstring_connectwifi1, wm.getWiFiSSID(true));
+    page->displayLogo(langstring_connectwifi1, wm.getWiFiSSID(true));
 #endif
 }
 
@@ -1807,7 +1847,7 @@ void setup() {
 
 #if DISPLAY_HARDWARE != 0
     display.init(DISPLAYROTATE);
-    displayLogo(String("Version "), String(sysVersion));
+    page->displayLogo(String("Version "), String(sysVersion));
     delay(2000); // caused crash with wifi manager on esp8266, should be ok on esp32
 #endif
 
