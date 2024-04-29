@@ -1,5 +1,4 @@
-#ifndef DUMMYDISPLAY_H
-#define DUMMYDISPLAY_H
+#pragma once
 
 #include <Arduino.h>
 #include "DisplayBase.h"
@@ -50,5 +49,3 @@ public:
 protected:
     void initViews() override;
 };
-
-#endif // DUMMYDISPLAY_H

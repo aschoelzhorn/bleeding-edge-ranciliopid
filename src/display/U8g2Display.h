@@ -1,5 +1,4 @@
-#ifndef U8G2DISPLAY_H
-#define U8G2DISPLAY_H
+#pragma once
 
 #include <U8g2lib.h>
 #include "DisplayBase.h"
@@ -54,5 +53,3 @@ private:
     int getStringWidth(int lenght, FontType font);
     int getStringWidth(int lenght);
 };
-
-#endif // U8G2DISPLAY_H

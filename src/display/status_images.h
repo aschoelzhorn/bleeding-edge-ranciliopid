@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef status_images_h
-#define status_images_h
-
 enum class StatusImage {
     None = 0,
     Coldstart = 1,
@@ -36,5 +33,3 @@ enum class ProfileIcon {
     Profile_2 = 2,
     Profile_3 = 3
 };
-
-#endif

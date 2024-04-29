@@ -1,5 +1,4 @@
-#ifndef TFTeSPIDisplay_H
-#define TFTeSPIDisplay_H
+#pragma once
 
 #include <TFT_eSPI.h>
 #include <TFT_eWidget.h>
@@ -65,5 +64,3 @@ private:
     int ringMeter(float value, int vmin, int vmax, int x, int y, int r, const char *units, byte scheme);
     unsigned int rainbow(byte value);
 };
-
-#endif // TFTeSPIDisplay_H

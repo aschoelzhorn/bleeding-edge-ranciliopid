@@ -1,5 +1,4 @@
-#ifndef DISPLAY_BASE_H
-#define DISPLAY_BASE_H
+#pragma once
 
 #include "IDisplay.h" // Include your interface header
 
@@ -73,5 +72,3 @@ protected:
     Viewport temperature;
     Viewport brewTime;
 };
-
-#endif // DISPLAY_BASE_H

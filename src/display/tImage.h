@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef IMAGE_TYPEDEF
-#define IMAGE_TYPEDEF
-
 #include "../userConfig.h"
 
 #if DISPLAY_HARDWARE == 4
@@ -19,5 +16,3 @@ using ImageDataType = const unsigned char;
      uint16_t height;
      uint8_t dataSize;
      } tImage;
-
-#endif

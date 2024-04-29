@@ -1,5 +1,4 @@
-#ifndef IDISPLAY_H
-#define IDISPLAY_H
+#pragma once
 
 #include <map>
 
@@ -104,5 +103,3 @@ public:
 
     virtual void drawBorder(Area);
 };
-
-#endif // IDISPLAY_H
