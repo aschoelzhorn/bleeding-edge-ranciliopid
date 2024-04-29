@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef IMAGE_DICTIONARY_h
-#define IMAGE_DICTIONARY_h
-
 #include <map>
 #include "status_images.h"  // Include the enum
 #include "../userConfig.h"
@@ -43,5 +40,3 @@ private:
      std::map<StatusIcon, tImage> statusIconDictionary;
      // std::map<ProfileIcon, tImage> profileIconDictionary;
 };
-
-#endif // IMAGE_DICTIONARY_h

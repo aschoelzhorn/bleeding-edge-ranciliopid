@@ -1,6 +1,3 @@
-#ifndef Point_H
-#define Point_H
-
 #pragma once
 
 class Point {
@@ -10,5 +7,3 @@ class Point {
         int X;
         int Y;
 };
-
-#endif

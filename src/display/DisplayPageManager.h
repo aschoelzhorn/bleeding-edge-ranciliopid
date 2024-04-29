@@ -1,5 +1,4 @@
-#ifndef DISPLAYPAGEMANAGER_H
-#define DISPLAYPAGEMANAGER_H
+#pragma once
 
 #include "DisplayPage.h"
 #include "DisplayManager.h"
@@ -13,5 +12,3 @@ private:
     DisplayPage *page;
     DisplayManager *displayManager;
 };
-
-#endif // DISPLAYPAGEMANAGER_H

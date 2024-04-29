@@ -1,5 +1,4 @@
-#ifndef DISPLAYMANAGER_H
-#define DISPLAYMANAGER_H
+#pragma once
 
 #include <Wire.h>
 #include "IDisplay.h"
@@ -67,4 +66,3 @@ private:
     IDisplay* display;  // Use a pointer to IDisplay to allow dynamic initialization
 };
 
-#endif // DISPLAYMANAGER_H

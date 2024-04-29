@@ -1,4 +1,5 @@
 #pragma once
+
 #include <brewEnums.h>
 
 struct BrewData {
