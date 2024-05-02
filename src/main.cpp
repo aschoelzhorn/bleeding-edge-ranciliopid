@@ -51,6 +51,9 @@
 
 // DTOs
 #include "DTOs/brewData.h"
+#include "DTOs/pidData.h"
+#include "DTOs/wifiData.h"
+#include "DTOs/mqttData.h"
 
 hw_timer_t* timer = NULL;
 
@@ -436,11 +439,23 @@ void printScreen() {
     b.timeBrewed = timeBrewed;
     b.totalBrewTime = totalBrewTime;
 
+    //PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki, double Kd, int POn, int ControllerDirection)
+    //PID bPID(        &temperature, &pidOutput,      &setpoint,       aggKp,     aggKi,     aggKd,  1,       DIRECT);
     PidData p;
     p.mode = bPID.GetMode();
-    p.pidOutput = pidOutput;
+    p.input = temperature;
+    p.output = pidOutput;
+    p.setpoint = setpoint;
 
-    // switch of page during runtime
+    WifiData w;
+    w.isConnected = WiFi.status() == WL_CONNECTED;
+    w.signalStrength = getSignalStrength();
+    w.reconnects = wifiReconnects;
+
+    MqttData m;
+    m.isConnected = mqtt.connected() == 1;
+
+    // test: switch of page during runtime
     if (temperature > 35 && changed == false) {
         LOGF(DEBUG, "CHANGE PAGE");
         LOGF(DEBUG, "old page name: %s", page->getPageName());
@@ -449,7 +464,7 @@ void printScreen() {
         LOGF(DEBUG, "new page name: %s", page->getPageName());
     }
 
-    page->printScreen(temperature, setpoint, isrCounter, offlineMode, b, p);
+    page->printScreen(isrCounter, offlineMode, b, p, w);
 }
 
 Timer printDisplayTimer(&printScreen, 100);

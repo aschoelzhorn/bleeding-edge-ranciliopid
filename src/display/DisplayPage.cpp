@@ -5,10 +5,10 @@
  * @brief Draw a water empty icon at the given coordinates if water supply is low
  */
 void DisplayPage::displayWaterIcon(int x, int y) {
-    // if (!waterFull) {
-    //     //display->drawImage(x, y, 8, 8, Water_Empty_Icon);
-    //     display->drawImage(x, y, images.getStatusIcon(StatusIcon::Water_Empty));
-    // }
+    if (!stateData.waterFull) {  // TODO: stateData is NULL
+        //display->drawImage(x, y, 8, 8, Water_Empty_Icon);
+        display->drawImage(x, y, images.getStatusIcon(StatusIcon::Water_Empty));
+    }
 }
 
 /**
@@ -33,44 +33,42 @@ void DisplayPage::displayUptime(int x, int y, const char* format) {
 /**
  * @brief Draw a WiFi signal strength indicator at the given coordinates
  */
-void DisplayPage::displayWiFiStatus(int x, int y) {
-    // getSignalStrength();
+void DisplayPage::displayWiFiStatus(int x, int y, const WifiData& w) {
+    if (w.isConnected) {
+        //display->drawImage(x, y, 8, 8, Antenna_OK_Icon);
+        display->drawImage(x, y, images.getStatusIcon(StatusIcon::Wifi_Ok));
 
-    // if (WiFi.status() == WL_CONNECTED) {
-    //     //display->drawImage(x, y, 8, 8, Antenna_OK_Icon);
-    //     display->drawImage(x, y, images.getStatusIcon(StatusIcon::Wifi_Ok));
-
-    //     for (int b = 0; b <= getSignalStrength(); b++) {
-    //         display->drawVLine(x + 5 + (b * 2), y + 8 - (b * 2), b * 2);
-    //     }
-    // }
-    // else {
-    //     //display->drawImage(x, y, 8, 8, Antenna_NOK_Icon);
-    //     display->drawImage(x, y, images.getStatusIcon(StatusIcon::Wifi_Not_Ok));
-    //     display->setCursor(x + 5, y + 10);
-    //     display->setFont(FontType::Normal);
-    //     display->print("RC: ");
-    //     display->print(wifiReconnects);
-    // }
+         for (int b = 0; b <= w.signalStrength; b++) {
+             display->drawVLine(x + 5 + (b * 2), y + 8 - (b * 2), b * 2);
+         }
+     }
+    else {
+        //display->drawImage(x, y, 8, 8, Antenna_NOK_Icon);
+        display->drawImage(x, y, images.getStatusIcon(StatusIcon::Wifi_Not_Ok));
+        display->setCursor(x + 5, y + 10);
+        display->setFont(FontType::Normal);
+        display->print("RC: ");
+        display->print(w.reconnects);
+    }
 }
 
 /**
  * @brief Draw an MQTT status indicator at the given coordinates if MQTT is enabled
  */
-void DisplayPage::displayMQTTStatus(int x, int y) {
-    // if (FEATURE_MQTT == 1) {
-    //     if (mqtt.connected() == 1) {
-    //         //display->drawImage(x, y, images.getStatusIcon(StatusIcon::Mqtt_Ok));
-    //         display->setCursor(x, y);
-    //         display->setFont(FontType::Normal);
-    //         display->print("MQTT");
-    //     }
-    //     else {
-    //         //display->drawImage(x, y, images.getStatusIcon(StatusIcon::Mqtt_Not_Ok));
-    //         display->setCursor(x, y);
-    //         display->print("");
-    //     }
-    // }
+void DisplayPage::displayMQTTStatus(int x, int y, MqttData& mqtt) {
+    if (FEATURE_MQTT == 1) {
+        if (mqtt.isConnected) {
+            //display->drawImage(x, y, images.getStatusIcon(StatusIcon::Mqtt_Ok));
+            display->setCursor(x, y);
+            display->setFont(FontType::Normal);
+            display->print("MQTT");
+        }
+        else {
+            //display->drawImage(x, y, images.getStatusIcon(StatusIcon::Mqtt_Not_Ok));
+            display->setCursor(x, y);
+            display->print("");
+        }
+    }
 }
 
 /**
@@ -176,8 +174,8 @@ void DisplayPage::displayStatusbar(int offlineMode) {
     display->drawHLine(statusbar.getLowerLeft().X, statusbar.getLowerLeft().Y, statusbar.getWidth());
 
     if (offlineMode == 0) {
-        displayWiFiStatus(statusbar.getUpperLeft().X + 4, statusbar.getUpperLeft().Y + 1);
-        displayMQTTStatus(statusbar.getUpperLeft().X + 38, statusbar.getUpperLeft().Y);
+        displayWiFiStatus(statusbar.getUpperLeft().X + 4, statusbar.getUpperLeft().Y + 1, wifiData);
+        displayMQTTStatus(statusbar.getUpperLeft().X + 38, statusbar.getUpperLeft().Y, mqttData);
     }
     else {
         display->setCursor(statusbar.getUpperLeft().X + 4, statusbar.getUpperLeft().X);
