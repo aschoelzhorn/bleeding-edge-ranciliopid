@@ -9,7 +9,7 @@ const char* DisplayPageTemperatureOnly::getPageName() {
     return "DisplayPageTemperatureOnly";
 }
 
-void DisplayPageTemperatureOnly::printScreen(double temperature, double setpoint, unsigned int isrCounter, int offlineMode, const BrewData& b, const PidData& p) {
+void DisplayPageTemperatureOnly::printScreen(unsigned int isrCounter, int offlineMode, const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m) {
 
     // Show shot timer:
     if (displayShottimer()) {
@@ -23,37 +23,40 @@ void DisplayPageTemperatureOnly::printScreen(double temperature, double setpoint
         return;
     }
 
+    wifiData = w; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+    mqttData = m; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+
     // If no specific machine state was printed, print default:
     display->clearBuffer();
 
     // draw (blinking) temp
-    if (((fabs(temperature - setpoint) < blinkingtempoffset && blinkingtemp == 0) || (fabs(temperature - setpoint) >= blinkingtempoffset && blinkingtemp == 1)) && !FEATURE_STATUS_LED) {
+    if (((fabs(p.input - p.setpoint) < blinkingtempoffset && blinkingtemp == 0) || (fabs(p.input - p.setpoint) >= blinkingtempoffset && blinkingtemp == 1)) && !FEATURE_STATUS_LED) {
         if (isrCounter < 500) {
-            if (temperature < 99.999) {
+            if (p.input < 99.999) {
                 display->setCursor(8, 22);
                 display->setFont(FontType::fup35);
-                display->print(temperature, 1);
+                display->print(p.input, 1);
                 display->drawCircle(116, 27, 4);
             }
             else {
                 display->setCursor(24, 22);
                 display->setFont(FontType::fup35);
-                display->print(temperature, 0);
+                display->print(p.input, 0);
                 display->drawCircle(116, 27, 4);
             }
         }
     }
     else {
-        if (temperature < 99.999) {
+        if (p.input < 99.999) {
             display->setCursor(8, 22);
             display->setFont(FontType::fup35);
-            display->print(temperature, 1);
+            display->print(p.input, 1);
             display->drawCircle(116, 27, 4);
         }
         else {
             display->setCursor(24, 22);
             display->setFont(FontType::fup35);
-            display->print(temperature, 0);
+            display->print(p.input, 0);
             display->drawCircle(116, 27, 4);
         }
     }

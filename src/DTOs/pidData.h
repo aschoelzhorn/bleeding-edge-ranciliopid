@@ -2,5 +2,7 @@
 
 struct PidData {
     int mode;
-    double pidOutput;
+    double input;    // temperature
+    double output;   // output
+    double setpoint; // setpoint
 };

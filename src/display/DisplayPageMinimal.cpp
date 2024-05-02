@@ -7,7 +7,9 @@ DisplayPageMinimal::DisplayPageMinimal(DisplayManager *instanceOfDisplayManager)
     display = instanceOfDisplayManager;
 }
 
-
+/**
+ * @brief Return the name of the page / template
+ */
 const char* DisplayPageMinimal::getPageName() {
     return "DisplayPageMinimal";
 }
@@ -15,7 +17,7 @@ const char* DisplayPageMinimal::getPageName() {
 /**
  * @brief Send data to display
  */
-void DisplayPageMinimal::printScreen(double temperature, double setpoint, unsigned int isrCounter, int offlineMode, const BrewData& b, const PidData& p) {
+void DisplayPageMinimal::printScreen(unsigned int isrCounter, int offlineMode, const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m) {
 
     // Show shot timer:
     if (displayShottimer()) {
@@ -29,6 +31,9 @@ void DisplayPageMinimal::printScreen(double temperature, double setpoint, unsign
         return;
     }
 
+    wifiData = w; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+    mqttData = m; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+
     // If no specific machine state was printed, print default:
     display->clearBuffer();
 
@@ -36,35 +41,35 @@ void DisplayPageMinimal::printScreen(double temperature, double setpoint, unsign
 
     int numDecimalsInput = 1;
 
-    if (temperature > 99.999) {
+    if (p.input > 99.999) {
         numDecimalsInput = 0;
     }
 
     int numDecimalsSetpoint = 1;
 
-    if (setpoint > 99.999) {
+    if (p.setpoint > 99.999) {
         numDecimalsSetpoint = 0;
     }
     
     Viewport temp = display->getView(Area::Temperature);
     // Draw temp, blink if feature STATUS_LED is not enabled
-    if ((fabs(temperature - setpoint) < 0.3) && !FEATURE_STATUS_LED) {
+    if ((fabs(p.input - p.setpoint) < 0.3) && !FEATURE_STATUS_LED) {
         if (isrCounter < 500) {
             // limit to 4 characters
             display->setCursor(2, 20);
             display->setFont(FontType::Big);
-            display->print(temperature, numDecimalsInput);
+            display->print(p.input, numDecimalsInput);
             display->setFont(FontType::OpenIconicArrow2x);
             display->print(char(78));
             display->setCursor(78, 20);
             display->setFont(FontType::Big);
-            display->print(setpoint, numDecimalsSetpoint);
+            display->print(p.setpoint, numDecimalsSetpoint);
         }
     }
     else {
         display->setCursor(2, 20);
         display->setFont(FontType::Big);
-        display->print(temperature, numDecimalsInput);
+        display->print(p.input, numDecimalsInput);
         display->setFont(FontType::OpenIconicArrow2x);
         display->setCursor(56, 24);
 
@@ -77,7 +82,7 @@ void DisplayPageMinimal::printScreen(double temperature, double setpoint, unsign
 
         display->setCursor(79, 20);
         display->setFont(FontType::Big);
-        display->print(setpoint, numDecimalsSetpoint);
+        display->print(p.setpoint, numDecimalsSetpoint);
     }
 
     display->setFont(FontType::Normal);
@@ -101,7 +106,7 @@ void DisplayPageMinimal::printScreen(double temperature, double setpoint, unsign
 
     // Show heater output in %
     Viewport pg = display->getView(Area::Progressbar);
-    displayProgressbar(p.pidOutput / 10, pg.getUpperLeft().X + 15, pg.getUpperLeft().Y, 100);
+    displayProgressbar(p.output / 10, pg.getUpperLeft().X + 15, pg.getUpperLeft().Y, 100);
 
     display->sendBuffer();
 }

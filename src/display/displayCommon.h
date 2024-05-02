@@ -189,7 +189,7 @@ void displayStatusbar() {
     display.drawHLine(statusbar.getLowerLeft().X, statusbar.getLowerLeft().Y, statusbar.getWidth());
 
     if (offlineMode == 0) {
-        displayWiFiStatus(statusbar.getUpperLeft().X + 4, statusbar.getUpperLeft().Y + 1);
+        displayWiFiStatus(statusbar.getUpperLeft().X + 4, statusbar.getUpperLeft().Y + 1, wifiData);
         displayMQTTStatus(statusbar.getUpperLeft().X + 38, statusbar.getUpperLeft().Y);
     }
     else {
