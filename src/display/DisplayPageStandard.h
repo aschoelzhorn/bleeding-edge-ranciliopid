@@ -1,10 +1,9 @@
 #pragma once
 
 #include <Arduino.h>
-#include "DisplayPage.h"
-#include <DTOs/brewData.h>
+#include "DisplayPageBase.h"
 
-class DisplayPageStandard : public DisplayPage {
+class DisplayPageStandard : public DisplayPageBase {
 public:
     DisplayPageStandard(DisplayManager *instanceOfDisplayManager);
 

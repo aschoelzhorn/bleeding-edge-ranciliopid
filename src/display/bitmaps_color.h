@@ -265,14 +265,14 @@ static const uint16_t mqtt_ok_bits[] PROGMEM = {
 
 
 static const unsigned char Water_Empty_Icon[] PROGMEM = {
-    B00001001,
-    B01001010,
-    B00011100,
-    B00010100,
-    B00101110,
-    B00111110,
-    B01011100,
-    B10000000
+    0B00001001,
+    0B01001010,
+    0B00011100,
+    0B00010100,
+    0B00101110,
+    0B00111110,
+    0B01011100,
+    0B10000000
 };
 
 

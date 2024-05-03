@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Arduino.h>
-#include "DisplayPage.h"
+#include "DisplayPageBase.h"
 
-class DisplayPageMinimal : public DisplayPage {
+class DisplayPageMinimal : public DisplayPageBase {
 public:
     DisplayPageMinimal(DisplayManager *instanceOfDisplayManager);
 

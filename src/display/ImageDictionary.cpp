@@ -36,17 +36,17 @@ ImageDictionary::ImageDictionary() {
     // };
 
     const tImage wifi_not_ok = { Antenna_NOK_Icon, status_icon_width, status_icon_height, IMAGE_DATA_SIZE };
-    const tImage mqtt_not_ok = { mqtt_nok_bits, status_icon_width, status_icon_height, IMAGE_DATA_SIZE };
+    // const tImage mqtt_not_ok = { mqtt_nok_bits, status_icon_width, status_icon_height, IMAGE_DATA_SIZE };
     const tImage wifi_ok = { Antenna_OK_Icon, status_icon_width, status_icon_height, IMAGE_DATA_SIZE };
     const tImage mqtt_ok = { mqtt_ok_bits, status_icon_width, status_icon_height, IMAGE_DATA_SIZE };
-    const tImage water_empty = { Water_Empty_Icon, status_icon_width, status_icon_height, IMAGE_DATA_SIZE };
+    // const tImage water_empty = { Water_Empty_Icon, status_icon_width, status_icon_height, IMAGE_DATA_SIZE };
 
     statusIconDictionary = {
         {StatusIcon::Wifi_Not_Ok, wifi_not_ok},
-        {StatusIcon::Mqtt_Not_Ok, mqtt_not_ok},
+        // {StatusIcon::Mqtt_Not_Ok, mqtt_not_ok},
         {StatusIcon::Wifi_Ok, wifi_ok},
         {StatusIcon::Mqtt_Ok, mqtt_ok},
-        {StatusIcon::Water_Empty, water_empty}
+        // {StatusIcon::Water_Empty, water_empty}
     };
 }
 
