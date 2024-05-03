@@ -17,7 +17,14 @@ const char* DisplayPageMinimal::getPageName() {
 /**
  * @brief Send data to display
  */
-void DisplayPageMinimal::printScreen(unsigned int isrCounter, int offlineMode, const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m) {
+void DisplayPageMinimal::printScreen(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md) {
+
+    wifiData = w; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+    mqttData = m; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+    stateData = s; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+    pidData = p; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+    brewData = b; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set 
+    machineData = md; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set     
 
     // Show shot timer:
     if (displayShottimer()) {
@@ -31,13 +38,10 @@ void DisplayPageMinimal::printScreen(unsigned int isrCounter, int offlineMode, c
         return;
     }
 
-    wifiData = w; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
-    mqttData = m; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
-
     // If no specific machine state was printed, print default:
     display->clearBuffer();
 
-    displayStatusbar(offlineMode);
+    displayStatusbar(s.offlineMode);
 
     int numDecimalsInput = 1;
 
@@ -54,7 +58,7 @@ void DisplayPageMinimal::printScreen(unsigned int isrCounter, int offlineMode, c
     Viewport temp = display->getView(Area::Temperature);
     // Draw temp, blink if feature STATUS_LED is not enabled
     if ((fabs(p.input - p.setpoint) < 0.3) && !FEATURE_STATUS_LED) {
-        if (isrCounter < 500) {
+        if (s.isrCounter < 500) {
             // limit to 4 characters
             display->setCursor(2, 20);
             display->setFont(FontType::Big);

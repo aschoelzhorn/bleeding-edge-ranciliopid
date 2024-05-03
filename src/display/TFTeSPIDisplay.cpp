@@ -139,6 +139,10 @@ void TFTeSPIDisplay::println(const String &s) {
     tft.drawString(s, tft.getCursorX(), tft.getCursorY());  // Print a string followed by a newline
 }
 
+void TFTeSPIDisplay::drawStr(uint16_t x, uint16_t y, const char* s) {
+    tft.drawString(s, x, y);
+}
+
 void TFTeSPIDisplay::drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) {
     // Implement drawing a glyph using tft, if applicable
 }

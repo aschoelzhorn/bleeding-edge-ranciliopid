@@ -7,7 +7,7 @@ class DisplayPageMinimal : public DisplayPage {
 public:
     DisplayPageMinimal(DisplayManager *instanceOfDisplayManager);
 
-    void printScreen(unsigned int isrCounter, int offlineMode, const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m) override;
+    void printScreen(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md) override;
     const char* getPageName() override;
 
 private:

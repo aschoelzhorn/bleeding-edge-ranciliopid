@@ -9,4 +9,7 @@ struct BrewData {
     double brewtimesoftware;
     double timeBrewed;
     double totalBrewTime;
+    double lastBrewTime;
+    int brewSwitchState;
+    float weightBrew;
 };

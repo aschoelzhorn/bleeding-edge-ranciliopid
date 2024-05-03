@@ -5,4 +5,7 @@ struct PidData {
     double input;    // temperature
     double output;   // output
     double setpoint; // setpoint
+    double kd;
+    double kp;
+    double ki;
 };

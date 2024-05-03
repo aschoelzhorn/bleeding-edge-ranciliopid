@@ -17,6 +17,7 @@ public:
     virtual void print(char c) = 0; 
     virtual void print(const char* c) = 0; 
     virtual void println(const String &s) = 0;
+    virtual void drawStr(uint16_t x, uint16_t y, const char* s) = 0; 
     virtual void drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) = 0; 
     virtual void sendBuffer() = 0; 
     virtual int getWidth() = 0; 

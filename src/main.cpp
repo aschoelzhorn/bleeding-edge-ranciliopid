@@ -29,6 +29,7 @@
 // Includes
 #include "languages.h"       // for language translation
 #include "storage.h"
+#include "machineStateEnum.h"
 
 // Utilities:
 #include "utils/Timer.h"
@@ -54,6 +55,8 @@
 #include "DTOs/pidData.h"
 #include "DTOs/wifiData.h"
 #include "DTOs/mqttData.h"
+#include "DTOs/machineData.h"
+#include "DTOs/stateData.h"
 
 hw_timer_t* timer = NULL;
 
@@ -398,31 +401,17 @@ int getSignalStrength() {
     }
 }
 
-// // Horizontal or vertical display
-// #if (DISPLAY_HARDWARE != 0)
-// #if (DISPLAYTEMPLATE < 20) // horizontal templates
-// #include "display/displayCommon.h"
-// #endif
-
-// #if (DISPLAYTEMPLATE >= 20) // vertical templates
-// #include "display/displayRotateUpright.h"
-// #endif
-
 
 #if (DISPLAYTEMPLATE == 1)
-#include "display/displayTemplateStandard.h"
-//DisplayPage *page = displayPageManager.getPage(DisplayPageType::Standard);
+DisplayPage *page = displayPageManager.getPage(DisplayPageType::Standard);
 #elif (DISPLAYTEMPLATE == 2)
-//#include "display/displayTemplateMinimal.h"
 DisplayPage *page = displayPageManager.getPage(DisplayPageType::Minimal);
 #elif (DISPLAYTEMPLATE == 3)
-//#include "display/displayTemplateTempOnly.h"
 DisplayPage *page = displayPageManager.getPage(DisplayPageType::TemperatureOnly);
 #elif (DISPLAYTEMPLATE == 4)
-#include "display/displayTemplateScale.h"
 //DisplayPage *page = displayPageManager.getPage(DisplayPageType::Scale);
 #elif (DISPLAYTEMPLATE == 20)
-#include "display/displayTemplateUpright.h"
+//DisplayPage *page = displayPageManager.getPage(DisplayPageType::Rotated);
 #endif
 
 //#endif
@@ -438,11 +427,20 @@ void printScreen() {
     b.timeBrewDetection = timeBrewDetection;
     b.timeBrewed = timeBrewed;
     b.totalBrewTime = totalBrewTime;
+    b.brewSwitchState = brewSwitchState;
+    b.lastBrewTime = lastBrewTime;
+#if FEATURE_SCALE == 1    
+    b.weightBrew = weightBrew;
+#endif
+
 
     //PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki, double Kd, int POn, int ControllerDirection)
     //PID bPID(        &temperature, &pidOutput,      &setpoint,       aggKp,     aggKi,     aggKd,  1,       DIRECT);
     PidData p;
     p.mode = bPID.GetMode();
+    p.kd = bPID.GetKd();
+    p.ki = bPID.GetKi();
+    p.kp = bPID.GetKp();
     p.input = temperature;
     p.output = pidOutput;
     p.setpoint = setpoint;
@@ -455,16 +453,27 @@ void printScreen() {
     MqttData m;
     m.isConnected = mqtt.connected() == 1;
 
-    // test: switch of page during runtime
-    if (temperature > 35 && changed == false) {
-        LOGF(DEBUG, "CHANGE PAGE");
-        LOGF(DEBUG, "old page name: %s", page->getPageName());
-        changed = true;
-        page = displayPageManager.getPage(DisplayPageType::Minimal);
-        LOGF(DEBUG, "new page name: %s", page->getPageName());
-    }
+    StateData s;
+    s.isrCounter = isrCounter;
+    s.offlineMode = offlineMode;
+    s.waterFull = waterFull;
+    s.flushCycles = flushCycles;
+    s.maxflushCycles = maxflushCycles;
+    s.backflushState = backflushState;
 
-    page->printScreen(isrCounter, offlineMode, b, p, w);
+    MachineData md;
+    md.state = machineState;
+
+    // test: switch of page during runtime -> working
+    // if (temperature > 35 && changed == false) {
+    //     LOGF(DEBUG, "CHANGE PAGE");
+    //     LOGF(DEBUG, "old page name: %s", page->getPageName());
+    //     changed = true;
+    //     page = displayPageManager.getPage(DisplayPageType::Minimal);
+    //     LOGF(DEBUG, "new page name: %s", page->getPageName());
+    // }
+
+    page->printScreen(b, p, w, m, s, md);
 }
 
 Timer printDisplayTimer(&printScreen, 100);

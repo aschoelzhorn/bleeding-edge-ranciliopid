@@ -145,6 +145,10 @@ void U8g2Display::println(const String &s) {
     u8g2.println(s);
 }
 
+void U8g2Display::drawStr(uint16_t x, uint16_t y, const char* s) {
+    u8g2.drawStr(x, y, s);
+}
+
 void U8g2Display::drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) {
     u8g2.drawGlyph(x, y, encoding);
 }
