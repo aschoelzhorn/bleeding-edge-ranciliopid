@@ -1,10 +1,10 @@
-#include "DisplayPage.h"
+#include "DisplayPageColorBase.h"
 #include "languages.h"
 
 /**
  * @brief Draw a water empty icon at the given coordinates if water supply is low
  */
-void DisplayPage::displayWaterIcon(int x, int y) {
+void DisplayPageColorBase::displayWaterIcon(int x, int y) {
     if (!stateData.waterFull) {
         //display->drawImage(x, y, 8, 8, Water_Empty_Icon);
         display->drawImage(x, y, images.getStatusIcon(StatusIcon::Water_Empty));
@@ -14,7 +14,7 @@ void DisplayPage::displayWaterIcon(int x, int y) {
 /**
  * @brief Draw the system uptime at the given coordinates
  */
-void DisplayPage::displayUptime(int x, int y, const char* format) {
+void DisplayPageColorBase::displayUptime(int x, int y, const char* format) {
     // Show uptime of machine
     unsigned long seconds = millis() / 1000;
     unsigned long hours = seconds / 3600;
@@ -33,7 +33,7 @@ void DisplayPage::displayUptime(int x, int y, const char* format) {
 /**
  * @brief Draw a WiFi signal strength indicator at the given coordinates
  */
-void DisplayPage::displayWiFiStatus(int x, int y, const WifiData& w) {
+void DisplayPageColorBase::displayWiFiStatus(int x, int y, const WifiData& w) {
     if (w.isConnected) {
         //display->drawImage(x, y, 8, 8, Antenna_OK_Icon);
         display->drawImage(x, y, images.getStatusIcon(StatusIcon::Wifi_Ok));
@@ -55,7 +55,7 @@ void DisplayPage::displayWiFiStatus(int x, int y, const WifiData& w) {
 /**
  * @brief Draw an MQTT status indicator at the given coordinates if MQTT is enabled
  */
-void DisplayPage::displayMQTTStatus(int x, int y, MqttData& mqtt) {
+void DisplayPageColorBase::displayMQTTStatus(int x, int y, MqttData& mqtt) {
     if (FEATURE_MQTT == 1) {
         if (mqtt.isConnected) {
             //display->drawImage(x, y, images.getStatusIcon(StatusIcon::Mqtt_Ok));
@@ -74,7 +74,7 @@ void DisplayPage::displayMQTTStatus(int x, int y, MqttData& mqtt) {
 /**
  * @brief Draw the outline of a thermometer for use in conjunction with the drawTemperaturebar method
  */
-void DisplayPage::displayThermometerOutline(int x, int y, double setpoint) {
+void DisplayPageColorBase::displayThermometerOutline(int x, int y, double setpoint) {
     display->drawLine(x + 3, y - 9, x + 3, y - 42);
     display->drawLine(x + 9, y - 9, x + 9, y - 42);
     display->drawPixel(x + 4, y - 43);
@@ -91,7 +91,7 @@ void DisplayPage::displayThermometerOutline(int x, int y, double setpoint) {
  * @brief Draw temperature bar, e.g. inside the thermometer outline.
  *        Add 4 pixels to the x-coordinate and subtract 12 pixels from the y-coordinate of the thermometer.
  */
-void DisplayPage::drawTemperaturebar(int x, int y, int heightRange, double temperature) {
+void DisplayPageColorBase::drawTemperaturebar(int x, int y, int heightRange, double temperature) {
     int width = x + 5;
 
     for (int i = x; i < width; i++) {
@@ -109,7 +109,7 @@ void DisplayPage::drawTemperaturebar(int x, int y, int heightRange, double tempe
 /**
  * @brief Draw the temperature in big font at given position
  */
-void DisplayPage::displayTemperature(int x, int y, double temperature) {
+void DisplayPageColorBase::displayTemperature(int x, int y, double temperature) {
     display->setFont(FontType::fup25);
 
     if (temperature < 99.999) {
@@ -127,7 +127,7 @@ void DisplayPage::displayTemperature(int x, int y, double temperature) {
 /**
  * @brief Draw the brew time at given position
  */
-void DisplayPage::displayBrewtime(int x, int y, double brewtime) {
+void DisplayPageColorBase::displayBrewtime(int x, int y, double brewtime) {
     display->setFont(FontType::fup25);
 
     if (brewtime < 10000.000) {
@@ -154,7 +154,7 @@ void DisplayPage::displayBrewtime(int x, int y, double brewtime) {
 /**
  * @brief Draw a bar visualizing the output in % at the given coordinates and with the given width
  */
-void DisplayPage::displayProgressbar(int value, int x, int y, int width) {
+void DisplayPageColorBase::displayProgressbar(int value, int x, int y, int width) {
     display->drawFrame(x, y, width, 4);
     int output = map(value, 0, 100, 0, width);
 
@@ -168,7 +168,7 @@ void DisplayPage::displayProgressbar(int value, int x, int y, int width) {
  * @brief Draw a status bar at the top of the screen with icons for WiFi, MQTT,
  *        the system uptime and a separator line underneath
  */
-void DisplayPage::displayStatusbar(int offlineMode) {
+void DisplayPageColorBase::displayStatusbar(int offlineMode) {
     // For status info
     Viewport statusbar = display->getView(Area::Statusbar);
     display->drawHLine(statusbar.getLowerLeft().X, statusbar.getLowerLeft().Y, statusbar.getWidth());
@@ -190,7 +190,7 @@ void DisplayPage::displayStatusbar(int offlineMode) {
 /**
  * @brief print message
  */
-void DisplayPage::displayMessage(String text1, String text2, String text3, String text4, String text5, String text6) {
+void DisplayPageColorBase::displayMessage(String text1, String text2, String text3, String text4, String text5, String text6) {
     display->clearBuffer();
     display->setCursor(0, 0);
     display->println(text1);
@@ -210,7 +210,7 @@ void DisplayPage::displayMessage(String text1, String text2, String text3, Strin
 /**
  * @brief print logo and message at boot
  */
-void DisplayPage::displayLogo(String displaymessagetext, String displaymessagetext2) {
+void DisplayPageColorBase::displayLogo(String displaymessagetext, String displaymessagetext2) {
     display->clearBuffer();
     display->setCursor(0, 45);
     display->print(displaymessagetext.c_str());
@@ -225,7 +225,7 @@ void DisplayPage::displayLogo(String displaymessagetext, String displaymessagete
 /**
  * @brief display shot timer
  */
-bool DisplayPage::displayShottimer() {
+bool DisplayPageColorBase::displayShottimer() {
     if (FEATURE_SHOTTIMER == 0) {
         return false;
     }
@@ -304,7 +304,7 @@ bool DisplayPage::displayShottimer() {
 /**
  * @brief display heating logo
  */
-bool DisplayPage::displayMachineState() {
+bool DisplayPageColorBase::displayMachineState() {
     // Show the heating logo when we are in regular PID mode and more than 5degC below the set point
     if (FEATURE_HEATINGLOGO > 0 && machineData.state == MachineState::kPidNormal && (pidData.setpoint - pidData.input) > 5. && brewData.brewSwitchState != kBrewSwitchFlushOff) {
         // For status info

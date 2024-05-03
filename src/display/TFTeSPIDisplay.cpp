@@ -39,28 +39,28 @@ void TFTeSPIDisplay::initViews() {
 
     Point upperLeft = Point(0, 0);
 
-    bootLogo = Viewport(upperLeft, width, maxBootLogoHeight);
-    bootMessage = Viewport(0, bootLogo.getLowerLeft().Y + margin, width, height - bootLogo.getHeight() - margin);
+    Viewport bootLogo = Viewport(upperLeft, width, maxBootLogoHeight);
+    Viewport bootMessage = Viewport(0, bootLogo.getLowerLeft().Y + margin, width, height - bootLogo.getHeight() - margin);
     
     //actionImage = Viewport(upperLeft, width / 2, (height / 2));
-    actionImage = Viewport(upperLeft, width / 2, (height / 4));
+    // actionImage = Viewport(upperLeft, width / 2, (height / 4));
     temperature = Viewport(width / 2, upperLeft.Y, width / 2, (height / 2));
 
-    statusMessage = Viewport(0, actionImage.getHeight()*2 + margin, getWidth(), getHeight() - actionImage.getHeight()*2 - margin - statusIconHeight);
-    statusIcons = Viewport(Point(0, height - statusIconHeight), statusIconWidth * numberOfStatusIcons, statusIconHeight);
-    profileIcon = Viewport(Point(width - statusIconWidth, height - statusIconHeight), statusIconWidth, statusIconHeight);
+    // statusMessage = Viewport(0, actionImage.getHeight()*2 + margin, getWidth(), getHeight() - actionImage.getHeight()*2 - margin - statusIconHeight);
+    Viewport statusIcons = Viewport(Point(0, height - statusIconHeight), statusIconWidth * numberOfStatusIcons, statusIconHeight);
+    // profileIcon = Viewport(Point(width - statusIconWidth, height - statusIconHeight), statusIconWidth, statusIconHeight);
 
-    softwareUpdate = Viewport(upperLeft, getWidth(), getHeight()); // fullscreen
+    // softwareUpdate = Viewport(upperLeft, getWidth(), getHeight()); // fullscreen
 
     areaMap = {
-        {Area::BootLogo, this->bootLogo},
-        {Area::BootMessage, this->bootMessage},
-        {Area::ActionImage, this->actionImage},
-        {Area::StatusMessage, this->statusMessage},
+        //{Area::BootLogo, this->bootLogo},
+        //{Area::BootMessage, this->bootMessage},
+        // {Area::ActionImage, this->actionImage},
+        // {Area::StatusMessage, this->statusMessage},
         {Area::Temperature, this->temperature},
-        {Area::StatusIcons, this->statusIcons},
-        {Area::ProfileIcon, this->profileIcon},
-        {Area::SoftwareUpdate, this->softwareUpdate},
+        //{Area::StatusIcons, this->statusIcons},
+        // {Area::ProfileIcon, this->profileIcon},
+        // {Area::SoftwareUpdate, this->softwareUpdate},
     };
 }
 

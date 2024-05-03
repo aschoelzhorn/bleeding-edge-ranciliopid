@@ -4,6 +4,7 @@
 
 #include "Viewport.h"
 #include "tImage.h"
+#include "areaEnum.h"
 
 enum class Rotation {
     R0,
@@ -26,22 +27,6 @@ enum class FontType {
     OpenIconicEmbedded,
     OpenIconicThing,
     OpenIconicOther
-};
-
-enum class Area {
-    // BootLogo = 0,
-    // BootMessage = 1,
-    // ActionImage = 2, // like icon for heating, brewing, cleaning, ....
-    // StatusMessage = 3,
-    // StatusIcons = 4,
-    // ProfileIcon = 5,
-    // Temperature = 6,
-    // SoftwareUpdate = 7,
-    // test for clever coffee minimal template
-    Statusbar,
-    Progressbar,
-    Temperature,
-    BrewTime
 };
 
 class IDisplay {

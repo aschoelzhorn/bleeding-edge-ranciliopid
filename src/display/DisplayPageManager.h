@@ -1,14 +1,14 @@
 #pragma once
 
-#include "DisplayPage.h"
+#include "IDisplayPage.h"
 #include "DisplayManager.h"
 
 class DisplayPageManager {
 public:
     DisplayPageManager(DisplayManager *instanceOfDisplayManager);
 
-    DisplayPage *getPage(DisplayPageType pageType);
+    IDisplayPage *getPage(DisplayPageType pageType);
 private:
-    DisplayPage *page;
+    IDisplayPage *page;
     DisplayManager *displayManager;
 };

@@ -3,6 +3,7 @@
 #include <TFT_eSPI.h>
 #include <TFT_eWidget.h>
 #include "DisplayBase.h"
+#include "areaEnum.h"
 
 // Meter colour schemes
 #define RED2RED 0

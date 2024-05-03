@@ -9,16 +9,20 @@
 #include "userConfig.h"
 
 #if (LANGUAGE == 0) // DE
-#if (DISPLAYTEMPLATE <= 4)
+#if (DISPLAYTEMPLATE < 20)
 static const char* langstring_set_temp = "Soll:  ";
 static const char* langstring_current_temp = "Ist:   ";
 static const char* langstring_brew = "Brew: ";
 static const char* langstring_uptime = "Uptime:  ";
-#endif
-#if (DISPLAYTEMPLATE >= 20) // vertical templates
+#elif (DISPLAYTEMPLATE < 100) // vertical templates
 static const char* langstring_set_temp_rot_ur = "S: ";
 static const char* langstring_current_temp_rot_ur = "I: ";
 static const char* langstring_brew_rot_ur = "B: ";
+#else  // color templates (>= 100)
+static const char* langstring_set_temp = "Set:   ";
+static const char* langstring_current_temp = "Temp:  ";
+static const char* langstring_brew = "Brew: ";
+static const char* langstring_uptime = "Uptime:  ";
 #endif
 
 static const char* langstring_offlinemode = "Offline";
@@ -38,16 +42,20 @@ static const char* langstring_backflush_start = "um zu starten...";
 static const char* langstring_backflush_finish = "um zu beenden...";
 
 #elif LANGUAGE == 1         // EN
-#if (DISPLAYTEMPLATE <= 4)
+#if (DISPLAYTEMPLATE < 20)
 static const char* langstring_set_temp = "Set:   ";
 static const char* langstring_current_temp = "Temp:  ";
 static const char* langstring_brew = "Brew: ";
 static const char* langstring_uptime = "Uptime:  ";
-#endif
-#if (DISPLAYTEMPLATE >= 20) // vertical templates
+#elif (DISPLAYTEMPLATE < 100) // vertical templates
 static const char* langstring_set_temp_rot_ur = "S: ";
 static const char* langstring_current_temp_rot_ur = "T: ";
 static const char* langstring_brew_rot_ur = "B: ";
+#else  // color templates (>= 100)
+static const char* langstring_set_temp = "Set:   ";
+static const char* langstring_current_temp = "Temp:  ";
+static const char* langstring_brew = "Brew: ";
+static const char* langstring_uptime = "Uptime:  ";
 #endif
 
 static const char* langstring_offlinemode = "Offline";
@@ -67,16 +75,20 @@ static const char* langstring_backflush_start = "to start...";
 static const char* langstring_backflush_finish = "to finish...";
 
 #elif LANGUAGE == 2         // ES
-#if (DISPLAYTEMPLATE <= 4)
+#if (DISPLAYTEMPLATE < 20)
 static const char* langstring_set_temp = "Obj:  ";
 static const char* langstring_current_temp = "T:    ";
 static const char* langstring_brew = "Brew: ";
 static const char* langstring_uptime = "Uptime:  ";
-#endif
-#if (DISPLAYTEMPLATE >= 20) // vertical templates
+#elif (DISPLAYTEMPLATE < 100) // vertical templates
 static const char* langstring_set_temp_rot_ur = "O: ";
 static const char* langstring_current_temp_rot_ur = "T: ";
 static const char* langstring_brew_rot_ur = "B: ";
+#else  // color templates (>= 100)
+static const char* langstring_set_temp = "Set:   ";
+static const char* langstring_current_temp = "Temp:  ";
+static const char* langstring_brew = "Brew: ";
+static const char* langstring_uptime = "Uptime:  ";
 #endif
 
 static const char* langstring_offlinemode = "Offline";
