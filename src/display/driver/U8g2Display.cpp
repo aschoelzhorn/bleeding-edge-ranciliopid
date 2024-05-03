@@ -1,5 +1,5 @@
 #include "U8g2Display.h"
-#include "../userConfig.h"
+#include "../../userConfig.h"
 #include <float.h>
 
 U8g2Display::U8g2Display(U8G2& u8g2Instance) : u8g2(u8g2Instance) {}

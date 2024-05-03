@@ -22,7 +22,7 @@
 #include <PID_v1.h>  // for PID calculation
 #include "display/DisplayManager.h"
 #include "display/DisplayPageManager.h"
-#include "display/IDisplayPage.h"
+#include "display/templates/IDisplayPage.h"
 #include <WiFiManager.h>
 #include <os.h>
 

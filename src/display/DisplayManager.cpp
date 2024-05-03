@@ -4,12 +4,12 @@
 
 #if (DISPLAY_HARDWARE == 4)
 #define TFT_eSPI_DISPLAY
-#include "TFTeSPIDisplay.h"
+#include "driver/TFTeSPIDisplay.h"
 #include <TFT_eSPI.h>
 #include <TFT_eWidget.h>
 #elif (DISPLAY_HARDWARE == 1) || (DISPLAY_HARDWARE == 2) || (DISPLAY_HARDWARE == 3)
 #define U8G2_DISPLAY
-#include "U8g2Display.h"
+#include "driver/U8g2Display.h"
 #else
 #define NO_DISPLAY
 #endif
@@ -22,7 +22,7 @@
 
 #if (DISPLAY_HARDWARE == 0)
 #define NO_DISPLAY
-#include "DummyDisplay.h"
+#include "driver/DummyDisplay.h"
 #endif
 
 #if (DISPLAY_HARDWARE == 1)

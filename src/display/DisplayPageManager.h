@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IDisplayPage.h"
+#include "templates/IDisplayPage.h"
 #include "DisplayManager.h"
 
 class DisplayPageManager {
