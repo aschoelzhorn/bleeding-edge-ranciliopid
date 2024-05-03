@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Arduino.h>
-#include "DisplayManager.h"
-#include "ImageDictionary.h"
+#include "../DisplayManager.h"
+#include "../ImageDictionary.h"
 
 #include <DTOs/brewData.h>
 #include <DTOs/pidData.h>
@@ -27,20 +27,6 @@ public:
     virtual const char* getPageName() = 0;
     virtual void displayMessage(String text1, String text2, String text3, String text4, String text5, String text6) = 0;
     virtual void displayLogo(String displaymessagetext, String displaymessagetext2) = 0;
-
-// protected:
-//     virtual void displayWaterIcon(int x, int y) = 0;
-//     virtual void displayUptime(int x, int y, const char* format) = 0;
-//     virtual void displayWiFiStatus(int x, int y, const WifiData& w) = 0;
-//     virtual void displayMQTTStatus(int x, int y, MqttData& m) = 0;
-//     virtual void displayThermometerOutline(int x, int y, double setpoint) = 0;
-//     virtual void drawTemperaturebar(int x, int y, int heightRange, double temperature) = 0;
-//     virtual void displayTemperature(int x, int y, double temperature) = 0;
-//     virtual void displayBrewtime(int x, int y, double brewtime) = 0;
-//     virtual void displayProgressbar(int value, int x, int y, int width) = 0;
-//     virtual void displayStatusbar(int offlineMode) = 0;
-//     virtual bool displayShottimer() = 0;
-//     virtual bool displayMachineState() = 0;
 
     // TODO: rethink this
     WifiData wifiData;

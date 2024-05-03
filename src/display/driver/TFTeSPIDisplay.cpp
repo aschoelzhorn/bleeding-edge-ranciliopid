@@ -1,4 +1,4 @@
-#include "../userConfig.h"
+#include "../../userConfig.h"
 
 #if (DISPLAY_HARDWARE == 4)
 

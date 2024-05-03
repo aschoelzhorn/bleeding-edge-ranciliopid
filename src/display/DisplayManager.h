@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Wire.h>
-#include "IDisplay.h"
+#include "driver/IDisplay.h"
 
 class DisplayManager {
 public:

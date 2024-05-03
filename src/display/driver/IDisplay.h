@@ -2,9 +2,9 @@
 
 #include <map>
 
-#include "Viewport.h"
-#include "tImage.h"
-#include "areaEnum.h"
+#include "../Viewport.h"
+#include "../tImage.h"
+#include "../areaEnum.h"
 
 enum class Rotation {
     R0,
