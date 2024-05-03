@@ -45,6 +45,7 @@ public:
     void drawDisc(uint16_t x, uint16_t y, uint16_t rad) override;
     void drawPixel(uint16_t x, uint16_t y) override;
     void drawFrame(uint16_t x, uint16_t y, uint16_t w, uint16_t h) override;
+    void drawStr(uint16_t x, uint16_t y, const char* c) override;    
 
 protected:
     void initViews() override;

@@ -117,6 +117,10 @@ void DisplayManager::printRightAligned(float data, unsigned int digits, uint16_t
     display->printRightAligned(data, digits, y);
 }
 
+void DisplayManager::drawStr(uint16_t x, uint16_t y, const char *s) {
+    display->drawStr(x, y, s);
+}
+
 void DisplayManager::drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
     display->drawLine(x1, y1, x2, y2);
 }

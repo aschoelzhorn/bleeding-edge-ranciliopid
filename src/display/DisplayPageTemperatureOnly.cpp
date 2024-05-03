@@ -9,7 +9,14 @@ const char* DisplayPageTemperatureOnly::getPageName() {
     return "DisplayPageTemperatureOnly";
 }
 
-void DisplayPageTemperatureOnly::printScreen(unsigned int isrCounter, int offlineMode, const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m) {
+void DisplayPageTemperatureOnly::printScreen(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md) {
+
+    wifiData = w; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+    mqttData = m; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+    stateData = s; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+    pidData = p; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
+    brewData = b; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set 
+    machineData = md; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set     
 
     // Show shot timer:
     if (displayShottimer()) {
@@ -23,15 +30,12 @@ void DisplayPageTemperatureOnly::printScreen(unsigned int isrCounter, int offlin
         return;
     }
 
-    wifiData = w; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
-    mqttData = m; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
-
     // If no specific machine state was printed, print default:
     display->clearBuffer();
 
     // draw (blinking) temp
     if (((fabs(p.input - p.setpoint) < blinkingtempoffset && blinkingtemp == 0) || (fabs(p.input - p.setpoint) >= blinkingtempoffset && blinkingtemp == 1)) && !FEATURE_STATUS_LED) {
-        if (isrCounter < 500) {
+        if (s.isrCounter < 500) {
             if (p.input < 99.999) {
                 display->setCursor(8, 22);
                 display->setFont(FontType::fup35);
@@ -61,7 +65,7 @@ void DisplayPageTemperatureOnly::printScreen(unsigned int isrCounter, int offlin
         }
     }
 
-    displayStatusbar(offlineMode);
+    displayStatusbar(s.offlineMode);
 
     display->sendBuffer();
 }

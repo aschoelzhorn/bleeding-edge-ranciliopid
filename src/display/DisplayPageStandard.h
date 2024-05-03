@@ -4,9 +4,9 @@
 #include "DisplayPage.h"
 #include <DTOs/brewData.h>
 
-class DisplayPageTemperatureOnly : public DisplayPage {
+class DisplayPageStandard : public DisplayPage {
 public:
-    DisplayPageTemperatureOnly(DisplayManager *instanceOfDisplayManager);
+    DisplayPageStandard(DisplayManager *instanceOfDisplayManager);
 
     void printScreen(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md) override;
     const char* getPageName() override;

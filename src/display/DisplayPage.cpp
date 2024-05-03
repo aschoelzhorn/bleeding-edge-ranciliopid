@@ -5,7 +5,7 @@
  * @brief Draw a water empty icon at the given coordinates if water supply is low
  */
 void DisplayPage::displayWaterIcon(int x, int y) {
-    if (!stateData.waterFull) {  // TODO: stateData is NULL
+    if (!stateData.waterFull) {
         //display->drawImage(x, y, 8, 8, Water_Empty_Icon);
         display->drawImage(x, y, images.getStatusIcon(StatusIcon::Water_Empty));
     }
@@ -230,17 +230,17 @@ bool DisplayPage::displayShottimer() {
         return false;
     }
 #if (FEATURE_SHOTTIMER == 1)
-    if ((machineState == kBrew || brewSwitchState == kBrewSwitchFlushOff) && SHOTTIMER_TYPE == 1) {
+    if ((machineData.state == MachineState::kBrew || brewData.brewSwitchState == kBrewSwitchFlushOff) && SHOTTIMER_TYPE == 1) {
         display->clearBuffer();
 
-        if (brewSwitchState != kBrewSwitchFlushOff) {
+        if (brewData.brewSwitchState != kBrewSwitchFlushOff) {
             display->drawImage(-1, 11, Brew_Cup_Logo_width, Brew_Cup_Logo_height, Brew_Cup_Logo);
         }
         else {
             display->drawImage(0, 12, Manual_Flush_Logo_width, Manual_Flush_Logo_height, Manual_Flush_Logo);
         }
 
-        displayBrewtime(48, 25, timeBrewed);
+        displayBrewtime(48, 25, brewData.timeBrewed);
 
         displayWaterIcon(119, 1);
         display->sendBuffer();
@@ -251,11 +251,11 @@ bool DisplayPage::displayShottimer() {
      * nothing should be done, otherwise wrong time is displayed
      * because the switch is pressed later than totalBrewTime
      */
-    else if ((machineState == kShotTimerAfterBrew && brewSwitchState != kBrewSwitchFlushOff) && SHOTTIMER_TYPE == 1) {
+    else if ((machineData.state == MachineState::kShotTimerAfterBrew && brewData.brewSwitchState != kBrewSwitchFlushOff) && SHOTTIMER_TYPE == 1) {
         display->clearBuffer();
         display->drawImage(-1, 11, Brew_Cup_Logo_width, Brew_Cup_Logo_height, Brew_Cup_Logo);
 
-        displayBrewtime(48, 25, lastBrewTime);
+        displayBrewtime(48, 25, brewData.lastBrewTime);
 
         displayWaterIcon(119, 1);
         display->sendBuffer();
@@ -264,17 +264,17 @@ bool DisplayPage::displayShottimer() {
 #endif    
 
 #if FEATURE_SCALE == 1
-    else if ((machineState == kBrew) && SHOTTIMER_TYPE == 2) {
+    else if ((machineData.state == MachineState::kBrew) && SHOTTIMER_TYPE == 2) {
         display->clearBuffer();
 
         // temp icon
         display->drawImage(-1, 11, Brew_Cup_Logo_width, Brew_Cup_Logo_height, Brew_Cup_Logo);
         display->setFont(FontType::Big);
         display->setCursor(64, 15);
-        display->print(timeBrewed / 1000, 1);
+        display->print(brewData.timeBrewed / 1000, 1);
         display->print("s");
         display->setCursor(64, 38);
-        display->print(weightBrew, 1);
+        display->print(brewData.weightBrew, 1);
         display->print("g");
         display->setFont(FontType::Normal);
         displayWaterIcon(119, 1);
@@ -282,15 +282,15 @@ bool DisplayPage::displayShottimer() {
         return true;
     }
 
-    else if (((machineState == kShotTimerAfterBrew) && SHOTTIMER_TYPE == 2)) {
+    else if (((machineData.state == MachineState::kShotTimerAfterBrew) && SHOTTIMER_TYPE == 2)) {
         display->clearBuffer();
         display->drawImage(-1, 11, Brew_Cup_Logo_width, Brew_Cup_Logo_height, Brew_Cup_Logo);
         display->setFont(FontType::Big);
         display->setCursor(64, 15);
-        display->print(lastBrewTime / 1000, 1);
+        display->print(brewData.lastBrewTime / 1000, 1);
         display->print("s");
         display->setCursor(64, 38);
-        display->print(weightBrew, 1);
+        display->print(brewData.weightBrew, 1);
         display->print("g");
         display->setFont(FontType::Normal);
         displayWaterIcon(119, 1);
@@ -306,141 +306,141 @@ bool DisplayPage::displayShottimer() {
  */
 bool DisplayPage::displayMachineState() {
     // Show the heating logo when we are in regular PID mode and more than 5degC below the set point
-    // if (FEATURE_HEATINGLOGO > 0 && machineState == kPidNormal && (setpoint - temperature) > 5. && brewSwitchState != kBrewSwitchFlushOff) {
-    //     // For status info
-    //     display->clearBuffer();
+    if (FEATURE_HEATINGLOGO > 0 && machineData.state == MachineState::kPidNormal && (pidData.setpoint - pidData.input) > 5. && brewData.brewSwitchState != kBrewSwitchFlushOff) {
+        // For status info
+        display->clearBuffer();
 
-    //     displayStatusbar();
+        displayStatusbar(stateData.offlineMode);
 
-    //     display->drawImage(0, 20, Heating_Logo_width, Heating_Logo_height, Heating_Logo);
-    //     display->setFont(FontType::fup25);
-    //     display->setCursor(50, 30);
-    //     display->print(temperature, 1);
-    //     display->drawCircle(122, 32, 3);
+        display->drawImage(0, 20, Heating_Logo_width, Heating_Logo_height, Heating_Logo);
+        display->setFont(FontType::fup25);
+        display->setCursor(50, 30);
+        display->print(pidData.input, 1);
+        display->drawCircle(122, 32, 3);
 
-    //     display->sendBuffer();
-    //     return true;
-    // }
-    // // Offline logo
-    // else if (FEATURE_PIDOFF_LOGO == 1 && machineState == kPidDisabled) {
-    //     display->clearBuffer();
-    //     display->drawImage(38, 0, Off_Logo_width, Off_Logo_height, Off_Logo);
-    //     display->setCursor(0, 55);
-    //     display->setFont(FontType::Normal);
-    //     display->print("PID is disabled manually");
-    //     displayWaterIcon(119, 1);
-    //     display->sendBuffer();
-    //     return true;
-    // }
-    // else if (FEATURE_PIDOFF_LOGO == 1 && machineState == kStandby) {
-    //     display->clearBuffer();
-    //     display->drawImage(38, 0, Off_Logo_width, Off_Logo_height, Off_Logo);
-    //     display->setCursor(36, 55);
-    //     display->setFont(FontType::Normal);
-    //     display->print("Standby mode");
-    //     displayWaterIcon(119, 1);
-    //     display->sendBuffer();
-    //     return true;
-    // }
-    // // Steam
-    // else if (machineState == kSteam && brewSwitchState != kBrewSwitchFlushOff) {
-    //     display->clearBuffer();
-    //     display->drawImage(-1, 12, Steam_Logo_width, Steam_Logo_height, Steam_Logo);
+        display->sendBuffer();
+        return true;
+    }
+    // Offline logo
+    else if (FEATURE_PIDOFF_LOGO == 1 && machineData.state == MachineState::kPidDisabled) {
+        display->clearBuffer();
+        display->drawImage(38, 0, Off_Logo_width, Off_Logo_height, Off_Logo);
+        display->setCursor(0, 55);
+        display->setFont(FontType::Normal);
+        display->print("PID is disabled manually");
+        displayWaterIcon(119, 1);
+        display->sendBuffer();
+        return true;
+    }
+    else if (FEATURE_PIDOFF_LOGO == 1 && machineData.state == MachineState::kStandby) {
+        display->clearBuffer();
+        display->drawImage(38, 0, Off_Logo_width, Off_Logo_height, Off_Logo);
+        display->setCursor(36, 55);
+        display->setFont(FontType::Normal);
+        display->print("Standby mode");
+        displayWaterIcon(119, 1);
+        display->sendBuffer();
+        return true;
+    }
+    // Steam
+    else if (machineData.state == MachineState::kSteam && brewData.brewSwitchState != kBrewSwitchFlushOff) {
+        display->clearBuffer();
+        display->drawImage(-1, 12, Steam_Logo_width, Steam_Logo_height, Steam_Logo);
 
-    //     displayTemperature(48, 16);
+        displayTemperature(48, 16, pidData.input);
 
-    //     displayWaterIcon(119, 1);
-    //     display->sendBuffer();
-    //     return true;
-    // }
-    // // Water empty
-    // else if (machineState == kWaterEmpty && brewSwitchState != kBrewSwitchFlushOff) {
-    //     display->clearBuffer();
-    //     display->drawImage(45, 0, Water_Empty_Logo_width, Water_Empty_Logo_height, Water_Empty_Logo);
-    //     display->setFont(FontType::Normal);
-    //     display->sendBuffer();
-    //     return true;
-    // }
-    // // Backflush
-    // else if (machineState == kBackflush) {
-    //     display->clearBuffer();
-    //     display->setFont(FontType::fup17);
-    //     display->setCursor(2, 10);
-    //     display->print("Backflush");
+        displayWaterIcon(119, 1);
+        display->sendBuffer();
+        return true;
+    }
+    // Water empty
+    else if (machineData.state == MachineState::kWaterEmpty && brewData.brewSwitchState != kBrewSwitchFlushOff) {
+        display->clearBuffer();
+        display->drawImage(45, 0, Water_Empty_Logo_width, Water_Empty_Logo_height, Water_Empty_Logo);
+        display->setFont(FontType::Normal);
+        display->sendBuffer();
+        return true;
+    }
+    // Backflush
+    else if (machineData.state == MachineState::kBackflush) {
+        display->clearBuffer();
+        display->setFont(FontType::fup17);
+        display->setCursor(2, 10);
+        display->print("Backflush");
 
-    //     switch (backflushState) {
-    //         case kBackflushWaitBrewswitchOn:
-    //             display->setFont(FontType::Normal);
-    //             display->setCursor(4, 37);
-    //             display->print(langstring_backflush_press);
-    //             display->setCursor(4, 50);
-    //             display->print(langstring_backflush_start);
-    //             break;
+        switch (stateData.backflushState) {
+            case kBackflushWaitBrewswitchOn:
+                display->setFont(FontType::Normal);
+                display->setCursor(4, 37);
+                display->print(langstring_backflush_press);
+                display->setCursor(4, 50);
+                display->print(langstring_backflush_start);
+                break;
 
-    //         case kBackflushWaitBrewswitchOff:
-    //             display->setFont(FontType::Normal);
-    //             display->setCursor(4, 37);
-    //             display->print(langstring_backflush_press);
-    //             display->setCursor(4, 50);
-    //             display->print(langstring_backflush_finish);
-    //             break;
+            case kBackflushWaitBrewswitchOff:
+                display->setFont(FontType::Normal);
+                display->setCursor(4, 37);
+                display->print(langstring_backflush_press);
+                display->setCursor(4, 50);
+                display->print(langstring_backflush_finish);
+                break;
 
-    //         default:
-    //             display->setFont(FontType::fup17);
-    //             display->setCursor(42, 42);
-    //             display->print(flushCycles + 1, 0);
-    //             display->print("/");
-    //             display->print(maxflushCycles, 0);
-    //             break;
-    //     }
+            default:
+                display->setFont(FontType::fup17);
+                display->setCursor(42, 42);
+                display->print(stateData.flushCycles + 1, 0);
+                display->print("/");
+                display->print(stateData.maxflushCycles, 0);
+                break;
+        }
 
-    //     displayWaterIcon(119, 1);
-    //     display->sendBuffer();
-    //     return true;
-    // }
-    // // PID Off
-    // else if (machineState == kEmergencyStop) {
-    //     display->clearBuffer();
-    //     display->setFont(FontType::Normal);
-    //     display->setCursor(32, 24);
-    //     display->print(langstring_current_temp);
-    //     display->print(temperature, 1);
-    //     display->print(" ");
-    //     display->print((char)176);
-    //     display->print("C");
-    //     display->setCursor(32, 34);
-    //     display->print(langstring_set_temp);
-    //     display->print(setpoint, 1);
-    //     display->print(" ");
-    //     display->print((char)176);
-    //     display->print("C");
+        displayWaterIcon(119, 1);
+        display->sendBuffer();
+        return true;
+    }
+    // PID Off
+    else if (machineData.state == MachineState::kEmergencyStop) {
+        display->clearBuffer();
+        display->setFont(FontType::Normal);
+        display->setCursor(32, 24);
+        display->print(langstring_current_temp);
+        display->print(pidData.input, 1);
+        display->print(" ");
+        display->print((char)176);
+        display->print("C");
+        display->setCursor(32, 34);
+        display->print(langstring_set_temp);
+        display->print(pidData.setpoint, 1);
+        display->print(" ");
+        display->print((char)176);
+        display->print("C");
 
-    //     displayThermometerOutline(4, 58);
+        displayThermometerOutline(4, 58, pidData.setpoint);
 
-    //     // draw current temp in thermometer
-    //     if (isrCounter < 500) {
-    //         drawTemperaturebar(8, 46, 30);
-    //         display->setCursor(32, 4);
-    //         display->print("PID STOPPED");
-    //     }
+        // draw current temp in thermometer
+        if (stateData.isrCounter < 500) {
+            drawTemperaturebar(8, 46, 30, pidData.input);
+            display->setCursor(32, 4);
+            display->print("PID STOPPED");
+        }
 
-    //     displayWaterIcon(119, 1);
+        displayWaterIcon(119, 1);
 
-    //     display->sendBuffer();
-    //     return true;
-    // }
-    // else if (machineState == kSensorError) {
-    //     display->clearBuffer();
-    //     display->setFont(FontType::Normal);
-    //     displayMessage(langstring_error_tsensor[0], String(temperature), langstring_error_tsensor[1], "", "", "");
-    //     return true;
-    // }
-    // else if (machineState == kEepromError) {
-    //     display->clearBuffer();
-    //     display->setFont(FontType::Normal);
-    //     displayMessage("EEPROM Error, please set Values", "", "", "", "", "");
-    //     return true;
-    // }
+        display->sendBuffer();
+        return true;
+    }
+    else if (machineData.state == MachineState::kSensorError) {
+        display->clearBuffer();
+        display->setFont(FontType::Normal);
+        displayMessage(langstring_error_tsensor[0], String(pidData.input), langstring_error_tsensor[1], "", "", "");
+        return true;
+    }
+    else if (machineData.state == MachineState::kEepromError) {
+        display->clearBuffer();
+        display->setFont(FontType::Normal);
+        displayMessage("EEPROM Error, please set Values", "", "", "", "", "");
+        return true;
+    }
 
     return false;
 }
