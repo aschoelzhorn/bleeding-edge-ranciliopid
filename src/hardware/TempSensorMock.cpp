@@ -31,14 +31,18 @@ float getTemperature(float maxValue) {
     return temp_current;
 }
 
-float TempSensorMock::getTemperatureCelsius() const {
+bool TempSensorMock::sample_temperature(double& temperature) const {
     if (function_ == 1) { // steam
-        return getTemperature(117.0);
+        temperature = getTemperature(117.0);
+        return true;
     } else if (function_ == 2) { // error not heating
-        return 24;
+        temperature = 24;
+        return false;
     } else if (function_ == 3) { // error too hot
-        return getTemperature(140.0);
+        temperature = getTemperature(140.0);
+        return false;
     } else { // normal
-        return getTemperature(95.0);
+        temperature = getTemperature(95.0);
+        return true;
     }
 }

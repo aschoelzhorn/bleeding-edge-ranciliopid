@@ -11,10 +11,11 @@
 class TempSensorMock : public TempSensor {
     public:
         TempSensorMock(int function);
-        float getTemperatureCelsius() const override;
+
+    protected:
+        bool sample_temperature(double& temperature) const override;
 
     private:
         int function_;
-
         float getTemperature1(float maxValue);
 };
