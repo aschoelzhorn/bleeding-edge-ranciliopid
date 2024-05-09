@@ -18,7 +18,8 @@ enum class DisplayPageType {
     TemperatureOnly = 3,
     Scale = 4, 
     Rotated = 20,
-    Color = 100
+    Color = 100,
+    ColorMinimal = 101
 };
 
 class IDisplayPage {

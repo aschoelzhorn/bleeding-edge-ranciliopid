@@ -11,12 +11,12 @@ const char* DisplayPageTemperatureOnly::getPageName() {
 
 void DisplayPageTemperatureOnly::printScreen(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md) {
 
-    wifiData = w; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
-    mqttData = m; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
-    stateData = s; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
-    pidData = p; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set
-    brewData = b; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set 
-    machineData = md; // TODO: this is not good, you have to do it in every DisplayPage, don't you a member variable at all or force it via base ctor to be set     
+    wifiData = w; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set
+    mqttData = m; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set
+    stateData = s; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set
+    pidData = p; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set
+    brewData = b; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set 
+    machineData = md; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set     
 
     // Show shot timer:
     if (displayShottimer()) {

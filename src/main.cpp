@@ -404,19 +404,6 @@ int getSignalStrength() {
 DisplayPageType templateType = static_cast<DisplayPageType>(DISPLAYTEMPLATE);
 IDisplayPage *page = displayPageManager.getPage(templateType);
 
-// #if (DISPLAYTEMPLATE == 1)
-// DisplayPage *page = displayPageManager.getPage(DisplayPageType::Standard);
-// #elif (DISPLAYTEMPLATE == 2)
-// DisplayPage *page = displayPageManager.getPage(DisplayPageType::Minimal);
-// #elif (DISPLAYTEMPLATE == 3)
-// DisplayPage *page = displayPageManager.getPage(DisplayPageType::TemperatureOnly);
-// #elif (DISPLAYTEMPLATE == 4)
-// //DisplayPage *page = displayPageManager.getPage(DisplayPageType::Scale);
-// #elif (DISPLAYTEMPLATE == 20)
-// //DisplayPage *page = displayPageManager.getPage(DisplayPageType::Rotated);
-// #endif
-
-
 bool changed = false;
 
 void printScreen() {

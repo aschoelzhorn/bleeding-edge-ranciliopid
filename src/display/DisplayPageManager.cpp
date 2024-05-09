@@ -5,13 +5,14 @@
 #include "templates/DisplayPageTemperatureOnly.h" 
 // #include "templates/DisplayPageScale.h" 
 #include "templates/DisplayPageColor.h" 
+#include "templates/DisplayPageColorMinimal.h" 
 
 DisplayPageManager::DisplayPageManager(DisplayManager *instanceOfDisplayManager) {
     displayManager = instanceOfDisplayManager;
 }
 
 IDisplayPage *DisplayPageManager::getPage(DisplayPageType pageType) {
-    // return correct instance of DisplayPage
+    // return correct instance of DisplayPage, instead if using switch/case, we could use an dictionary, make the code easier
     switch (pageType) {
         case DisplayPageType::Standard: {
             page = new DisplayPageStandard(displayManager);
@@ -33,6 +34,10 @@ IDisplayPage *DisplayPageManager::getPage(DisplayPageType pageType) {
             page = new DisplayPageColor(displayManager);
             break;
         }
+        case DisplayPageType::ColorMinimal: {
+            page = new DisplayPageColorMinimal(displayManager);
+            break;
+        }        
         default: {
             // error? or just use standard?
             // page = new DisplayPageStandard(displayManager);

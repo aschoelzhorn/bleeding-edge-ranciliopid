@@ -55,21 +55,24 @@ public:
     virtual void printCentered(Area area, const char* line1, const char* line2);
 
 protected:
+
+    // TODO move all this from driver to templates
+
     virtual void initViews() = 0;
 
     std::map<Area, Viewport> areaMap;
 
-    // Viewport bootLogo;
-    // Viewport bootMessage;
-    // Viewport actionImage;
-    // Viewport statusIcons;
-    // Viewport profileIcon;
-    // Viewport temperature;
-    // Viewport statusMessage;
-    // Viewport softwareUpdate;
+    Viewport bootLogo;
+    Viewport bootMessage;
+    Viewport actionImage;
+    Viewport statusIcons;
+    Viewport profileIcon;
+    Viewport temperature;
+    Viewport statusMessage;
+    Viewport softwareUpdate;
 
     Viewport statusbar;
     Viewport progressbar;
-    Viewport temperature;
+    //Viewport temperature;
     Viewport brewTime;
 };
