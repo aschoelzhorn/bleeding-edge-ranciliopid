@@ -29,7 +29,7 @@ public:
     virtual void displayMessage(String text1, String text2, String text3, String text4, String text5, String text6) = 0;
     virtual void displayLogo(String displaymessagetext, String displaymessagetext2) = 0;
 
-    // TODO: rethink this
+//protected:
     WifiData wifiData;
     MqttData mqttData;
     StateData stateData;

@@ -183,6 +183,7 @@ TempSensor* tempSensor;
 #include "isr.h"
 
 // Method forward declarations
+void setDisplayIndex(int displayIndex);
 void setSteamMode(int steamMode);
 void setPidStatus(int pidStatus);
 void setBackflush(int backflush);
@@ -401,7 +402,10 @@ int getSignalStrength() {
     }
 }
 
-DisplayPageType templateType = static_cast<DisplayPageType>(DISPLAYTEMPLATE);
+int currentPageIndex = DISPLAYTEMPLATE;
+int prevPageIndex = currentPageIndex;
+
+DisplayPageType templateType = static_cast<DisplayPageType>(currentPageIndex);
 IDisplayPage *page = displayPageManager.getPage(templateType);
 
 bool changed = false;
@@ -421,9 +425,6 @@ void printScreen() {
     b.weightBrew = weightBrew;
 #endif
 
-
-    //PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki, double Kd, int POn, int ControllerDirection)
-    //PID bPID(        &temperature, &pidOutput,      &setpoint,       aggKp,     aggKi,     aggKd,  1,       DIRECT);
     PidData p;
     p.mode = bPID.GetMode();
     p.kd = bPID.GetKd();
@@ -452,6 +453,13 @@ void printScreen() {
     MachineData md;
     md.state = machineState;
 
+    if (currentPageIndex != prevPageIndex) {
+        LOGF(DEBUG, "CHANGE PAGE");
+        LOGF(DEBUG, "old page name: %s", page->getPageName());
+        page = displayPageManager.getPage(static_cast<DisplayPageType>(currentPageIndex));
+        prevPageIndex = currentPageIndex;
+        LOGF(DEBUG, "new page name: %s", page->getPageName());
+    }
     // test: switch of page during runtime -> working
     // if (temperature > 35 && changed == false) {
     //     LOGF(DEBUG, "CHANGE PAGE");
@@ -472,10 +480,10 @@ Timer printDisplayTimer(&printScreen, 100);
 
 // Emergency stop if temp is too high
 void testEmergencyStop() {
-    if (temperature > EmergencyStopTemp && emergencyStop == false) {
+    if (temperature > EmergencyStopTemp) {
         emergencyStop = true;
     }
-    else if (temperature < (brewSetpoint + 5) && emergencyStop == true) {
+    else if (temperature < (setpoint + 5)) {
         emergencyStop = false;
     }
 }
@@ -2041,6 +2049,10 @@ void setSteamMode(int steamMode) {
 void setPidStatus(int pidStatus) {
     pidON = pidStatus;
     writeSysParamsToStorage();
+}
+
+void setDisplayIndex(int index) {
+    currentPageIndex = index;
 }
 
 void setNormalPIDTunings() {
