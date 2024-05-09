@@ -113,3 +113,6 @@ void DummyDisplay::drawDisc(uint16_t x, uint16_t y, uint16_t rad) {
 
 void DummyDisplay::drawPixel(uint16_t x, uint16_t y) {
 }
+
+void DummyDisplay::drawStr(uint16_t x, uint16_t y, const char* c) {
+}

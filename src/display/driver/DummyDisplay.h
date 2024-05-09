@@ -1,17 +1,16 @@
-#ifndef U8G2DISPLAY_H
-#define U8G2DISPLAY_H
+#pragma once
 
-#include <U8g2lib.h>
+#include <Arduino.h>
 #include "DisplayBase.h"
 
-class U8g2Display : public DisplayBase {
+class DummyDisplay : public DisplayBase {
 public:
-    U8g2Display(U8G2& u8g2Instance);
-    
+    DummyDisplay();
+
     void init(Rotation rotation) override;
     void clearBuffer() override;
     void setPowerSave(uint32_t is_enabled) override;
-    void drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) override;
+     void drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint8_t *bitmap) override;
     void drawImage(uint16_t x, uint16_t y, uint16_t w, uint16_t h, const uint16_t *bitmap) override;
     void drawImage(uint16_t x, uint16_t y, tImage bitmap) override;
     void setFont(FontType fontType) override;
@@ -28,13 +27,15 @@ public:
     void printCentered(const char* c, uint16_t y) override;
     void printCentered(const char* line1, const char* line2, uint16_t y) override;
     void printRightAligned(const char* c, uint16_t y) override;
-    void printRightAligned(const char* c, uint16_t y, FontType font) override;    
+    void printRightAligned(const char* c, uint16_t y, FontType font) override;
     void printRightAligned(float data, unsigned int digits, uint16_t y) override;
+
     void printTemperatures(float t1, float t2, bool steaming) override;
     void printBrewingInfo(unsigned long totalBrewTime, unsigned long brewTimer, unsigned int activeBrewTimeEndDetection, bool scaleEnabled, int currentWeight, float activeScaleSensorWeightSetPoint) override;
     void printCountdown(unsigned int timer) override;
 
     void fillView(Area, uint32_t color) override;
+
     void drawBorder(Area) override;
 
     void drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) override;
@@ -44,15 +45,8 @@ public:
     void drawDisc(uint16_t x, uint16_t y, uint16_t rad) override;
     void drawPixel(uint16_t x, uint16_t y) override;
     void drawFrame(uint16_t x, uint16_t y, uint16_t w, uint16_t h) override;
+    void drawStr(uint16_t x, uint16_t y, const char* c) override;    
 
 protected:
     void initViews() override;
-
-private:
-    U8G2& u8g2;
-    void prepare();
-    int getStringWidth(int lenght, FontType font);
-    int getStringWidth(int lenght);
 };
-
-#endif // U8G2DISPLAY_H

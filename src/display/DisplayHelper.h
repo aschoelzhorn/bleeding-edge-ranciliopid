@@ -1,5 +1,4 @@
-#ifndef DISPLAY_HELPER_H
-#define DISPLAY_HELPER_H
+#pragma once
 
 #include "status_images.h"
 #include "ImageDictionary.h"
@@ -27,5 +26,3 @@ private:
      ProfileIcon currentProfileIcon;
      std::pair<bool, StatusImage> currentActionImage;
 };
-
-#endif

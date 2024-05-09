@@ -1,5 +1,4 @@
-#ifndef DISPLAY_BASE_H
-#define DISPLAY_BASE_H
+#pragma once
 
 #include "IDisplay.h" // Include your interface header
 
@@ -18,6 +17,7 @@ public:
     virtual void print(char c) = 0; 
     virtual void print(const char* c) = 0; 
     virtual void println(const String &s) = 0;
+    virtual void drawStr(uint16_t x, uint16_t y, const char* s) = 0; 
     virtual void drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) = 0; 
     virtual void sendBuffer() = 0; 
     virtual int getWidth() = 0; 
@@ -55,23 +55,24 @@ public:
     virtual void printCentered(Area area, const char* line1, const char* line2);
 
 protected:
+
+    // TODO move all this from driver to templates
+
     virtual void initViews() = 0;
 
     std::map<Area, Viewport> areaMap;
 
-    // Viewport bootLogo;
-    // Viewport bootMessage;
-    // Viewport actionImage;
-    // Viewport statusIcons;
-    // Viewport profileIcon;
-    // Viewport temperature;
-    // Viewport statusMessage;
-    // Viewport softwareUpdate;
+    Viewport bootLogo;
+    Viewport bootMessage;
+    Viewport actionImage;
+    Viewport statusIcons;
+    Viewport profileIcon;
+    Viewport temperature;
+    Viewport statusMessage;
+    Viewport softwareUpdate;
 
     Viewport statusbar;
     Viewport progressbar;
-    Viewport temperature;
+    //Viewport temperature;
     Viewport brewTime;
 };
-
-#endif // DISPLAY_BASE_H

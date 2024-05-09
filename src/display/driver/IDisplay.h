@@ -1,10 +1,10 @@
-#ifndef IDISPLAY_H
-#define IDISPLAY_H
+#pragma once
 
 #include <map>
 
-#include "Viewport.h"
-#include "tImage.h"
+#include "../Viewport.h"
+#include "../tImage.h"
+#include "../areaEnum.h"
 
 enum class Rotation {
     R0,
@@ -29,22 +29,6 @@ enum class FontType {
     OpenIconicOther
 };
 
-enum class Area {
-    // BootLogo = 0,
-    // BootMessage = 1,
-    // ActionImage = 2, // like icon for heating, brewing, cleaning, ....
-    // StatusMessage = 3,
-    // StatusIcons = 4,
-    // ProfileIcon = 5,
-    // Temperature = 6,
-    // SoftwareUpdate = 7,
-    // test for clever coffee minimal template
-    Statusbar,
-    Progressbar,
-    Temperature,
-    BrewTime
-};
-
 class IDisplay {
 public:
     // generic functions
@@ -67,6 +51,7 @@ public:
     virtual void printRightAligned(const char* c, uint16_t y);
     virtual void printRightAligned(const char* c, uint16_t y, FontType font);
     virtual void printRightAligned(float data, unsigned int digits, uint16_t y);
+    virtual void drawStr(uint16_t x, uint16_t y, const char *s);
 
     // generic graphic functions
     virtual void drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
@@ -104,5 +89,3 @@ public:
 
     virtual void drawBorder(Area);
 };
-
-#endif // IDISPLAY_H

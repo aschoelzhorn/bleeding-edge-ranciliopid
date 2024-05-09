@@ -1,4 +1,4 @@
-#include "../userConfig.h"
+#include "../../userConfig.h"
 
 #if (DISPLAY_HARDWARE == 4)
 
@@ -25,7 +25,7 @@ void TFTeSPIDisplay::init(Rotation rotation) {
 }
 
 void TFTeSPIDisplay::initViews() {
-    int width = getWidth();
+     int width = getWidth();
     int height = getHeight();
     int margin = 5;
     int maxBootLogoHeight = 131;
@@ -137,6 +137,10 @@ void TFTeSPIDisplay::print(const char* c) {
 
 void TFTeSPIDisplay::println(const String &s) {
     tft.drawString(s, tft.getCursorX(), tft.getCursorY());  // Print a string followed by a newline
+}
+
+void TFTeSPIDisplay::drawStr(uint16_t x, uint16_t y, const char* s) {
+    tft.drawString(s, x, y);
 }
 
 void TFTeSPIDisplay::drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) {

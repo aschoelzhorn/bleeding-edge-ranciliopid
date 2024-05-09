@@ -1,8 +1,7 @@
-#ifndef DISPLAYMANAGER_H
-#define DISPLAYMANAGER_H
+#pragma once
 
 #include <Wire.h>
-#include "IDisplay.h"
+#include "driver/IDisplay.h"
 
 class DisplayManager {
 public:
@@ -28,6 +27,7 @@ public:
     virtual void printRightAligned(const char* c, uint16_t y);
     virtual void printRightAligned(const char* c, uint16_t y, FontType font);
     virtual void printRightAligned(float data, unsigned int digits, uint16_t y);
+    virtual void drawStr(uint16_t x, uint16_t y, const char *s);
 
     // generic graphic functions
     virtual void drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
@@ -67,4 +67,3 @@ private:
     IDisplay* display;  // Use a pointer to IDisplay to allow dynamic initialization
 };
 
-#endif // DISPLAYMANAGER_H

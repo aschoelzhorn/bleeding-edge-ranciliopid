@@ -1,5 +1,5 @@
 #include "U8g2Display.h"
-#include "../userConfig.h"
+#include "../../userConfig.h"
 #include <float.h>
 
 U8g2Display::U8g2Display(U8G2& u8g2Instance) : u8g2(u8g2Instance) {}
@@ -143,6 +143,10 @@ void U8g2Display::print(const char* c) {
 
 void U8g2Display::println(const String &s) {
     u8g2.println(s);
+}
+
+void U8g2Display::drawStr(uint16_t x, uint16_t y, const char* s) {
+    u8g2.drawStr(x, y, s);
 }
 
 void U8g2Display::drawGlyph(uint8_t x, uint8_t y, uint8_t encoding) {

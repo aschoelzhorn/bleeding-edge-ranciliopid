@@ -21,12 +21,15 @@
 #include <LittleFS.h>
 #include <PID_v1.h>  // for PID calculation
 #include "display/DisplayManager.h"
+#include "display/DisplayPageManager.h"
+#include "display/templates/IDisplayPage.h"
 #include <WiFiManager.h>
 #include <os.h>
 
 // Includes
 #include "languages.h"       // for language translation
 #include "storage.h"
+#include "machineStateEnum.h"
 
 // Utilities:
 #include "utils/Timer.h"
@@ -46,6 +49,14 @@
 // User configuration & defaults
 #include "defaults.h"
 #include "userConfig.h" // needs to be configured by the user
+
+// DTOs
+#include "DTOs/brewData.h"
+#include "DTOs/pidData.h"
+#include "DTOs/wifiData.h"
+#include "DTOs/mqttData.h"
+#include "DTOs/machineData.h"
+#include "DTOs/stateData.h"
 
 hw_timer_t* timer = NULL;
 
@@ -73,23 +84,6 @@ MACHINE machine = (enum MACHINE)MACHINEID;
 
 #define HIGH_ACCURACY
 
-enum MachineState {
-    kInit = 0,
-    kPidNormal = 20,
-    kBrew = 30,
-    kShotTimerAfterBrew = 31,
-    kBrewDetectionTrailing = 35,
-    kSteam = 40,
-    kCoolDown = 45,
-    kBackflush = 50,
-    kWaterEmpty = 70,
-    kEmergencyStop = 80,
-    kPidDisabled = 90,
-    kStandby = 95,
-    kSensorError = 100,
-    kEepromError = 110,
-};
-
 MachineState machineState = kInit;
 MachineState lastmachinestate = kInit;
 int lastmachinestatepid = -1;
@@ -105,6 +99,7 @@ int brewControlType = BREWCONTROL_TYPE;
 
 // Display
 DisplayManager display;
+DisplayPageManager displayPageManager(&display);
 
 // WiFi
 uint8_t wifiCredentialsSaved = 0;
@@ -398,28 +393,68 @@ int getSignalStrength() {
     }
 }
 
-// Horizontal or vertical display
-#if (DISPLAY_HARDWARE != 0)
-#if (DISPLAYTEMPLATE < 20) // horizontal templates
-#include "display/displayCommon.h"
+DisplayPageType templateType = static_cast<DisplayPageType>(DISPLAYTEMPLATE);
+IDisplayPage *page = displayPageManager.getPage(templateType);
+
+bool changed = false;
+
+void printScreen() {
+
+    BrewData b;
+    b.brewtimesoftware = brewtimesoftware;
+    b.currBrewState = currBrewState;
+    b.isBrewDetected = isBrewDetected;
+    b.timeBrewDetection = timeBrewDetection;
+    b.timeBrewed = timeBrewed;
+    b.totalBrewTime = totalBrewTime;
+    b.brewSwitchState = brewSwitchState;
+    b.lastBrewTime = lastBrewTime;
+#if FEATURE_SCALE == 1    
+    b.weightBrew = weightBrew;
 #endif
 
-#if (DISPLAYTEMPLATE >= 20) // vertical templates
-#include "display/displayRotateUpright.h"
-#endif
 
-#if (DISPLAYTEMPLATE == 1)
-#include "display/displayTemplateStandard.h"
-#elif (DISPLAYTEMPLATE == 2)
-#include "display/displayTemplateMinimal.h"
-#elif (DISPLAYTEMPLATE == 3)
-#include "display/displayTemplateTempOnly.h"
-#elif (DISPLAYTEMPLATE == 4)
-#include "display/displayTemplateScale.h"
-#elif (DISPLAYTEMPLATE == 20)
-#include "display/displayTemplateUpright.h"
-#endif
-#endif
+    //PID::PID(double *Input, double *Output, double *Setpoint, double Kp, double Ki, double Kd, int POn, int ControllerDirection)
+    //PID bPID(        &temperature, &pidOutput,      &setpoint,       aggKp,     aggKi,     aggKd,  1,       DIRECT);
+    PidData p;
+    p.mode = bPID.GetMode();
+    p.kd = bPID.GetKd();
+    p.ki = bPID.GetKi();
+    p.kp = bPID.GetKp();
+    p.input = temperature;
+    p.output = pidOutput;
+    p.setpoint = setpoint;
+
+    WifiData w;
+    w.isConnected = WiFi.status() == WL_CONNECTED;
+    w.signalStrength = getSignalStrength();
+    w.reconnects = wifiReconnects;
+
+    MqttData m;
+    m.isConnected = mqtt.connected() == 1;
+
+    StateData s;
+    s.isrCounter = isrCounter;
+    s.offlineMode = offlineMode;
+    s.waterFull = waterFull;
+    s.flushCycles = flushCycles;
+    s.maxflushCycles = maxflushCycles;
+    s.backflushState = backflushState;
+
+    MachineData md;
+    md.state = machineState;
+
+    // test: switch of page during runtime -> working
+    // if (temperature > 35 && changed == false) {
+    //     LOGF(DEBUG, "CHANGE PAGE");
+    //     LOGF(DEBUG, "old page name: %s", page->getPageName());
+    //     changed = true;
+    //     page = displayPageManager.getPage(DisplayPageType::Minimal);
+    //     LOGF(DEBUG, "new page name: %s", page->getPageName());
+    // }
+
+    page->printScreen(b, p, w, m, s, md);
+}
 
 Timer printDisplayTimer(&printScreen, 100);
 
@@ -562,7 +597,7 @@ void refreshTemp() {
  */
 void initOfflineMode() {
 #if DISPLAY_HARDWARE != 0
-    displayMessage("", "", "", "", "Begin Fallback,", "No Wifi");
+    page->displayMessage("", "", "", "", "Begin Fallback,", "No Wifi");
 #endif
 
     LOG(INFO, "Start offline mode with eeprom values, no wifi :(");
@@ -570,7 +605,7 @@ void initOfflineMode() {
 
     if (readSysParamsFromStorage() != 0) {
 #if DISPLAY_HARDWARE != 0
-        displayMessage("", "", "", "", "No eeprom,", "Values");
+        page->displayMessage("", "", "", "", "No eeprom,", "Values");
 #endif
 
         LOG(INFO, "No working eeprom value, I am sorry, but use default offline value :)");
@@ -596,7 +631,7 @@ void checkWifi() {
 
                 if (!setupDone) {
 #if DISPLAY_HARDWARE != 0
-                    displayMessage("", "", "", "", langstring_wifirecon, String(wifiReconnects));
+                    page->displayMessage("", "", "", "", langstring_wifirecon, String(wifiReconnects));
 #endif
                 }
 
@@ -1244,7 +1279,7 @@ void wiFiSetup() {
         LOGF(INFO, "Connecting to WiFi: %s", String(hostname));
 
 #if DISPLAY_HARDWARE != 0
-        displayLogo("Connecting to: ", HOSTNAME);
+        page->displayLogo("Connecting to: ", HOSTNAME);
 #endif
     }
 
@@ -1270,7 +1305,7 @@ void wiFiSetup() {
         LOG(INFO, "WiFi connection timed out...");
 
 #if DISPLAY_HARDWARE != 0
-        displayLogo(langstring_nowifi[0], langstring_nowifi[1]);
+        page->displayLogo(langstring_nowifi[0], langstring_nowifi[1]);
 #endif
 
         wm.disconnect();
@@ -1280,7 +1315,7 @@ void wiFiSetup() {
     }
 
 #if DISPLAY_HARDWARE != 0
-    displayLogo(langstring_connectwifi1, wm.getWiFiSSID(true));
+    page->displayLogo(langstring_connectwifi1, wm.getWiFiSSID(true));
 #endif
 }
 
@@ -1807,7 +1842,7 @@ void setup() {
 
 #if DISPLAY_HARDWARE != 0
     display.init(DISPLAYROTATE);
-    displayLogo(String("Version "), String(sysVersion));
+    page->displayLogo(String("Version "), String(sysVersion));
     delay(2000); // caused crash with wifi manager on esp8266, should be ok on esp32
 #endif
 

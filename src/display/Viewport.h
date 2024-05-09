@@ -1,5 +1,4 @@
-#ifndef VIEWPORT_H
-#define VIEWPORT_H
+#pragma once
 
 #include "Point.h"
 #include <Arduino.h>
@@ -25,5 +24,3 @@ private:
     u_int16_t width;
     u_int16_t height;
 };
-
-#endif
