@@ -7,6 +7,6 @@ class DisplayPageColorMinimal : public DisplayPageColorBase {
 public:
     DisplayPageColorMinimal(DisplayManager *instanceOfDisplayManager);
 
-    void printScreen(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md) override;
+    void printScreen(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md, const ScaleData& sd) override;
     const char* getPageName() override;
 };

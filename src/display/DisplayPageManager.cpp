@@ -3,7 +3,7 @@
 #include "templates/DisplayPageStandard.h"
 #include "templates/DisplayPageMinimal.h" 
 #include "templates/DisplayPageTemperatureOnly.h" 
-// #include "templates/DisplayPageScale.h" 
+#include "templates/DisplayPageScale.h"
 #include "templates/DisplayPageColor.h" 
 #include "templates/DisplayPageColorMinimal.h" 
 
@@ -27,7 +27,7 @@ IDisplayPage *DisplayPageManager::getPage(DisplayPageType pageType) {
             break;
         }
         case DisplayPageType::Scale: {
-            //page = new DisplayPageScale(displayManager);
+            page = new DisplayPageScale(displayManager);
             break;
         }
         case DisplayPageType::Color: {

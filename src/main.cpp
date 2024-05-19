@@ -57,6 +57,7 @@
 #include "DTOs/mqttData.h"
 #include "DTOs/machineData.h"
 #include "DTOs/stateData.h"
+#include "DTOs/scaleData.h"
 
 hw_timer_t* timer = NULL;
 
@@ -412,47 +413,64 @@ bool changed = false;
 
 void printScreen() {
 
-    BrewData b;
-    b.brewtimesoftware = brewtimesoftware;
-    b.currBrewState = currBrewState;
-    b.isBrewDetected = isBrewDetected;
-    b.timeBrewDetection = timeBrewDetection;
-    b.timeBrewed = timeBrewed;
-    b.totalBrewTime = totalBrewTime;
-    b.brewSwitchState = brewSwitchState;
-    b.lastBrewTime = lastBrewTime;
+    BrewData brewData;
+    brewData.brewtimesoftware = brewtimesoftware;
+    brewData.currBrewState = currBrewState;
+    brewData.isBrewDetected = isBrewDetected;
+    brewData.timeBrewDetection = timeBrewDetection;
+    brewData.timeBrewed = timeBrewed;
+    brewData.totalBrewTime = totalBrewTime;
+    brewData.brewSwitchState = brewSwitchState;
+    brewData.lastBrewTime = lastBrewTime;
 #if FEATURE_SCALE == 1    
-    b.weightBrew = weightBrew;
+    brewData.weightBrew = weightBrew;
 #endif
 
-    PidData p;
-    p.mode = bPID.GetMode();
-    p.kd = bPID.GetKd();
-    p.ki = bPID.GetKi();
-    p.kp = bPID.GetKp();
-    p.input = temperature;
-    p.output = pidOutput;
-    p.setpoint = setpoint;
+    PidData pidData;
+    pidData.mode = bPID.GetMode();
+    pidData.kd = bPID.GetKd();
+    pidData.ki = bPID.GetKi();
+    pidData.kp = bPID.GetKp();
+    pidData.input = temperature;
+    pidData.output = pidOutput;
+    pidData.setpoint = setpoint;
 
-    WifiData w;
-    w.isConnected = WiFi.status() == WL_CONNECTED;
-    w.signalStrength = getSignalStrength();
-    w.reconnects = wifiReconnects;
+    WifiData wifiData;
+    wifiData.isConnected = WiFi.status() == WL_CONNECTED;
+    wifiData.signalStrength = getSignalStrength();
+    wifiData.reconnects = wifiReconnects;
 
-    MqttData m;
-    m.isConnected = mqtt.connected() == 1;
+    MqttData mqttData;
+    mqttData.isConnected = mqtt.connected() == 1;
 
-    StateData s;
-    s.isrCounter = isrCounter;
-    s.offlineMode = offlineMode;
-    s.waterFull = waterFull;
-    s.flushCycles = flushCycles;
-    s.maxflushCycles = maxflushCycles;
-    s.backflushState = backflushState;
+    StateData stateData;
+    stateData.isrCounter = isrCounter;
+    stateData.offlineMode = offlineMode;
+    stateData.waterFull = waterFull;
+    stateData.flushCycles = flushCycles;
+    stateData.maxflushCycles = maxflushCycles;
+    stateData.backflushState = backflushState;
+#if (FEATURE_PRESSURESENSOR == 1)    
+    stateData.inputPressure = inputPressure;
+#endif    
 
-    MachineData md;
-    md.state = machineState;
+    MachineData machineData;
+    machineData.state = machineState;
 
+    ScaleData scaleData;
+#if FEATURE_SCALE == 1
+    scaleData.scaleFailure = SCALE_CALIBRATION_FACTOR;
+    scaleData.weight = weight;
+    scaleData.weightBrew = weightBrew;
+    scaleData.weightSetpoint = weightSetpoint;
+#else
+    scaleData.scaleFailure = false;
+    scaleData.weight = 0;
+    scaleData.weightBrew = 0;
+    scaleData.weightSetpoint = weightSetpoint;
+#endif
+
+    // page can be change from web (no ui, just by url)
     if (currentPageIndex != prevPageIndex) {
         LOGF(DEBUG, "CHANGE PAGE");
         LOGF(DEBUG, "old page name: %s", page->getPageName());
@@ -460,16 +478,8 @@ void printScreen() {
         prevPageIndex = currentPageIndex;
         LOGF(DEBUG, "new page name: %s", page->getPageName());
     }
-    // test: switch of page during runtime -> working
-    // if (temperature > 35 && changed == false) {
-    //     LOGF(DEBUG, "CHANGE PAGE");
-    //     LOGF(DEBUG, "old page name: %s", page->getPageName());
-    //     changed = true;
-    //     page = displayPageManager.getPage(DisplayPageType::Minimal);
-    //     LOGF(DEBUG, "new page name: %s", page->getPageName());
-    // }
 
-    page->printScreen(b, p, w, m, s, md);
+    page->printScreen(brewData, pidData, wifiData, mqttData, stateData, machineData, scaleData);
 }
 
 Timer printDisplayTimer(&printScreen, 100);
@@ -492,17 +502,13 @@ void testEmergencyStop() {
  * @brief Switch to offline mode if maxWifiReconnects were exceeded during boot
  */
 void initOfflineMode() {
-#if DISPLAY_HARDWARE != 0
     page->displayMessage("", "", "", "", "Begin Fallback,", "No Wifi");
-#endif
 
     LOG(INFO, "Start offline mode with eeprom values, no wifi :(");
     offlineMode = 1;
 
     if (readSysParamsFromStorage() != 0) {
-#if DISPLAY_HARDWARE != 0
         page->displayMessage("", "", "", "", "No eeprom,", "Values");
-#endif
 
         LOG(INFO, "No working eeprom value, I am sorry, but use default offline value :)");
         delay(1000);
@@ -526,9 +532,7 @@ void checkWifi() {
                 LOGF(INFO, "Attempting WIFI (re-)connection: %i", wifiReconnects);
 
                 if (!setupDone) {
-#if DISPLAY_HARDWARE != 0
                     page->displayMessage("", "", "", "", langstring_wifirecon, String(wifiReconnects));
-#endif
                 }
 
                 wm.disconnect();
@@ -1119,9 +1123,7 @@ void wiFiSetup() {
         const char hostname[] = (STR(HOSTNAME));
         LOGF(INFO, "Connecting to WiFi: %s", String(hostname));
 
-#if DISPLAY_HARDWARE != 0
         page->displayLogo("Connecting to: ", HOSTNAME);
-#endif
     }
 
     wm.setHostname(hostname);
@@ -1145,9 +1147,7 @@ void wiFiSetup() {
     else {
         LOG(INFO, "WiFi connection timed out...");
 
-#if DISPLAY_HARDWARE != 0
         page->displayLogo(langstring_nowifi[0], langstring_nowifi[1]);
-#endif
 
         wm.disconnect();
         delay(1000);
@@ -1155,9 +1155,7 @@ void wiFiSetup() {
         offlineMode = 1;
     }
 
-#if DISPLAY_HARDWARE != 0
     page->displayLogo(langstring_connectwifi1, wm.getWiFiSSID(true));
-#endif
 }
 
 /**
@@ -1681,11 +1679,9 @@ void setup() {
         waterSensor = new IOSwitch(PIN_WATERSENSOR, (WATER_SENS_TYPE == Switch::NORMALLY_OPEN ? GPIOPin::IN_PULLDOWN : GPIOPin::IN_PULLUP), Switch::TOGGLE, WATER_SENS_TYPE);
     }
 
-#if DISPLAY_HARDWARE != 0
     display.init(DISPLAYROTATE);
     page->displayLogo(String("Version "), String(sysVersion));
     delay(2000); // caused crash with wifi manager on esp8266, should be ok on esp32
-#endif
 
     // Fallback offline
     if (connectmode == 1) { // WiFi Mode
@@ -1904,9 +1900,7 @@ void looppid() {
 #endif
 
     // Check if PID should run or not. If not, set to manual and force output to zero
-#if DISPLAY_HARDWARE != 0
     printDisplayTimer();
-#endif
 
     if (machineState == kPidDisabled || machineState == kWaterEmpty || machineState == kSensorError || machineState == kEmergencyStop || machineState == kEepromError || machineState == kStandby || brewPIDDisabled) {
         if (bPID.GetMode() == 1) {

@@ -20,13 +20,13 @@ int writeSysParamsToStorage(void);
 #define STR(x)        STR_HELPER(x)
 
 // default parameters
-#define SETPOINT                  95     // brew temperature setpoint
+#define SETPOINT                  93     // brew temperature setpoint
 #define TEMPOFFSET                0      // brew temperature setpoint
 #define STEAMSETPOINT             120    // steam temperature setpoint
 #define SCALE_CALIBRATION_FACTOR  1.00   // Raw data is divided by this value to convert to readable data
 #define SCALE2_CALIBRATION_FACTOR 1.00   // Raw data is divided by this value to convert to readable data
 #define SCALE_KNOWN_WEIGHT        267.00 // Calibration weight for scale (weight of the tray)
-#define AGGKP                     62     // PID Kp (regular phase)
+#define AGGKP                     67     // PID Kp (regular phase)
 #define AGGTN                     52     // PID Tn (regular phase)
 #define AGGTV                     11.5   // PID Tv (regular phase)
 #define AGGIMAX                   55     // PID Integrator Max (regular phase)

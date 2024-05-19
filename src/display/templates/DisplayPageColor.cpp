@@ -14,14 +14,9 @@ const char* DisplayPageColor::getPageName() {
 /**
  * @brief Send data to display
  */
-void DisplayPageColor::printScreen(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md) {
+void DisplayPageColor::printScreen(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md, const ScaleData& sd) {
 
-    wifiData = w; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set
-    mqttData = m; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set
-    stateData = s; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set
-    pidData = p; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set
-    brewData = b; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set 
-    machineData = md; // TODO: this is not good, you have to do it in every DisplayPage, don't use a member variable at all or force it via base ctor to be set     
+    setStateData(b, p, w, m, s, md, sd);    
 
     // // Show shot timer:
     // if (displayShottimer()) {

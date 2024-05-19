@@ -1,6 +1,16 @@
 #include "DisplayPageBase.h"
 #include "languages.h"
 
+void DisplayPageBase::setStateData(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md, const ScaleData& sd) {
+    brewData = b;
+    pidData = p;
+    wifiData = w;
+    mqttData = m;
+    stateData = s;
+    machineData = md;
+    scaleData = sd;
+}
+
 /**
  * @brief Draw a water empty icon at the given coordinates if water supply is low
  */
@@ -444,4 +454,3 @@ bool DisplayPageBase::displayMachineState() {
 
     return false;
 }
-

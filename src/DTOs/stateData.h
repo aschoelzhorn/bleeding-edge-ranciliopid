@@ -10,4 +10,6 @@ struct StateData {
     int flushCycles;
     int maxflushCycles;
     int backflushState;
+
+    float inputPressure;
 };

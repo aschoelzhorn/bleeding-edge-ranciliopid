@@ -20,4 +20,6 @@ protected:
     void displayStatusbar(int offlineMode);
     bool displayShottimer();
     bool displayMachineState();
+
+    void setStateData(const BrewData&, const PidData&, const WifiData&, const MqttData&, const StateData&, const MachineData&, const ScaleData&) override;
 };
