@@ -59,7 +59,7 @@
 #define PIN_TFT_SCLK 25 // PIN_HXDAT2
 #define PIN_TFT_CS   -1 // -1 not connected
 #define PIN_TFT_DC   32 // PIN_HXDAT
-#define PIN_TFT_RST  4  // PIN_ROTARY_DT,  shoud be 15
+#define PIN_TFT_RST  4  // PIN_ROTARY_DT, should be 15
 
 /**
  * These settings work with GMT020-02 Ver1.1 320*240 (ST7789)
