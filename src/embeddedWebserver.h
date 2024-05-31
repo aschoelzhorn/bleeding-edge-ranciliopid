@@ -284,6 +284,14 @@ void serverSetup() {
         LOGF(DEBUG, "Set display index: %d\n", index);
         request->redirect("/");
     });
+    server.on("/4", HTTP_POST, [](AsyncWebServerRequest* request) {
+        LOGF(DEBUG, "/4 requested, method: %d", request->method());
+        int index = 4;
+        setDisplayIndex(index);
+        LOGF(DEBUG, "Set display index: %d\n", index);
+        request->redirect("/");
+    });
+
 
     server.on("/toggleBackflush", HTTP_POST, [](AsyncWebServerRequest* request) {
         int backflush = flipUintValue(backflushOn);
