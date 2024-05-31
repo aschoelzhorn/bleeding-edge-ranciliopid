@@ -14,7 +14,6 @@ enum MachineState {
     kShotTimerAfterBrew = 31,
     kBrewDetectionTrailing = 35,
     kSteam = 40,
-    kCoolDown = 45,
     kBackflush = 50,
     kWaterEmpty = 70,
     kEmergencyStop = 80,
