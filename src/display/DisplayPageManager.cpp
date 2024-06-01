@@ -1,5 +1,7 @@
 #include "DisplayPageManager.h"
 
+// TODO: should only contain pages for correct display type (oled or tft)
+
 #include "templates/DisplayPageStandard.h"
 #include "templates/DisplayPageMinimal.h" 
 #include "templates/DisplayPageTemperatureOnly.h" 
@@ -46,6 +48,5 @@ IDisplayPage *DisplayPageManager::getPage(DisplayPageType pageType) {
     }
 
     page->initViews();
-
     return page;
 }

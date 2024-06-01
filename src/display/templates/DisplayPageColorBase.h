@@ -26,14 +26,15 @@ protected:
     // TODO: check which are really needed and if probably better moved to ech concrete implementation
     Viewport bootLogo;
     Viewport bootMessage;
-    Viewport actionImage;
-    Viewport statusIcons;
-    Viewport profileIcon;
-    Viewport temperature;
-    Viewport statusMessage;
-    Viewport softwareUpdate;
+    // Viewport actionImage;
+    // Viewport statusIcons;
+    // Viewport profileIcon;
+    // Viewport temperature;
+    // Viewport statusMessage;
+    // Viewport softwareUpdate;
 
     Viewport statusbar;
-    Viewport progressbar;
-    Viewport brewTime;    
+    Viewport header;
+    // Viewport progressbar;
+    // Viewport brewTime;    
 };

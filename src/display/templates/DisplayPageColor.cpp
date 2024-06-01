@@ -10,9 +10,6 @@ const char* DisplayPageColor::getPageName() {
 }
 
 void DisplayPageColor::initViews() {
-
-    Serial.println("initViews: start");
-
     // we could expose those 2 through the baseclass
     int displayWidth = 240;//display->getWidth();
     int displayHeight = 240;//display->getHeight();
@@ -30,24 +27,40 @@ void DisplayPageColor::initViews() {
 
     bootLogo = Viewport(upperLeft, displayWidth, ccLogoHeight);
     bootMessage = Viewport(0, bootLogo.getLowerLeft().Y + margin, displayWidth, displayHeight - bootLogo.getHeight() - margin);
+
+    statusbar = Viewport(0, displayHeight - statusIconHeight, displayWidth, statusIconHeight);
+    header = Viewport(0, 0, displayWidth, 20);
+
+
+    // TOP: header with uptime and IP
     
-    actionImage = Viewport(upperLeft, displayWidth / 2, (displayHeight / 4));
-    temperature = Viewport(displayWidth / 2, upperLeft.Y, displayWidth / 2, (displayHeight / 2));
+    // actionImage = Viewport(upperLeft, displayWidth / 2, (displayHeight / 4));
+    // temperature = Viewport(displayWidth / 2, upperLeft.Y, displayWidth / 2, (displayHeight / 2));
 
-    statusMessage = Viewport(0, actionImage.getHeight()*2 + margin, displayWidth, displayHeight - actionImage.getHeight()*2 - margin - statusIconHeight);
-    statusIcons = Viewport(Point(0, displayHeight - statusIconHeight), statusIconWidth * numberOfStatusIcons, statusIconHeight);
-    profileIcon = Viewport(Point(displayWidth - statusIconWidth, displayHeight - statusIconHeight), statusIconWidth, statusIconHeight);
+    // statusMessage = Viewport(0, actionImage.getHeight()*2 + margin, displayWidth, displayHeight - actionImage.getHeight()*2 - margin - statusIconHeight);
+    // statusIcons = Viewport(Point(0, displayHeight - statusIconHeight), statusIconWidth * numberOfStatusIcons, statusIconHeight);
+    // profileIcon = Viewport(Point(displayWidth - statusIconWidth, displayHeight - statusIconHeight), statusIconWidth, statusIconHeight);
 
-    softwareUpdate = Viewport(upperLeft, displayWidth, displayHeight); // fullscreen
+    // softwareUpdate = Viewport(upperLeft, displayWidth, displayHeight); // fullscreen
 
     areaMap = {
         {Area::BootLogo, this->bootLogo},
         {Area::BootMessage, this->bootMessage},
+        {Area::Statusbar, this->statusbar},
+        {Area::Header, this->header},
     };
 
     display->setAreaMap(areaMap);
 }
 
+
+void DisplayPageColor::displayHeader() {
+    const char* format = "%02luh %02lum";
+    displayUptime(statusbar.getUpperLeft().X, statusbar.getUpperLeft().Y, format); // todo: could be improved, x not need, we used printRightAligned in displayUptime
+
+    display->setFont(FontType::Normal);
+    display->drawStr(statusbar.getUpperLeft().X, statusbar.getUpperLeft().Y, "192.168.123.123");
+}
 
 /**
  * @brief Send data to display
@@ -73,6 +86,7 @@ void DisplayPageColor::printScreen(const BrewData& b, const PidData& p, const Wi
     //display->clearBuffer();
     display->setFont(FontType::Normal); // set font
 
+    displayHeader();
     displayStatusbar(s.offlineMode);
 
     // display->setCursor(35, 16);

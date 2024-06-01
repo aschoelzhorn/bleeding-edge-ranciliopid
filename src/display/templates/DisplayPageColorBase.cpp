@@ -193,8 +193,8 @@ void DisplayPageColorBase::displayStatusbar(int offlineMode) {
         display->print(langstring_offlinemode);
     }
 
-    const char* format = "%02luh %02lum";
-    displayUptime(statusbar.getUpperLeft().X + 84, statusbar.getUpperLeft().Y, format); // todo: could be improved, x not need, we used printRightAligned in displayUptime
+    // const char* format = "%02luh %02lum";
+    // displayUptime(statusbar.getUpperLeft().X + 84, statusbar.getUpperLeft().Y, format); // todo: could be improved, x not need, we used printRightAligned in displayUptime
 }
 
 /**
@@ -222,16 +222,10 @@ void DisplayPageColorBase::displayMessage(String text1, String text2, String tex
  */
 void DisplayPageColorBase::displayLogo(String displaymessagetext, String displaymessagetext2) {
     display->clearBuffer();
-    // display->setCursor(0, 45);
-    // display->print(displaymessagetext.c_str());
-    // display->setCursor(0, 55);
-    // display->print(displaymessagetext2.c_str());
-    //display->drawImage(38, 0, images.getLogo(StatusImage::CleverCoffee));
     
     display->drawImageCentered(Area::BootLogo, images.getLogo(StatusImage::CleverCoffee));
+    display->setFont(FontType::Normal);
     display->printCentered(Area::BootMessage, displaymessagetext.c_str(), displaymessagetext2.c_str());
-
-    //display->sendBuffer();
 }
 
 /**

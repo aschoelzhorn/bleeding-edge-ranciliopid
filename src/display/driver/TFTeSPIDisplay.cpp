@@ -20,8 +20,6 @@ void TFTeSPIDisplay::init(Rotation rotation) {
         tft.setRotation(3);
     else 
         tft.setRotation(0);
-
-    //initViews();
 }
 
 void TFTeSPIDisplay::clearBuffer() {
@@ -33,7 +31,7 @@ void TFTeSPIDisplay::sendBuffer() {
 }
 
 void TFTeSPIDisplay::setPowerSave(uint32_t is_enabled) {
-    // this is used to turn of display in screensaver mode, TODO check is there is anything similar in this library
+    // this is used to turn of display in screensaver mode, TODO check if there is anything similar in this library
     //tft.enableSleep(is_enabled);
 }
 

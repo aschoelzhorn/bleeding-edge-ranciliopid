@@ -300,24 +300,24 @@ void setDisplayIndex(int index) {
 }
 
 uint32_t updateTime = 0;       // time for next update
-#define LOOP_PERIOD 35 // Display updates every 35 ms
+#define LOOP_PERIOD 100 // Display updates every 100 ms
 
 void setup() {
     // Start serial console
     Serial.begin(115200);
-    Serial.println();
-    Serial.println("Setting up ...");
-    Serial.println("Display" + DISPLAY_HARDWARE);
-    Serial.print("Page name: ");Serial.println(page->getPageName());
+    Serial.println("Page name: ");Serial.println(page->getPageName());
     display.init(DISPLAYROTATE);
     page->displayLogo(String("Version "), String("4.0.0.0"));
     temperature = 56;
     temperature -= brewTempOffset;
-    Serial.println("  ... done");
-    delay(20000);
+    delay(3000);
 
     updateTime = millis(); // Next update time
     display.clearBuffer();
+
+    Viewport statusbar = display.getView(Area::Statusbar);
+
+    Serial.println(statusbar.getDebugString());
 }
 
 
@@ -325,6 +325,7 @@ void setup() {
 void loop() {
   if (updateTime <= millis()) {
     updateTime = millis() + LOOP_PERIOD;
-        printScreen();
+    printScreen();
   }
+ 
 }
