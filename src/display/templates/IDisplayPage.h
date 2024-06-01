@@ -4,6 +4,8 @@
 #include "../DisplayManager.h"
 #include "../ImageDictionary.h"
 
+#include "DisplayPageTypeEnum.h"
+
 #include <DTOs/brewData.h>
 #include <DTOs/pidData.h>
 #include <DTOs/wifiData.h>
@@ -11,17 +13,6 @@
 #include <DTOs/mqttData.h>
 #include <DTOs/machineData.h>
 #include "DTOs/scaleData.h"
-
-enum class DisplayPageType {
-    Undefined = 0,
-    Standard = 1,
-    Minimal = 2,
-    TemperatureOnly = 3,
-    Scale = 4, 
-    Rotated = 20,
-    Color = 100,
-    ColorMinimal = 101
-};
 
 class IDisplayPage {
 public:
