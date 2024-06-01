@@ -181,6 +181,10 @@ void DisplayManager::printCountdown(unsigned int timer) {
     display->printCountdown(timer);
 }
 
+void DisplayManager::setAreaMap(std::map<Area, Viewport> map) {
+    display->setAreaMap(map);
+}
+
 Viewport DisplayManager::getView(Area area) {
     return display->getView(area);
 }
@@ -199,6 +203,10 @@ void DisplayManager::drawImageCentered(Area area, int w, int h, const uint8_t *b
 
 void DisplayManager::drawImageCentered(Area area, int w, int h, const uint16_t *bitmap) {
     display->drawImageCentered(area, w, h, bitmap);
+}
+
+void DisplayManager::drawImageCentered(Area area, tImage bitmap) {
+    display->drawImageCentered(area, bitmap.width, bitmap.height, bitmap.data);
 }
 
 void DisplayManager::printCentered(Area area, const char* c) {

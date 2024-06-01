@@ -5,6 +5,10 @@ Viewport DisplayBase::getView(Area area) {
     return areaMap[area];
 }
 
+void DisplayBase::setAreaMap(std::map<Area, Viewport> map) {
+    areaMap = map;
+}
+
 void DisplayBase::clearView(Area area) {
     Viewport view = getView(area);
     clearRect(view.getUpperLeft().X, view.getUpperLeft().Y, view.getWidth(), view.getHeight());

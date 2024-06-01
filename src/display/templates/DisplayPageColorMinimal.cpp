@@ -1,5 +1,4 @@
 #include "DisplayPageColorMinimal.h"
-#include "Logger.h"
 #include "languages.h"
 
 DisplayPageColorMinimal::DisplayPageColorMinimal(DisplayManager *instanceOfDisplayManager) {
@@ -10,6 +9,9 @@ const char* DisplayPageColorMinimal::getPageName() {
     return "DisplayPageColorMinimal";
 }
 
+void DisplayPageColorMinimal::initViews() {
+    
+}
 
 /**
  * @brief Send data to display

@@ -58,7 +58,6 @@ public:
     void drawStr(uint16_t x, uint16_t y, const char* c) override;    
 
 protected:
-    void initViews() override;
 
 private:
     TFT_eSPI& tft;

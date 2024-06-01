@@ -1,5 +1,4 @@
 #include "DisplayPageColor.h"
-#include "Logger.h"
 #include "languages.h"
 
 DisplayPageColor::DisplayPageColor(DisplayManager *instanceOfDisplayManager) {
@@ -8,6 +7,45 @@ DisplayPageColor::DisplayPageColor(DisplayManager *instanceOfDisplayManager) {
 
 const char* DisplayPageColor::getPageName() {
     return "DisplayPageColor";
+}
+
+void DisplayPageColor::initViews() {
+
+    Serial.println("initViews: start");
+
+    // we could expose those 2 through the baseclass
+    int displayWidth = 240;//display->getWidth();
+    int displayHeight = 240;//display->getHeight();
+
+    int margin = 5;
+    int ccLogoHeight = 180;
+    int statusIconHeight = 56;
+    int statusIconWidth = 56;
+
+    int iconHeight  = 45;
+
+    int numberOfStatusIcons = 3;
+
+    Point upperLeft = Point(0, 0);
+
+    bootLogo = Viewport(upperLeft, displayWidth, ccLogoHeight);
+    bootMessage = Viewport(0, bootLogo.getLowerLeft().Y + margin, displayWidth, displayHeight - bootLogo.getHeight() - margin);
+    
+    actionImage = Viewport(upperLeft, displayWidth / 2, (displayHeight / 4));
+    temperature = Viewport(displayWidth / 2, upperLeft.Y, displayWidth / 2, (displayHeight / 2));
+
+    statusMessage = Viewport(0, actionImage.getHeight()*2 + margin, displayWidth, displayHeight - actionImage.getHeight()*2 - margin - statusIconHeight);
+    statusIcons = Viewport(Point(0, displayHeight - statusIconHeight), statusIconWidth * numberOfStatusIcons, statusIconHeight);
+    profileIcon = Viewport(Point(displayWidth - statusIconWidth, displayHeight - statusIconHeight), statusIconWidth, statusIconHeight);
+
+    softwareUpdate = Viewport(upperLeft, displayWidth, displayHeight); // fullscreen
+
+    areaMap = {
+        {Area::BootLogo, this->bootLogo},
+        {Area::BootMessage, this->bootMessage},
+    };
+
+    display->setAreaMap(areaMap);
 }
 
 
@@ -32,7 +70,7 @@ void DisplayPageColor::printScreen(const BrewData& b, const PidData& p, const Wi
 
     // If no specific machine state was printed, print default:
 
-    display->clearBuffer();
+    //display->clearBuffer();
     display->setFont(FontType::Normal); // set font
 
     displayStatusbar(s.offlineMode);
@@ -111,5 +149,5 @@ void DisplayPageColor::printScreen(const BrewData& b, const PidData& p, const Wi
     // // Show heater output in %
     // displayProgressbar(p.output / 10, 30, 60, 98);
 
-    display->sendBuffer();
+    //display->sendBuffer();
 }

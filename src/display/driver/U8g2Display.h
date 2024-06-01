@@ -46,7 +46,7 @@ public:
     void drawStr(uint16_t x, uint16_t y, const char* c) override;
 
 protected:
-    void initViews() override;
+    // void initViews() override;
 
 private:
     U8G2& u8g2;

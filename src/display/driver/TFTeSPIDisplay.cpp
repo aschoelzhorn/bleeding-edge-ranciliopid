@@ -21,47 +21,7 @@ void TFTeSPIDisplay::init(Rotation rotation) {
     else 
         tft.setRotation(0);
 
-    initViews();
-}
-
-void TFTeSPIDisplay::initViews() {
-     int width = getWidth();
-    int height = getHeight();
-    int margin = 5;
-    int maxBootLogoHeight = 131;
-
-    int statusIconHeight = 56;
-    int statusIconWidth = 56;
-
-    int iconHeight  = 45;
-
-    int numberOfStatusIcons = 3;
-
-    Point upperLeft = Point(0, 0);
-
-    bootLogo = Viewport(upperLeft, width, maxBootLogoHeight);
-    bootMessage = Viewport(0, bootLogo.getLowerLeft().Y + margin, width, height - bootLogo.getHeight() - margin);
-    
-    //actionImage = Viewport(upperLeft, width / 2, (height / 2));
-    actionImage = Viewport(upperLeft, width / 2, (height / 4));
-    temperature = Viewport(width / 2, upperLeft.Y, width / 2, (height / 2));
-
-    statusMessage = Viewport(0, actionImage.getHeight()*2 + margin, getWidth(), getHeight() - actionImage.getHeight()*2 - margin - statusIconHeight);
-    statusIcons = Viewport(Point(0, height - statusIconHeight), statusIconWidth * numberOfStatusIcons, statusIconHeight);
-    profileIcon = Viewport(Point(width - statusIconWidth, height - statusIconHeight), statusIconWidth, statusIconHeight);
-
-    softwareUpdate = Viewport(upperLeft, getWidth(), getHeight()); // fullscreen
-
-    areaMap = {
-        {Area::BootLogo, this->bootLogo},
-        {Area::BootMessage, this->bootMessage},
-        {Area::ActionImage, this->actionImage},
-        {Area::StatusMessage, this->statusMessage},
-        {Area::Temperature, this->temperature},
-        {Area::StatusIcons, this->statusIcons},
-        {Area::ProfileIcon, this->profileIcon},
-        {Area::SoftwareUpdate, this->softwareUpdate},
-    };
+    //initViews();
 }
 
 void TFTeSPIDisplay::clearBuffer() {
@@ -236,6 +196,7 @@ void TFTeSPIDisplay::printTemperatures(float input, float setPoint, bool steamin
     ringMeter(input, 0, setPoint, xpos, ypos, radius, "`C", RED2RED);
 }
 
+// TODO: this should not be here but in the "base page template"
 void TFTeSPIDisplay::printBrewingInfo(unsigned long totalBrewTime, unsigned long brewTimer, unsigned int activeBrewTimeEndDetection, bool scaleEnabled, int currentWeight, float activeScaleSensorWeightSetPoint) {
 
     Viewport actionImageView = getView(Area::ActionImage);

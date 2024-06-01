@@ -1,16 +1,13 @@
 #include "DummyDisplay.h"
 
-// this block is needed to avoid crash with no display 
-Viewport dummy = Viewport(Point(), 0, 0);
-std::map<Area, Viewport> areaMap = {
-    //{Area::BootLogo, dummy},
-};
+// // this block is needed to avoid crash with no display 
+// Viewport dummy = Viewport(Point(), 0, 0);
+// std::map<Area, Viewport> areaMap = {
+//     //{Area::BootLogo, dummy},
+// };
 
 
 DummyDisplay::DummyDisplay() {
-}
-
-void DummyDisplay::initViews() {
 }
 
 void DummyDisplay::init(Rotation rotation) {

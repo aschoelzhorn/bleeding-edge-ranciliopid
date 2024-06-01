@@ -45,5 +45,7 @@ IDisplayPage *DisplayPageManager::getPage(DisplayPageType pageType) {
         }
     }
 
+    page->initViews();
+
     return page;
 }

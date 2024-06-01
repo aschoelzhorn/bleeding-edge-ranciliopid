@@ -223,11 +223,12 @@ void DisplayPageBase::displayMessage(String text1, String text2, String text3, S
 void DisplayPageBase::displayLogo(String displaymessagetext, String displaymessagetext2) {
     display->clearBuffer();
     display->setCursor(0, 45);
-    display->print(displaymessagetext.c_str());
-    display->setCursor(0, 55);
-    display->print(displaymessagetext2.c_str());
+//    display->print(displaymessagetext.c_str());
+//    display->setCursor(0, 55);
+//    display->print(displaymessagetext2.c_str());
 
     display->drawImage(38, 0, images.getLogo(StatusImage::CleverCoffee));
+    //display->drawImage(38, 0, images.getLogo(StatusImage::CleverCoffee));
 
     display->sendBuffer();
 }

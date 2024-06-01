@@ -1,5 +1,4 @@
 #include "DisplayPageStandard.h"
-#include "Logger.h"
 #include "languages.h"
 
 DisplayPageStandard::DisplayPageStandard(DisplayManager *instanceOfDisplayManager) {
@@ -8,6 +7,10 @@ DisplayPageStandard::DisplayPageStandard(DisplayManager *instanceOfDisplayManage
 
 const char* DisplayPageStandard::getPageName() {
     return "DisplayPageStandard";
+}
+
+void DisplayPageStandard::initViews() {
+
 }
 
 

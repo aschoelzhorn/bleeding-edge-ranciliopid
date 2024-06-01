@@ -69,12 +69,13 @@ public:
     virtual void drawImage(uint16_t x, uint16_t y, tImage bitmap);
     virtual void drawGlyph(uint8_t x, uint8_t y, uint8_t encoding);
   
-    // specific functions 
+    // specific functions -> TODO: move to page templates
     virtual void printTemperatures(float t1, float t2, bool steaming);
     virtual void printBrewingInfo(unsigned long totalBrewTime, unsigned long brewTimer, unsigned int activeBrewTimeEndDetection, bool scaleEnabled, int currentWeight, float activeScaleSensorWeightSetPoint); // TODO: we could use a struct instead of 6 paramters, eg. "brewInfoData"
     virtual void printCountdown(unsigned int timer);
 
     // functions for defined areas
+    virtual void setAreaMap(std::map<Area, Viewport> map);
     virtual Viewport getView(Area);
     virtual void clearView(Area);
     virtual void fillView(Area view, uint32_t color);

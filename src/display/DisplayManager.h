@@ -51,12 +51,14 @@ public:
     virtual void printCountdown(unsigned int timer);
 
     // functions for defined areas
+    virtual void setAreaMap(std::map<Area, Viewport> map);
     virtual Viewport getView(Area);
     virtual void clearView(Area);
     virtual void fillView(Area view, uint32_t color);
 
     virtual void drawImageCentered(Area, int, int, const uint8_t *bitmap);
     virtual void drawImageCentered(Area, int, int, const uint16_t *bitmap);
+    virtual void drawImageCentered(Area, tImage bitmap);
 
     virtual void printCentered(Area, const char* c);
     virtual void printCentered(Area, const char* line1, const char* line2);

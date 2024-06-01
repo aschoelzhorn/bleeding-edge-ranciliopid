@@ -1,5 +1,4 @@
 #include "DisplayPageTemperatureOnly.h"
-#include "Logger.h"
 
 DisplayPageTemperatureOnly::DisplayPageTemperatureOnly(DisplayManager *instanceOfDisplayManager) {
     display = instanceOfDisplayManager;
@@ -8,6 +7,11 @@ DisplayPageTemperatureOnly::DisplayPageTemperatureOnly(DisplayManager *instanceO
 const char* DisplayPageTemperatureOnly::getPageName() {
     return "DisplayPageTemperatureOnly";
 }
+
+void DisplayPageTemperatureOnly::initViews() {
+
+}
+
 
 void DisplayPageTemperatureOnly::printScreen(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md, const ScaleData& sd) {
 

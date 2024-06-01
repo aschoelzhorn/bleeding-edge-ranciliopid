@@ -28,30 +28,30 @@ void U8g2Display::init(Rotation rotation) {
 
   u8g2.setBitmapMode(1);  // Enable transparent bitmap mode
 
-  initViews();
+//   initViews();
 }
 
-void U8g2Display::initViews() {
+// void U8g2Display::initViews() {
 
-    // these are the values for the current minimal template
-    statusbar = Viewport(0, 0, getWidth(), 12);
-    temperature = Viewport(0, 20, getWidth(), 20);
-    brewTime = Viewport(0, 44, getWidth(), 16);
-    progressbar = Viewport(0, 60, getWidth(), 4);
+//     // these are the values for the current minimal template
+//     statusbar = Viewport(0, 0, getWidth(), 12);
+//     temperature = Viewport(0, 20, getWidth(), 20);
+//     brewTime = Viewport(0, 44, getWidth(), 16);
+//     progressbar = Viewport(0, 60, getWidth(), 4);
 
-    // for testing we use a different layout for the minimal template
-    // statusbar = Viewport(0, 50, getWidth(), 12);
-    // temperature = Viewport(0, 20, getWidth(), 20);
-    // brewTime = Viewport(0, 5, getWidth(), 16);
-    // progressbar = Viewport(0, 0, getWidth(), 4);
+//     // for testing we use a different layout for the minimal template
+//     // statusbar = Viewport(0, 50, getWidth(), 12);
+//     // temperature = Viewport(0, 20, getWidth(), 20);
+//     // brewTime = Viewport(0, 5, getWidth(), 16);
+//     // progressbar = Viewport(0, 0, getWidth(), 4);
  
-    areaMap = {
-        {Area::Statusbar, this->statusbar},
-        {Area::Progressbar, this->progressbar},
-        {Area::Temperature, this->temperature},
-        {Area::BrewTime, this->brewTime}
-    };
-}
+//     areaMap = {
+//         {Area::Statusbar, this->statusbar},
+//         {Area::Progressbar, this->progressbar},
+//         {Area::Temperature, this->temperature},
+//         {Area::BrewTime, this->brewTime}
+//     };
+// }
 
 void U8g2Display::prepare(void) {
   u8g2.setFont(u8g2_font_profont11_tf);
@@ -225,7 +225,7 @@ void U8g2Display::printRightAligned(float data, unsigned int digits, uint16_t y)
     //u8g2.sendBuffer();
 }
 
-// specific functions
+// specific functions: TODO: move to base page templates
 
 void U8g2Display::printTemperatures(float input, float setPoint, bool steaming) {
     int symbolWidth = 11;

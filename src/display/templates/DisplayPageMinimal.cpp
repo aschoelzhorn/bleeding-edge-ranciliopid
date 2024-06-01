@@ -14,6 +14,10 @@ const char* DisplayPageMinimal::getPageName() {
     return "DisplayPageMinimal";
 }
 
+void DisplayPageMinimal::initViews() {
+    
+}
+
 /**
  * @brief Send data to display
  */

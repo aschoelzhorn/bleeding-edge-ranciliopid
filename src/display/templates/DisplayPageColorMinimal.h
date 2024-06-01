@@ -9,4 +9,8 @@ public:
 
     void printScreen(const BrewData& b, const PidData& p, const WifiData& w, const MqttData& m, const StateData& s, const MachineData& md, const ScaleData& sd) override;
     const char* getPageName() override;
+    void initViews() override;
+
+protected:
+
 };

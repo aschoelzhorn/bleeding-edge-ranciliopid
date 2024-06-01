@@ -60,6 +60,7 @@
 #define PIN_TFT_CS   -1 // -1 not connected
 #define PIN_TFT_DC   32 // PIN_HXDAT
 #define PIN_TFT_RST  4  // PIN_ROTARY_DT, should be 15
+#define TFT_RGB_ORDER TFT_BGR  // Colour order Blue-Green-Red
 
 /**
  * These settings work with GMT020-02 Ver1.1 320*240 (ST7789)
@@ -68,4 +69,16 @@
 * #define PIN_TFT_CS   14
 * #define PIN_TFT_DC   32
 * #define PIN_TFT_RST  -1  // Set TFT_RST to -1 if display RESET is connected to ESP32 board RST
+* #define TFT_RGB_ORDER TFT_BGR  // Colour order Blue-Green-Red
+*/
+
+/**
+ * These settings work with 1.69 TFT V1.1 (round corners), 240x280, ST7789V3
+* #define PIN_TFT_MOSI 33
+* #define PIN_TFT_SCLK 25
+* #define PIN_TFT_CS   14
+* #define PIN_TFT_DC   32
+* #define PIN_TFT_RST  -1  // Set TFT_RST to -1 if display RESET is connected to ESP32 board RST
+* #define TFT_RGB_ORDER TFT_BGR  // Colour order Blue-Green-Red
+* needs also backlight connected !!!!!
 */

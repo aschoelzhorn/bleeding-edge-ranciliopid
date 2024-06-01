@@ -12,12 +12,15 @@ DisplayPageScale::DisplayPageScale(DisplayManager *instanceOfDisplayManager) {
     display = instanceOfDisplayManager;
 }
 
-
 /**
  * @brief Return the name of the page / template
  */
 const char* DisplayPageScale::getPageName() {
     return "DisplayPageScale";
+}
+
+void DisplayPageScale::initViews() {
+
 }
 
 /**
